@@ -1,3 +1,8 @@
+package Server;
+
+import Server.Protocol;
+import Server.ServerPrinterThread;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -39,10 +44,14 @@ public class ServerThread extends Thread{
             outputLine = p.processInput(null);
             out.println(outputLine);
 
+            // reading, outputting loop
             while ((inputLine = in.readLine()) != null) {
+
+                // just printing client message on server out
                 mutex.acquire();
                 serverPrinterThread.addIncomingMessage(inputLine, clientSocket);
                 mutex.release();
+
                 outputLine = p.processInput(inputLine);
                 out.println(outputLine);
                 if (outputLine.equals("Bye."))

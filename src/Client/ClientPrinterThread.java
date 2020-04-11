@@ -1,3 +1,5 @@
+package Client;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,7 +15,7 @@ public class ClientPrinterThread extends Thread {
         try{
             String inputFromServer;
             while((inputFromServer = in.readLine()) != null){
-                System.out.println("Server: "+ inputFromServer);
+                System.out.println("Server.Server: "+ inputFromServer);
             }
 
         }catch (IOException e){

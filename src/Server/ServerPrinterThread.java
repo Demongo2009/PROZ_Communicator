@@ -1,3 +1,5 @@
+package Server;
+
 import javafx.util.Pair;
 
 import java.io.BufferedInputStream;
@@ -12,27 +14,6 @@ import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
 public class ServerPrinterThread extends Thread {
-//    ArrayList<BufferedReader> ins;
-//
-//    public void addClient(BufferedReader bufferedReader){
-//        ins.add(bufferedReader);
-//    }
-//
-//    public void run(){
-//
-//        try{
-//            String inputLine;
-//            int i=0;
-//            for (BufferedReader bufferedReader: ins) {
-//                if((inputLine = ins.get(i).))
-//            }
-//            while(incomingMessage){
-//
-//            }
-//        }catch (IOException e){
-//            e.printStackTrace();
-//        }
-//    }
 
 //    String incomingMessage;
 //    String clientName;
@@ -66,7 +47,7 @@ public class ServerPrinterThread extends Thread {
                 Pair<String, String> pair= buffer.remove();
                 String clientName = pair.getKey();
                 String incomingMessage = pair.getValue();
-                System.out.println("Client ( " + clientName + " ): " + incomingMessage);
+                System.out.println("Client.Client ( " + clientName + " ): " + incomingMessage);
                 mutex.release();
             }
 

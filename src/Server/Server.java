@@ -1,3 +1,5 @@
+package Server;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,11 +13,10 @@ public class Server {
 
     public static void main(String[] args) {
         System.out.println("Hello");
-//        int portNumber = Integer.parseInt(args[0]);
         int portNumber = 4444;
 
 
-
+// Main program. It should handle all connections.
         try{
             ServerSocket serverSocket = new ServerSocket(portNumber);
 

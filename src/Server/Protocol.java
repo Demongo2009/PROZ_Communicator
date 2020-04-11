@@ -1,8 +1,9 @@
-import javafx.event.Event;
+package Server;
+
+import Server.Server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.*;
 
@@ -34,31 +35,14 @@ public class Protocol {
     Socket partnerSocket;
     PrintWriter partnerOut;
 
-//    private void getConnectionWithDB(){
-////        Connection conn = null;
-//        try{
-//            String url = "jdbc:sqlite:/home/demongo/EITI/PROZ/PROZ_Communicator/src/UserNameDataBase";
-//            conn = DriverManager.getConnection(url);
-//
-//            System.out.println("Connection to sql db established...");
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } finally {
-//            try{
-//                if(conn != null){
-//                    conn.close();
-//                }
-//
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
-////        return conn;
-//    }
 
     //TODO: ADDRESS AND PORT FORWARDING TO SERVERTHREAD TO ESTABILISH CONNECTION BETWEEN CLIENTS
 
+// sqlite database handling
+//////////////////////////////////////////////////////////////////
+
     private boolean checkIfUserNameExists(String input){
+
         Statement stmt = null;
         String query = "select Username, Address, Port from Users where Username='"+input.replace("\n","")+"'";
 
@@ -123,17 +107,7 @@ public class Protocol {
             stmt.setInt(3, clientPort );
 
             stmt.executeUpdate();
-//            if(!stmt.execute()){
-//                System.out.println("tu");
-//                return false;
-//            }
-//            if(!rs.next()){
-//               return false;
-//            }
-//            while (rs.next()){
-//                partnerAddress = rs.getString("Address");
-//                partnerPort = rs.getInt("Port");
-//            }
+
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -161,20 +135,30 @@ public class Protocol {
         return true;
     }
 
+    ///////////////////////////////////////////////////
+
+
+
+
+    // main function of protocol state machine
+
     public String processInput(String input){
+        // string to be sent by server
         String processedInput = "";
 
+        //first message from server
         if(input == null){
             processedInput = "Witam to jest Chat\n" +
                     "Najpierw podaj swoje imie...";
             return processedInput;
         }
+        // if client types "Quit" than connections is closed
         if(input == "Quit"){
             processedInput = "Bye.";
             return processedInput;
         }
-//TODO: sqlite jdbc MAVEN
 
+        // client is supposed to give its name, than its added to database
         if(state.equals(AvailableStates.WAITING_FOR_USERNAME)){
 
             clientName = input;
@@ -189,25 +173,28 @@ public class Protocol {
 
             state = AvailableStates.SEARCHING_PARTNER;
 
+            // client types name of his partner and if such name exists in database than it is checked if client is
+            // connected to server by checking all connected socket on socked array
         }else if(state.equals(AvailableStates.SEARCHING_PARTNER)){
-//            getConnectionWithDB();
 
+            // checking if name exists
             if(checkIfUserNameExists(input)){
                 processedInput = "User name \" " + input + " \" found!";
                 partnerName = input;
 
 
-
+// checking all connected sockets
                 for(Socket s: Server.clientSocketArray){
                     if( (s.getPort() == partnerPort) && (s.getInetAddress().hashCode() == partnerAddress) ){
                         partnerSocket = s;
                     }
                 }
+                // if partner not connected
                 if(partnerSocket == null){
                     processedInput = partnerName + " not connected.";
                     return processedInput;
                 }
-
+// getting partner out
                 try {
                     partnerOut = new PrintWriter(partnerSocket.getOutputStream(), true);
                 } catch (IOException e) {
@@ -223,7 +210,7 @@ public class Protocol {
             }
 
 
-
+// messages outputted on partner out
         }else if(state.equals(AvailableStates.CONNECTED_WITH_PARTNER)){
             partnerOut.println(clientName + ": " + input);
 

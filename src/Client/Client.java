@@ -1,3 +1,5 @@
+package Client;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,13 +9,16 @@ import java.net.UnknownHostException;
 
 public class Client {
     static void send(String[] args){
-//        String hostName = args[0];
-//        int portNumber = Integer.parseInt(args[1]);
+
+
+
+
         String hostName = "localhost";
         int portNumber = 4444;
 
         try {
             Socket echoSocket = new Socket(hostName, portNumber);
+            // shutdown hook added for closing the connection if client exits
             Runtime.getRuntime().addShutdownHook(new ClientShutdownHook(echoSocket));
 
             PrintWriter out =
@@ -25,10 +30,13 @@ public class Client {
                     new BufferedReader(
                             new InputStreamReader(System.in));
 
+            // thread for printing client messages
             ClientPrinterThread clientPrinterThread = new ClientPrinterThread(in);
             clientPrinterThread.start();
 
+
             String userInput;
+            // sending message to server
             while ((userInput = stdIn.readLine()) != null) {
                 out.println(userInput);
 //                System.out.println("echo: " + in.readLine());

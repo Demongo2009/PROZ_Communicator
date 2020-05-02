@@ -18,12 +18,13 @@ public class Protocol {
 
 
     enum AvailableStates {
+        INIT,
         WAITING_FOR_USERNAME,
         SEARCHING_PARTNER,
         CONNECTED_WITH_PARTNER,
     }
 
-    AvailableStates state = AvailableStates.WAITING_FOR_USERNAME;
+    AvailableStates state = AvailableStates.INIT;
     String clientName;
 
 
@@ -57,9 +58,8 @@ public class Protocol {
             ResultSet rs = stmt.executeQuery(query);
             if(!rs.next()){
                 return false;
-            }
-            while (rs.next()){
-                partnerAddress = rs.getString("Address").hashCode();
+            }while(rs.next()){
+                partnerAddress = rs.getInt("Address");
                 partnerPort = rs.getInt("Port");
             }
 
@@ -94,6 +94,19 @@ public class Protocol {
         String query = "INSERT INTO Users (Username, Address, Port) " +
                 "VALUES (?,?,?);";
 
+//        String query =
+//                "insert into Users (Username, Address, Port)" +
+//                        " Select ?,?,? Where not exists(select * from Users where Username=?)";
+
+//        String query =
+//                "INSERT INTO Users (Username, Address, Port) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE    " +
+//                        "Address = ?, Port = ?";
+
+//        String query =
+//                "update Users set Username=?,Address=?,Port=? where Username=? " +
+//                        "IF @@ROWCOUNT=0 " +
+//                        "   insert into Users(Username,Address,Port) values(?,?,?);";
+
         Connection conn = null;
         try{
             String url = "jdbc:sqlite:/home/demongo/EITI/PROZ/PROZ_Communicator/src/UserNameDataBase";
@@ -103,8 +116,15 @@ public class Protocol {
 
             stmt = conn.prepareStatement(query);
             stmt.setString(1, input.replace("\n","") );
+//            stmt.setString(2, input.replace("\n","") );
             stmt.setInt(2, clientAddress );
             stmt.setInt(3, clientPort );
+//            stmt.setString(4, input.replace("\n","") );
+//            stmt.setString(5, input.replace("\n","") );
+
+//            stmt.setString(4, input.replace("\n","") );
+//            stmt.setInt(6, clientAddress );
+//            stmt.setInt(7, clientPort );
 
             stmt.executeUpdate();
 
@@ -148,8 +168,7 @@ public class Protocol {
 
         //first message from server
         if(input == null){
-            processedInput = "Witam to jest Chat\n" +
-                    "Najpierw podaj swoje imie...";
+            processedInput = "...";
             return processedInput;
         }
         // if client types "Quit" than connections is closed
@@ -157,9 +176,15 @@ public class Protocol {
             processedInput = "Bye.";
             return processedInput;
         }
+        if(state.equals(AvailableStates.INIT)){
+            state = AvailableStates.WAITING_FOR_USERNAME;
+            processedInput = "Witam to jest Chat\n" +
+                    "Najpierw podaj swoje imie...";
+
+        }
 
         // client is supposed to give its name, than its added to database
-        if(state.equals(AvailableStates.WAITING_FOR_USERNAME)){
+        else if(state.equals(AvailableStates.WAITING_FOR_USERNAME)){
 
             clientName = input;
             processedInput = "Twoje imie to: " + input;
@@ -167,11 +192,11 @@ public class Protocol {
             if(addToDB(input)){
                 processedInput += "\nDodano imie.";
                 processedInput += "\nPodaj imie partnera...";
+                state = AvailableStates.SEARCHING_PARTNER;
             }else{
                 processedInput += "\nNie dodano imienia.";
             }
 
-            state = AvailableStates.SEARCHING_PARTNER;
 
             // client types name of his partner and if such name exists in database than it is checked if client is
             // connected to server by checking all connected socket on socked array
@@ -179,7 +204,7 @@ public class Protocol {
 
             // checking if name exists
             if(checkIfUserNameExists(input)){
-                processedInput = "User name \" " + input + " \" found!";
+                processedInput = "User name  " + input + "  found!";
                 partnerName = input;
 
 
@@ -191,7 +216,7 @@ public class Protocol {
                 }
                 // if partner not connected
                 if(partnerSocket == null){
-                    processedInput = partnerName + " not connected.";
+                    processedInput += " " + partnerName + " not connected.";
                     return processedInput;
                 }
 // getting partner out
@@ -206,7 +231,7 @@ public class Protocol {
 
 
             }else {
-                processedInput = "User name \" " + input + " \" doesnt exist!";
+                processedInput = "User name  " + input + "  doesnt exist!";
             }
 
 

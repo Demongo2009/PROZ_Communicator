@@ -53,6 +53,9 @@ public class ServerThread extends Thread{
                 mutex.release();
 
                 outputLine = p.processInput(inputLine);
+                if(outputLine == ""){
+                    continue;
+                }
                 out.println(outputLine);
                 if (outputLine.equals("Bye."))
                     break;

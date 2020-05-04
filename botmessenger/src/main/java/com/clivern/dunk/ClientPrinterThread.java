@@ -62,6 +62,9 @@ public class ClientPrinterThread extends Thread {
             String inputFromServer;
             mutex.acquire();
             while((inputFromServer = in.readLine()) != null){
+                if(inputFromServer == "" || inputFromServer == "\n"){
+                    continue;
+                }
 //                System.out.println("Server.Server: "+ inputFromServer);
                 message_tpl.setRecipientId(userId);
                 message_tpl.setMessageText("Server: "+ inputFromServer);

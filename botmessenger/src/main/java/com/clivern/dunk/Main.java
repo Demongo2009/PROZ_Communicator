@@ -63,6 +63,29 @@ public class Main {
 
     public static void main(String[] args) throws IOException
     {
+        String hostName = "localhost";
+        int portNumber = 4444;
+        try {
+            echoSocket = new Socket(hostName, portNumber);
+            // shutdown hook added for closing the connection if client exits
+            Runtime.getRuntime().addShutdownHook(new ClientShutdownHook(echoSocket));
+            out =
+                    new PrintWriter(echoSocket.getOutputStream(), true);
+            in =
+                    new BufferedReader(
+                            new InputStreamReader(echoSocket.getInputStream()));
+
+
+            clientPrinterThread = new ClientPrinterThread(in);
+            clientPrinterThread.start();
+
+//            send("hello");
+
+        }catch (UnknownHostException e) {
+            e.printStackTrace();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
         // Verify Token Route
@@ -125,29 +148,7 @@ public class Main {
 
 
                 if( text.equals("hello") && currentState == AvailableStates.WAITING_FOR_HELLO ){
-                    String hostName = "localhost";
-                    int portNumber = 4444;
-                    try {
-                        echoSocket = new Socket(hostName, portNumber);
-                        // shutdown hook added for closing the connection if client exits
-                        Runtime.getRuntime().addShutdownHook(new ClientShutdownHook(echoSocket));
-                        out =
-                                new PrintWriter(echoSocket.getOutputStream(), true);
-                        in =
-                                new BufferedReader(
-                                        new InputStreamReader(echoSocket.getInputStream()));
 
-
-                        clientPrinterThread = new ClientPrinterThread(in);
-                        clientPrinterThread.start();
-
-//            send("hello");
-
-                    }catch (UnknownHostException e) {
-                        e.printStackTrace();
-                    }catch (IOException e) {
-                        e.printStackTrace();
-                    }
 
                     send(text);
 //                    message_tpl.setRecipientId(message.getUserId());

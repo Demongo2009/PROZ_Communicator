@@ -6,35 +6,40 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Protocol {
-    int clientAddress;
-    int clientPort;
+//    int clientAddress;
+//    int clientPort;
+    User client;
 
     Protocol(int clientAddress, int clientPort){
-        this.clientAddress = clientAddress;
-        this.clientPort = clientPort;
+        client = new User("",clientAddress,clientPort);
+//        this.clientAddress = clientAddress;
+//        this.clientPort = clientPort;
     }
 
 
     enum AvailableStates {
         INIT,
         WAITING_FOR_USERNAME,
-        SEARCHING_PARTNER,
-        CONNECTED_WITH_PARTNER,
+        SEARCHING_GROUP,
+        CREATING_GROUP,
+        CONNECTED_WITH_GROUP,
+        CHOOSING_GROUP_ACTION,
     }
 
     AvailableStates state = AvailableStates.INIT;
-    String clientName;
+//    String clientName;
 
 
-    String partnerName;
+//    String partnerName;
+//
+//    int partnerAddress;
+//    int partnerPort;
 
-    int partnerAddress;
-    int partnerPort;
-
-    Socket partnerSocket;
-    PrintWriter partnerOut;
+//    Socket partnerSocket;
+//    PrintWriter partnerOut;
 
 
     //TODO: ADDRESS AND PORT FORWARDING TO SERVERTHREAD TO ESTABILISH CONNECTION BETWEEN CLIENTS
@@ -59,8 +64,8 @@ public class Protocol {
             if(!rs.next()){
                 return false;
             }while(rs.next()){
-                partnerAddress = rs.getInt("Address");
-                partnerPort = rs.getInt("Port");
+//                partnerAddress = rs.getInt("Address");
+//                partnerPort = rs.getInt("Port");
             }
 
         } catch (SQLException e) {
@@ -117,8 +122,8 @@ public class Protocol {
             stmt = conn.prepareStatement(query);
             stmt.setString(1, input.replace("\n","") );
 //            stmt.setString(2, input.replace("\n","") );
-            stmt.setInt(2, clientAddress );
-            stmt.setInt(3, clientPort );
+            stmt.setInt(2, client.getHashedAddress() );
+            stmt.setInt(3, client.getPort() );
 //            stmt.setString(4, input.replace("\n","") );
 //            stmt.setString(5, input.replace("\n","") );
 
@@ -158,7 +163,17 @@ public class Protocol {
     ///////////////////////////////////////////////////
 
 
+    boolean checkIfGroupExists(String groupId){
+        if(Server.groupMap.containsKey(Integer.parseInt(groupId))){
 
+            return true;
+        }else {
+            return false;
+        }
+
+    }
+
+    ArrayList<User> currentGroupUsers;
 
     // main function of protocol state machine
 
@@ -186,13 +201,14 @@ public class Protocol {
         // client is supposed to give its name, than its added to database
         else if(state.equals(AvailableStates.WAITING_FOR_USERNAME)){
 
-            clientName = input;
+            client.setName(input);
             processedInput = "Twoje imie to: " + input;
 
             if(addToDB(input)){
                 processedInput += "\nDodano imie.";
-                processedInput += "\nPodaj imie partnera...";
-                state = AvailableStates.SEARCHING_PARTNER;
+                processedInput += "\nDolacz do istniejacej grupy: d" +
+                        "\n lub zaloz nowa: n";
+                state = AvailableStates.CHOOSING_GROUP_ACTION;
             }else{
                 processedInput += "\nNie dodano imienia.";
             }
@@ -200,44 +216,88 @@ public class Protocol {
 
             // client types name of his partner and if such name exists in database than it is checked if client is
             // connected to server by checking all connected socket on socked array
-        }else if(state.equals(AvailableStates.SEARCHING_PARTNER)){
+
+
+        }else if(state.equals(AvailableStates.CHOOSING_GROUP_ACTION)){
+
+
+            switch (input){
+                case "d":
+                    state = AvailableStates.SEARCHING_GROUP;
+                    processedInput = "Type in group id...";
+                    break;
+                case "n":
+                    state = AvailableStates.CREATING_GROUP;
+                    processedInput = "Creating group..." +
+                            "\n Please confirm with any key...";
+                    break;
+                default:
+                    processedInput = "Wrong input!";
+                    break;
+            }
+
+
+        } else if(state.equals(AvailableStates.CREATING_GROUP)){
+
+            int newIndex = Server.groupMap.size();
+            ArrayList group = new ArrayList<User>();
+            group.add(client);
+            Server.groupMap.put(newIndex,group);
+            currentGroupUsers = Server.groupMap.get(newIndex);
+
+            processedInput = "Group created with id: "+newIndex;
+
+            state = AvailableStates.CONNECTED_WITH_GROUP;
+        }
+
+        else if(state.equals(AvailableStates.SEARCHING_GROUP)){
 
             // checking if name exists
-            if(checkIfUserNameExists(input)){
-                processedInput = "User name  " + input + "  found!";
-                partnerName = input;
+            if(checkIfGroupExists(input)){
+                processedInput = "Group id  " + input + "  found!";
+//                partnerName = input;
+
+                ArrayList group = Server.groupMap.get(Integer.parseInt(input));
+                group.add(client);
+                Server.groupMap.replace(Integer.parseInt(input),group);
+                currentGroupUsers = Server.groupMap.get(Integer.parseInt(input));
+                state = AvailableStates.CONNECTED_WITH_GROUP;
 
 
-// checking all connected sockets
-                for(Socket s: Server.clientSocketArray){
-                    if( (s.getPort() == partnerPort) && (s.getInetAddress().hashCode() == partnerAddress) ){
-                        partnerSocket = s;
-                    }
-                }
-                // if partner not connected
-                if(partnerSocket == null){
-                    processedInput += " " + partnerName + " not connected.";
-                    return processedInput;
-                }
-// getting partner out
-                try {
-                    partnerOut = new PrintWriter(partnerSocket.getOutputStream(), true);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                state = AvailableStates.CONNECTED_WITH_PARTNER;
+//// checking all connected sockets
+//                for(Socket s: Server.clientSocketArray){
+//                    if( (s.getPort() == partnerPort) && (s.getInetAddress().hashCode() == partnerAddress) ){
+//                        partnerSocket = s;
+//                    }
+//                }
+//                // if partner not connected
+//                if(partnerSocket == null){
+//                    processedInput += " " + partnerName + " not connected.";
+//                    return processedInput;
+//                }
+//// getting partner out
+//                try {
+//                    partnerOut = new PrintWriter(partnerSocket.getOutputStream(), true);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                state = AvailableStates.CONNECTED_WITH_GROUP;
 
 
 
             }else {
-                processedInput = "User name  " + input + "  doesnt exist!";
+                processedInput = "Group id  " + input + "  doesnt exist! Type in new...";
             }
 
 
 // messages outputted on partner out
-        }else if(state.equals(AvailableStates.CONNECTED_WITH_PARTNER)){
-            partnerOut.println(clientName + ": " + input);
+        }else if(state.equals(AvailableStates.CONNECTED_WITH_GROUP)){
+            for(User u: currentGroupUsers){
+                u.addToBuffer(client.getName() + ": " +input);
+                u.trySend();
+            }
+//            partnerOut.println(clientName + ": " + input);
 
         }
 //        processedInput= "odpowiedz";

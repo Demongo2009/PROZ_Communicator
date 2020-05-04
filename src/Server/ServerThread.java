@@ -46,14 +46,16 @@ public class ServerThread extends Thread{
 
             // reading, outputting loop
             while ((inputLine = in.readLine()) != null) {
-
+                if(inputLine == "" || inputLine == "\n"){
+                    continue;
+                }
                 // just printing client message on server out
                 mutex.acquire();
                 serverPrinterThread.addIncomingMessage(inputLine, clientSocket);
                 mutex.release();
 
                 outputLine = p.processInput(inputLine);
-                if(outputLine == ""){
+                if(outputLine == "" || outputLine == "\n"){
                     continue;
                 }
                 out.println(outputLine);

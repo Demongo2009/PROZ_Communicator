@@ -24,7 +24,7 @@ public class ServerThread extends Thread{
         mutex = new Semaphore(1);
     }
 
-    //TODO: ESTABILISH CONNECTION BETWEEN CLIENTS
+
 
     public void run() {
 

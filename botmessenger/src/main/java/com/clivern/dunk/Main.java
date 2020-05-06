@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 public class Main {
 
@@ -63,29 +64,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException
     {
-        String hostName = "localhost";
-        int portNumber = 4444;
-        try {
-            echoSocket = new Socket(hostName, portNumber);
-            // shutdown hook added for closing the connection if client exits
-            Runtime.getRuntime().addShutdownHook(new ClientShutdownHook(echoSocket));
-            out =
-                    new PrintWriter(echoSocket.getOutputStream(), true);
-            in =
-                    new BufferedReader(
-                            new InputStreamReader(echoSocket.getInputStream()));
 
-
-            clientPrinterThread = new ClientPrinterThread(in);
-            clientPrinterThread.start();
-
-//            send("hello");
-
-        }catch (UnknownHostException e) {
-            e.printStackTrace();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
 
 
         // Verify Token Route
@@ -107,6 +86,7 @@ public class Main {
         });
 
         post("/", (request, response) -> {
+            ArrayList<String> userArray = new ArrayList<String>();
             String body = request.body();
             BotPlatform platform = new BotPlatform("src/main/java/resources/config.properties");
             platform.getBaseReceiver().set(body).parse();
@@ -114,6 +94,43 @@ public class Main {
             for (MessageReceivedWebhook message : messages.values()) {
 
                 String user_id = (message.hasUserId()) ? message.getUserId() : "";
+                boolean isInArray= false;
+                for(String u: userArray){
+                    if(u.equals(user_id)){
+                        isInArray =true;
+                    }
+                }
+                if(!isInArray){
+                    Thread thread = new Thread(){
+                        public void run(){
+                            String hostName = "localhost";
+                            int portNumber = 4444;
+                            try {
+                                echoSocket = new Socket(hostName, portNumber);
+                                // shutdown hook added for closing the connection if client exits
+                                Runtime.getRuntime().addShutdownHook(new ClientShutdownHook(echoSocket));
+                                out =
+                                        new PrintWriter(echoSocket.getOutputStream(), true);
+                                in =
+                                        new BufferedReader(
+                                                new InputStreamReader(echoSocket.getInputStream()));
+
+
+                                clientPrinterThread = new ClientPrinterThread(in);
+                                clientPrinterThread.start();
+
+//            send("hello");
+
+                            }catch (UnknownHostException e) {
+                                e.printStackTrace();
+                            }catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                    thread.start();
+
+                }
                 String page_id = (message.hasPageId()) ? message.getPageId() : "";
                 String message_id = (message.hasMessageId()) ? message.getMessageId() : "";
                 String message_text = (message.hasMessageText()) ? message.getMessageText() : "";

@@ -2,6 +2,7 @@ package Server;
 
 import Server.Server;
 
+import javax.xml.transform.Result;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -22,6 +23,8 @@ public class Protocol {
 
     enum AvailableStates {
         INIT,
+        OUR_CLIENT_LOGIN,
+        OUR_CLIENT_SIGN_IN,
         WAITING_FOR_USERNAME,
         SEARCHING_GROUP,
         CREATING_GROUP,
@@ -42,7 +45,7 @@ public class Protocol {
 //    PrintWriter partnerOut;
 
 
-    //TODO: ADDRESS AND PORT FORWARDING TO SERVERTHREAD TO ESTABILISH CONNECTION BETWEEN CLIENTS
+
 
 // sqlite database handling
 //////////////////////////////////////////////////////////////////
@@ -94,23 +97,10 @@ public class Protocol {
         return true;
     }
 
-    private boolean addToDB(String input){
+    private boolean addToDB(String login, String password){
         PreparedStatement stmt = null;
-        String query = "INSERT INTO Users (Username, Address, Port) " +
-                "VALUES (?,?,?);";
+        String query = "SELECT Username FROM Users WHERE Username = ?;";
 
-//        String query =
-//                "insert into Users (Username, Address, Port)" +
-//                        " Select ?,?,? Where not exists(select * from Users where Username=?)";
-
-//        String query =
-//                "INSERT INTO Users (Username, Address, Port) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE    " +
-//                        "Address = ?, Port = ?";
-
-//        String query =
-//                "update Users set Username=?,Address=?,Port=? where Username=? " +
-//                        "IF @@ROWCOUNT=0 " +
-//                        "   insert into Users(Username,Address,Port) values(?,?,?);";
 
         Connection conn = null;
         try{
@@ -120,18 +110,86 @@ public class Protocol {
             System.out.println("Connection to sql db established...");
 
             stmt = conn.prepareStatement(query);
-            stmt.setString(1, input.replace("\n","") );
-//            stmt.setString(2, input.replace("\n","") );
-            stmt.setInt(2, client.getHashedAddress() );
-            stmt.setInt(3, client.getPort() );
-//            stmt.setString(4, input.replace("\n","") );
-//            stmt.setString(5, input.replace("\n","") );
+            stmt.setString(1,login.replace("\n","") );
 
-//            stmt.setString(4, input.replace("\n","") );
-//            stmt.setInt(6, clientAddress );
-//            stmt.setInt(7, clientPort );
+
+            ResultSet rs =stmt.executeQuery();
+
+            if(rs.next()){
+                return false;
+            }
+
+            PreparedStatement stmt1 = null;
+            String query1 = "INSERT INTO Users (Username, Address, Port, Password) " +
+                    "VALUES (?,?,?,?);";
+
+            stmt1 = conn.prepareStatement(query1);
+            stmt1.setString(1, login.replace("\n","") );
+
+            stmt1.setInt(2, client.getHashedAddress() );
+            stmt1.setInt(3, client.getPort() );
+            stmt1.setString(4, password.replace("\n","") );
+
 
             stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try{
+                if(conn != null){
+                    conn.close();
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            if (stmt != null){
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+        return true;
+    }
+
+
+    private boolean isLoginSuccessful(String login, String password){
+
+        Statement stmt = null;
+        String query = "select Username, Address, Port, Password from Users where Username='" +
+                ""+login.replace("\n","")+"' and Password = '"+password.replace("\n","")+"'";
+
+        Connection conn = null;
+        try{
+            String url = "jdbc:sqlite:/home/demongo/EITI/PROZ/PROZ_Communicator/src/UserNameDataBase";
+            conn = DriverManager.getConnection(url);
+
+            System.out.println("Connection to sql db established...");
+
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            if(!rs.next()){
+                return false;
+            }while(rs.next()){
+                client.setName(rs.getString("Username"));
+            }
+
+            PreparedStatement stmt1 = null;
+            String query1 = "UPDATE Users SET Address = ?, Port = ? WHERE Username= ?";
+
+            stmt1 = conn.prepareStatement(query1);
+            stmt1.setInt(1,client.getHashedAddress());
+            stmt1.setInt(2, client.getPort());
+            stmt1.setString(3, login);
+
+            stmt1.executeUpdate();
 
 
         } catch (SQLException e) {
@@ -191,20 +249,61 @@ public class Protocol {
             processedInput = "Bye.";
             return processedInput;
         }
-        if(state.equals(AvailableStates.INIT)){
+
+
+        if(input == "/" && state.equals(AvailableStates.INIT)){
+            state = AvailableStates.OUR_CLIENT_LOGIN;
+
+        }
+        if(input == "." && state.equals(AvailableStates.INIT)){
+            state = AvailableStates.OUR_CLIENT_SIGN_IN;
+
+        }
+
+        else if (state.equals(AvailableStates.OUR_CLIENT_LOGIN)){
+            String inputSplit[] = input.split(" ");
+            String login = inputSplit[0];
+            String password = inputSplit[1];
+
+            if(isLoginSuccessful(login,password)){
+                state = AvailableStates.CHOOSING_GROUP_ACTION;
+                processedInput = "Ok";
+            }else {
+                processedInput = "Incorrect";
+            }
+        }
+
+        else if(state.equals(AvailableStates.OUR_CLIENT_SIGN_IN)){
+            String inputSplit[] = input.split(" ");
+            String login = inputSplit[0];
+            String password = inputSplit[1];
+
+            if(addToDB(login,password)){
+                state = AvailableStates.CHOOSING_GROUP_ACTION;
+                processedInput = "Ok";
+            }else {
+                processedInput = "Incorrect";
+            }
+        }
+
+        else if(state.equals(AvailableStates.INIT)){
             state = AvailableStates.WAITING_FOR_USERNAME;
             processedInput = "Witam to jest Chat\n" +
                     "Najpierw podaj swoje imie...";
 
         }
 
-        // client is supposed to give its name, than its added to database
+//         client is supposed to give its name, than its added to database
         else if(state.equals(AvailableStates.WAITING_FOR_USERNAME)){
 
             client.setName(input);
             processedInput = "Twoje imie to: " + input;
 
-            if(addToDB(input)){
+            String inputSplit[] = input.split(" ");
+            String login = inputSplit[0];
+            String password = inputSplit[1];
+
+            if(addToDB(login,password)){
                 processedInput += "\nDodano imie.";
                 processedInput += "\nDolacz do istniejacej grupy: d" +
                         "\n lub zaloz nowa: n";
@@ -218,7 +317,8 @@ public class Protocol {
             // connected to server by checking all connected socket on socked array
 
 
-        }else if(state.equals(AvailableStates.CHOOSING_GROUP_ACTION)){
+        }
+        else if(state.equals(AvailableStates.CHOOSING_GROUP_ACTION)){
 
 
             switch (input){

@@ -22,12 +22,112 @@ public class ApplicationClient {
     private JTextArea conversationText;
     private JPanel conversationPanel;
     private JFrame frame;
+    private JFrame loginFrame;
 
 
     public ApplicationClient() {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                loginFrame = new JFrame("Login");
+                loginFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                loginFrame.setLayout(new GridLayout(3,1));
+
+                JLabel loginLabel = new JLabel("Please log in or sign in.");
+                JButton loginButton = new JButton("log in");
+                JButton signInButton = new JButton("sign in");
+                loginFrame.add(loginLabel);
+                loginFrame.add(loginButton);
+                loginFrame.add(signInButton);
+
+                JFrame loggingInFrame = new JFrame("Logging in");
+                loggingInFrame.setLayout(new GridLayout(4,1));
+                loggingInFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+                JLabel loggingInLabel = new JLabel("Please input login and password");
+                JTextField loginTextField = new JTextField();
+                JTextField passwordLoginTextField = new JTextField();
+                JButton saveLoginButton = new JButton("Save");
+                loggingInFrame.add(loggingInLabel);
+                loggingInFrame.add(loginTextField);
+                loggingInFrame.add(passwordLoginTextField);
+                loggingInFrame.add(saveLoginButton);
+
+
+
+                saveLoginButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent actionEvent) {
+                        String login = loginTextField.getText();
+                        String password = passwordLoginTextField.getText();
+
+
+                        Client.sendFromApp(login+" "+password);
+
+                        loggingInFrame.setVisible(false);
+
+
+                        frame.pack();
+                        frame.setVisible(true);
+                    }
+                });
+
+                loginButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent actionEvent) {
+                        Client.sendFromApp("/");
+
+                        loginFrame.setVisible(false);
+
+                        loggingInFrame.pack();
+                        loggingInFrame.setVisible(true);
+                    }
+                });
+
+                JFrame signInFrame = new JFrame();
+                signInFrame.setLayout(new GridLayout(4,1));
+                signInFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+                JLabel signInLabel = new JLabel("Please input login and password");
+                JTextField loginSignInTextField =  new JTextField();
+                JTextField passwordSignInTextField = new JTextField();
+                JButton saveSignInButton = new JButton("Save");
+                signInFrame.add(signInLabel);
+                signInFrame.add(loginSignInTextField);
+                signInFrame.add(passwordSignInTextField);
+                signInFrame.add(saveSignInButton);
+
+                //TODO: bolean for indicatoin if login was successful
+
+                saveSignInButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent actionEvent) {
+                        String login = loginTextField.getText();
+                        String password = passwordLoginTextField.getText();
+
+
+                        Client.sendFromApp(login+" "+password);
+
+                        signInFrame.setVisible(false);
+
+
+                        frame.pack();
+                        frame.setVisible(true);
+                    }
+                });
+
+                signInButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent actionEvent) {
+                        Client.sendFromApp(".");
+
+                        loginFrame.setVisible(false);
+
+                        signInFrame.pack();
+                        signInFrame.setVisible(true);
+                    }
+                });
+
                 frame = new JFrame("MultiCom");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setPreferredSize(new Dimension(500,500));
@@ -156,8 +256,8 @@ public class ApplicationClient {
 
 
 
-                frame.pack();
-                frame.setVisible(true);
+                loginFrame.pack();
+                loginFrame.setVisible(true);
 
 
 

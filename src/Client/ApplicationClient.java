@@ -14,7 +14,7 @@ import java.io.*;
 import java.util.List;
 import java.util.Timer;
 import java.util.concurrent.Semaphore;
-
+/*
 public class ApplicationClient {
 
     private JTabbedPane conversations;
@@ -168,3 +168,4 @@ public class ApplicationClient {
 
     }
 }
+*/

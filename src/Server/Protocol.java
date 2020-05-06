@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.sql.*;
 import java.util.ArrayList;
-
+/*
 public class Protocol {
 //    int clientAddress;
 //    int clientPort;
@@ -305,3 +305,4 @@ public class Protocol {
         return processedInput;
     }
 }
+*/

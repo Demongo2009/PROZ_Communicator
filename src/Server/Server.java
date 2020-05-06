@@ -10,29 +10,33 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Server {
-    static ArrayList<Socket> clientSocketArray = new ArrayList<Socket>();
-    static HashMap<Integer,ArrayList<User>> groupMap;
+    static int serverPort = 4444;
+    static ServerSocket serverSocket;
 
     public static void main(String[] args) {
-        System.out.println("Hello");
-        int portNumber = 4444;
-        groupMap= new HashMap<Integer,ArrayList<User>>();
+        initServer();
+        handleServer();
 
+    }
+    private static void initServer(){
+        try {
+            serverSocket = new ServerSocket(serverPort);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-// Main program. It should handle all connections.
+    private static void handleServer(){
+        // Main program. It should handle all connections.
+
         try{
-            ServerSocket serverSocket = new ServerSocket(portNumber);
-
             ServerPrinterThread serverPrinterThread = new ServerPrinterThread();
             serverPrinterThread.start();
-
             while(true){
                 Socket clientSocket= serverSocket.accept();
-                clientSocketArray.add(clientSocket);
                 ServerThread thread = new ServerThread(serverSocket, clientSocket, serverPrinterThread);
                 thread.start();
             }
-
         }catch (IOException e) {
             e.printStackTrace();
         }

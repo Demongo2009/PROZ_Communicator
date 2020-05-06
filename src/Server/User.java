@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.Buffer;
 import java.util.stream.Stream;
-
+/*
 public class User {
 
     public User(String name, int hashedAddress, int port) {
@@ -73,3 +73,4 @@ public class User {
 
 
 }
+*/

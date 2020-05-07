@@ -79,12 +79,12 @@ public class ServerThread extends Thread{
         System.out.println("Skończyłem wątek");
     }
 
-/* throws exception if message is not REQUEST_LOGIN nor REQUEST_REGISTER
-*
-*   if operation is succesfull then add user do connectedUsers map
-*
-*   return true if login or register is succesful
-* */
+    /* throws exception if message is not REQUEST_LOGIN nor REQUEST_REGISTER
+    *
+    *   if operation is succesfull then add user do connectedUsers map
+    *
+    *   return true if login or register is succesful
+    * */
     boolean processLoginOrRegisterRequest() throws Exception{
         boolean answer;
 
@@ -108,11 +108,11 @@ public class ServerThread extends Thread{
         return answer;
     }
 
-/*
-*   sends ServerToClientMessage with adequate MessageType and text
-*
-*    returns true if answer is positive
-* */
+    /*
+    *   sends ServerToClientMessage with adequate MessageType and text
+    *
+    *    returns true if answer is positive
+    * */
     boolean sendLoginAnswer(boolean answer){
         ServerToClientMessageType type = null;
         String text = null;
@@ -134,6 +134,9 @@ public class ServerThread extends Thread{
         return answer;
     }
 
+    /*
+    * returns message received by inObject recived
+    * */
     ClientToServerMessage receiveMessage(){
         ClientToServerMessage message= null;
 
@@ -149,13 +152,18 @@ public class ServerThread extends Thread{
         return message;
     }
 
+    /*
+    * Removes user from connectedUsers and ends thread
+    * */
     void logoutUser(String login){
         connectedUsers.remove(login);
         System.out.println("Kończę wątek");
         shouldRun = false;
     }
 
-
+    /*
+    * Behaves like multiplexer for messages
+    * */
     void processMessage( ClientToServerMessage message ){
         ClientToServerMessageType type = message.getType();
         String text = message.getText();

@@ -16,6 +16,10 @@ public class DatabaseHandler {
         }
         return rs;
     }
+
+    /*
+    * Returns true if given login exists in given ResultSet
+    * */
     boolean checkIfLoginExists(ResultSet rs, String login){
         try {
             while (rs.next()) {
@@ -28,7 +32,9 @@ public class DatabaseHandler {
         }
         return false;
     }
-
+    /*
+    * Returns true if password matches login
+    * */
     boolean checkLogin(String login, String password){
         Statement statement = null;
         Connection conn = null;
@@ -51,9 +57,9 @@ public class DatabaseHandler {
         }
         return answer;
     }
-/*
-* Return true if registration is successful
-* */
+    /*
+    * Return true if registration is successful
+    * */
     boolean registerUser(String login, String password){
         Statement statement = null;
         Connection conn = null;

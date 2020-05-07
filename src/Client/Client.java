@@ -32,20 +32,17 @@ public class Client {
        initClient();
 
        // TEST: wait until you get logged in
-       while( true ) {
+       try {
            sendLoginOrRegisterRequest("Konrad", "123", ClientToServerMessageType.REQUEST_LOGIN);
-           try {
-               if (receiveLoginAnswer()){
-                   System.out.println("Client: udało się");
-                   break;
-               }else{
-                   System.out.println("Clien: nie udało się");
-                   break;
-               }
-           } catch (Exception e) {
+           if (receiveLoginAnswer()){
+               System.out.println("Client: udało się");
+           }else{
+               System.out.println("Clien: nie udało się");
+           }
+       } catch (Exception e) {
                e.printStackTrace();
            }
-       }
+
        logout();
     }
 
@@ -76,8 +73,14 @@ public class Client {
             e.printStackTrace();
         }
     }
+    /*
+    * Sends to server LOGIN_REQUEST or REGISTER_REQUEST with login and password. Depends on given type argument
+    * */
+    static void sendLoginOrRegisterRequest(String login, String password, ClientToServerMessageType type) throws Exception{
+        if( type != ClientToServerMessageType.REQUEST_LOGIN && type != ClientToServerMessageType.REQUEST_REGISTER){
+            throw new Exception("Only REQUEST_LOGIN or REQUEST_REGISTER");
+        }
 
-    static void sendLoginOrRegisterRequest(String login, String password, ClientToServerMessageType type){
         String textToSend = login + "#" + password;
         ClientToServerMessage message = new ClientToServerMessage(type, textToSend);
 
@@ -108,6 +111,9 @@ public class Client {
 
     }
 
+    /*
+    * Sends to server LOGOUT_MESSAGE
+    * */
     static void logout(){
          ClientToServerMessage message = new ClientToServerMessage( ClientToServerMessageType.LOGOUT);
         try {

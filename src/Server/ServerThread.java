@@ -11,6 +11,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.*;
+import java.util.Map;
 import java.util.concurrent.Semaphore;
 
 public class ServerThread extends Thread{
@@ -18,16 +19,20 @@ public class ServerThread extends Thread{
     ServerSocket serverSocket;
     Socket clientSocket;
     ServerPrinterThread serverPrinterThread;
+    Map<String, Socket> connectedUsers;
+    boolean shouldRun = true;
 
     /* to send obejects */
     static ObjectOutputStream outObject;
     /* to receive objects */
     static ObjectInputStream inObject;
+    DatabaseHandler databaseHandler;
 
-    ServerThread(ServerSocket serverSocket, Socket clientSocket, ServerPrinterThread serverPrinterThread){
+    ServerThread(ServerSocket serverSocket, Socket clientSocket, ServerPrinterThread serverPrinterThread, Map<String, Socket> connectedUsers){
         this.serverSocket = serverSocket;
         this.clientSocket = clientSocket;
         this.serverPrinterThread = serverPrinterThread;
+        this.connectedUsers = connectedUsers;
         mutex = new Semaphore(1);
 
         try {
@@ -51,96 +56,71 @@ public class ServerThread extends Thread{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-        while ( true ){
-             if (sendLoginAnswer( processLoginOrRegisterRequest() ) ){
-                 System.out.println("Serwer: użytkownik zalogowany");
-                 break;
-             }else{
-                 System.out.println("Serwe: nie udało sie");
-                 break;
-             }
-        }
-    }
-
-/* throws exception if message is not REQUEST_LOGIN
-*   return true if login or register is succesful
-* */
-    boolean processLoginOrRegisterRequest(){
-        String url = "jdbc:sqlite:/home/konrad/Desktop/scratchpad/sem4/PROZ/PROZ_Communicator/src/users.db";
-        Statement statement = null;
-        Connection conn = null;
+        databaseHandler = new DatabaseHandler();
+/* LOG IN PHASE*/
         try {
-            ClientToServerMessage message = (ClientToServerMessage)inObject.readObject();
-            if( message.getType() != ClientToServerMessageType.REQUEST_LOGIN
-                && message.getType() != ClientToServerMessageType.REQUEST_REGISTER){
-                throw new Exception();
-            }
-
-            String[] loginAndPass = message.getString().split("#");
-
-            conn = DriverManager.getConnection(url);
-            String query = "SELECT * FROM users WHERE login = \"" + loginAndPass[0] + "\"";
-            statement = conn.createStatement();
-            ResultSet rs = statement.executeQuery(query);
-            statement.close();
-
-            if( message.getType() == ClientToServerMessageType.REQUEST_LOGIN){
-                return  checkLogin(rs, loginAndPass[1]);
-            }else{
-                return checkRegister(rs, loginAndPass[0], loginAndPass[1]);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
-        return false;// something went wrong
-    }
-/* returns true if password matches to login*/
-    boolean checkLogin(ResultSet rs, String password){
-        try {
-                /*is OK since there is always only one user with the same login*/
-            if( rs.next()) {
-                return password.equals(rs.getString("pass"));
+            while (true) {
+                if (sendLoginAnswer(processLoginOrRegisterRequest())) {
+                    System.out.println("Serwer: użytkownik zalogowany");
+                    /* dodac uzytkownika do tablicy uzytkownikow zalogowanych*/
+                    break;
+                } else {
+                    System.out.println("Serwe: nie udało sie");
+                    break;
+                }
             }
         }catch( Exception e){
             e.printStackTrace();
         }
-        return false;
-    }
-/*returns true if login does not occur
-* inserts new user*/
-    boolean checkRegister(ResultSet rs, String login, String password){
-        Statement statement = null;
-        Connection conn = null;
-        String url = "jdbc:sqlite:/home/konrad/Desktop/scratchpad/sem4/PROZ/PROZ_Communicator/src/users.db";
-        try{
-            while( rs.next()) {
-                if( login.equals( rs.getString("login") ) ) {
-                    return false;
-                }
-            }
-            String query = "INSERT INTO users VALUES (\"" + login + "\", \"" + password + "\")";
-
-            conn = DriverManager.getConnection(url);
-            statement = conn.createStatement();
-            statement.executeUpdate(query);
-            statement.close();
-            return true;
-        }catch(Exception e){
-            e.printStackTrace();
+/* END OF LOG IN PHASE*/
+        while(shouldRun){
+            processMessage( receiveMessage() );
         }
-        return false;
+        System.out.println("Skończyłem wątek");
     }
-/* returns true if answer is positive*/
+
+/* throws exception if message is not REQUEST_LOGIN nor REQUEST_REGISTER
+*
+*   if operation is succesfull then add user do connectedUsers map
+*
+*   return true if login or register is succesful
+* */
+    boolean processLoginOrRegisterRequest() throws Exception{
+        boolean answer;
+
+        ClientToServerMessage message = (ClientToServerMessage)inObject.readObject();
+        if( message.getType() != ClientToServerMessageType.REQUEST_LOGIN
+                && message.getType() != ClientToServerMessageType.REQUEST_REGISTER){
+            throw new Exception();
+        }
+
+        String[] loginAndPass = message.getString().split("#");
+
+        if( message.getType() == ClientToServerMessageType.REQUEST_LOGIN){
+            answer = databaseHandler.checkLogin(loginAndPass[0], loginAndPass[1]);
+        }else{
+            answer = databaseHandler.registerUser(loginAndPass[0], loginAndPass[1]);
+        }
+        if( answer ){
+            connectedUsers.put(loginAndPass[0], clientSocket);
+        }
+
+        return answer;
+    }
+
+/*
+*   sends ServerToClientMessage with adequate MessageType and text
+*
+*    returns true if answer is positive
+* */
     boolean sendLoginAnswer(boolean answer){
         ServerToClientMessageType type = null;
+        String text = null;
         if( answer ){
             type = ServerToClientMessageType.CONFIRM_LOGIN;
         }else{
             type = ServerToClientMessageType.REJECT_LOGIN;
+            text = "Invalid login";
         }
 
         ServerToClientMessage message = new ServerToClientMessage(type, "");
@@ -152,5 +132,45 @@ public class ServerThread extends Thread{
         }
 
         return answer;
+    }
+
+    ClientToServerMessage receiveMessage(){
+        ClientToServerMessage message= null;
+
+        try {
+            message = (ClientToServerMessage) inObject.readObject();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return message;
+    }
+
+    void logoutUser(String login){
+        connectedUsers.remove(login);
+        System.out.println("Kończę wątek");
+        shouldRun = false;
+    }
+
+
+    void processMessage( ClientToServerMessage message ){
+        ClientToServerMessageType type = message.getType();
+        String text = message.getText();
+
+        try {
+            switch (type) {
+                case LOGOUT:
+                    logoutUser(text);
+                    break;
+                default:
+                    throw new Exception();
+            }
+        }catch (Exception e){
+            System.out.println("ZŁA WIADOMOŚĆ");
+
+        }
     }
 }

@@ -8,10 +8,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Server {
     static int serverPort = 4444;
     static ServerSocket serverSocket;
+    static Map connectedUsers;
 
     public static void main(String[] args) {
         initServer();
@@ -24,6 +26,7 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        connectedUsers = new HashMap();
     }
 
     private static void handleServer(){
@@ -34,7 +37,7 @@ public class Server {
             serverPrinterThread.start();
             while(true){
                 Socket clientSocket= serverSocket.accept();
-                ServerThread thread = new ServerThread(serverSocket, clientSocket, serverPrinterThread);
+                ServerThread thread = new ServerThread(serverSocket, clientSocket, serverPrinterThread, connectedUsers);
                 thread.start();
             }
         }catch (IOException e) {

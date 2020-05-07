@@ -33,7 +33,7 @@ public class Client {
 
        // TEST: wait until you get logged in
        while( true ) {
-           sendLoginOrRegisterRequest("Konrad", "2", ClientToServerMessageType.REQUEST_LOGIN);
+           sendLoginOrRegisterRequest("Konrad", "123", ClientToServerMessageType.REQUEST_LOGIN);
            try {
                if (receiveLoginAnswer()){
                    System.out.println("Client: udało się");
@@ -46,6 +46,7 @@ public class Client {
                e.printStackTrace();
            }
        }
+       logout();
     }
 
     private static void initClient(){
@@ -68,6 +69,7 @@ public class Client {
             inObject = new ObjectInputStream( echoSocket.getInputStream() );
 
 
+
         }catch (UnknownHostException e) {
             e.printStackTrace();
         }catch (IOException e) {
@@ -75,7 +77,7 @@ public class Client {
         }
     }
 
-     static void sendLoginOrRegisterRequest(String login, String password, ClientToServerMessageType type){
+    static void sendLoginOrRegisterRequest(String login, String password, ClientToServerMessageType type){
         String textToSend = login + "#" + password;
         ClientToServerMessage message = new ClientToServerMessage(type, textToSend);
 
@@ -84,10 +86,10 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
-     }
+    }
 
-    /* Throws exception if message given is not CONFIRM nor REJECT*/
-     static boolean receiveLoginAnswer() throws Exception{
+    /* Throws exception if received message is not CONFIRM nor REJECT*/
+    static boolean receiveLoginAnswer() throws Exception{
         ServerToClientMessage message = null;
         try {
             message = (ServerToClientMessage)inObject.readObject();
@@ -104,6 +106,15 @@ public class Client {
             throw new Exception();
         }
 
+    }
+
+    static void logout(){
+         ClientToServerMessage message = new ClientToServerMessage( ClientToServerMessageType.LOGOUT);
+        try {
+            outObject.writeObject( message );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

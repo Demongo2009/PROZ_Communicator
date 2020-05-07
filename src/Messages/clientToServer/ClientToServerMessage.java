@@ -9,6 +9,11 @@ public class ClientToServerMessage extends Message {
         this.type = type;
         this.text = text;
     }
+    public ClientToServerMessage( ClientToServerMessageType type){
+        this.type = type;
+        this.text = "";
+    }
 
     public ClientToServerMessageType getType(){ return type; }
+    public String getText() { return text; }
 }

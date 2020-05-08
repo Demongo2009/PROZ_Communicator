@@ -1,6 +1,7 @@
 package Messages.serverToClient;
 
 import Messages.Message;
+import Server.CommunicatorType;
 
 public class ServerToClientMessage extends Message {
     ServerToClientMessageType type;

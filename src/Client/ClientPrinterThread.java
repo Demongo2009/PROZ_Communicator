@@ -5,14 +5,12 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-/*
+
 public class ClientPrinterThread extends Thread {
     BufferedReader in;
-    ApplicationClient app;
 
-    ClientPrinterThread(BufferedReader in, ApplicationClient app){
+    ClientPrinterThread(BufferedReader in){
         this.in=in;
-        this.app = app;
     }
 
     public void run(){
@@ -23,9 +21,6 @@ public class ClientPrinterThread extends Thread {
                     continue;
                 }
                 System.out.println("Server.Server: "+ inputFromServer);
-                app.updateConversationText(inputFromServer);
-
-
             }
 
         }catch (IOException e){
@@ -33,4 +28,3 @@ public class ClientPrinterThread extends Thread {
         }
     }
 }
-*/

@@ -3,7 +3,28 @@ package Server;
 import java.sql.*;
 
 public class DatabaseHandler {
-    private String url = "jdbc:sqlite:/home/konrad/Desktop/scratchpad/sem4/PROZ/PROZ_Communicator/src/users.db";
+    private String url = "jdbc:sqlite:/home/konrad/Desktop/scratchpad/sem4/PROZ/PROZ_Communicator/src/MultiCom.db";
+/*
+users(
+login VARCHAR(20) NOT NULL,
+password VARCHAR(20) NOT NULL
+);
+
+friends(
+user1 VARCHAR(20) NOT NULL,
+user2 VARCHAR(20) NOT NULL
+);
+
+
+groups(
+group_name VARCHAR(20) NOT NULL,
+user1 VARCHAR(20) NOT NULL,
+user2 VARCHAR(20),
+user3 VARCHAR(20),
+user4 VARCHAR(20)
+)
+
+ */
 //TODO: make in resistent to sql injection
     ResultSet getLoginResultSet(Connection conn, Statement statement, String login){
         ResultSet rs = null;
@@ -46,7 +67,7 @@ public class DatabaseHandler {
             rs = getLoginResultSet(conn, statement, login);
 
             if( rs.next() ){/*ok since there is one or zero records*/
-                answer = rs.getString("pass").equals(password);
+                answer = rs.getString("password").equals(password);
             }
 
 

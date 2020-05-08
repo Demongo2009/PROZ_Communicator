@@ -13,7 +13,7 @@ import java.util.Map;
 public class Server {
     static int serverPort = 4444;
     static ServerSocket serverSocket;
-    static Map connectedUsers;
+    static ArrayList<User> connectedUsers;
 
     public static void main(String[] args) {
         initServer();
@@ -26,7 +26,7 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        connectedUsers = new HashMap();
+        connectedUsers = new ArrayList<User>();
     }
 
     private static void handleServer(){

@@ -1,5 +1,8 @@
 package Server;
 
+
+
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -7,6 +10,26 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.Buffer;
 import java.util.stream.Stream;
+
+public class User{
+    private String login;
+    private Socket userSocket;
+    private CommunicatorType communicatorType;
+
+
+    public User(String login, Socket socket, CommunicatorType communicatorType){
+        this.login = login;
+        this.userSocket = socket;
+        this.communicatorType = communicatorType;
+    }
+
+    String getLogin(){ return login; }
+    Socket getSocket(){ return userSocket; }
+    CommunicatorType getCommunicatorType(){ return communicatorType; }
+}
+
+
+
 /*
 public class User {
 

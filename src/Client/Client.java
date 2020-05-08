@@ -4,11 +4,14 @@ import Messages.clientToServer.ClientToServerMessage;
 import Messages.clientToServer.ClientToServerMessageType;
 import Messages.serverToClient.ServerToClientMessage;
 import Messages.serverToClient.ServerToClientMessageType;
+import Server.CommunicatorType;
 
 import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Client {
 
@@ -20,30 +23,42 @@ public class Client {
     static BufferedReader in;
     static BufferedReader stdIn;
 
-    /* to send obejects */
+    /* to send and receive objects */
     static ObjectOutputStream outObject;
-    /* to receive objects */
     static ObjectInputStream inObject;
 
-    static String username;
-
+    static String username = null;
+    //static ArrayList<String> friends;
 
     public static void main(String[] args) {
        initClient();
 
        // TEST: wait until you get logged in
+        String login = "Konrad2";
+        String password = "123";
        try {
-           sendLoginOrRegisterRequest("Konrad", "123", ClientToServerMessageType.REQUEST_LOGIN);
+           sendLoginOrRegisterRequest(login, password, ClientToServerMessageType.REQUEST_LOGIN);
            if (receiveLoginAnswer()){
-               System.out.println("Client: udało się");
+               System.out.println("Client: udało się zalogować");
+               username = login;
            }else{
-               System.out.println("Clien: nie udało się");
+               System.out.println("Client: NIE udało się zalogować");
            }
        } catch (Exception e) {
-               e.printStackTrace();
-           }
+           e.printStackTrace();
+       }
+/*=====================================*/
+        Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+        System.out.println("Enter logout ");
 
-       logout();
+        while( true ){
+            if( myObj.nextLine().equals("logout")){
+                logout();
+                break;
+            }
+        }
+/*=====================================*/
+       //logout();
     }
 
     private static void initClient(){
@@ -61,9 +76,12 @@ public class Client {
                     new BufferedReader(
                             new InputStreamReader(System.in));
 
+            ClientPrinterThread printerThread = new ClientPrinterThread(in);
+
 
             outObject = new ObjectOutputStream( echoSocket.getOutputStream()) ;
             inObject = new ObjectInputStream( echoSocket.getInputStream() );
+
 
 
 
@@ -75,6 +93,7 @@ public class Client {
     }
     /*
     * Sends to server LOGIN_REQUEST or REGISTER_REQUEST with login and password. Depends on given type argument
+    * Throws Exception if type is none of above
     * */
     static void sendLoginOrRegisterRequest(String login, String password, ClientToServerMessageType type) throws Exception{
         if( type != ClientToServerMessageType.REQUEST_LOGIN && type != ClientToServerMessageType.REQUEST_REGISTER){
@@ -82,7 +101,7 @@ public class Client {
         }
 
         String textToSend = login + "#" + password;
-        ClientToServerMessage message = new ClientToServerMessage(type, textToSend);
+        ClientToServerMessage message = new ClientToServerMessage(type, textToSend, CommunicatorType.MULTI_COM );
 
         try {
             outObject.writeObject( message );
@@ -91,7 +110,9 @@ public class Client {
         }
     }
 
-    /* Throws exception if received message is not CONFIRM nor REJECT*/
+    /*
+    * Throws exception if received message is not CONFIRM nor REJECT
+    * */
     static boolean receiveLoginAnswer() throws Exception{
         ServerToClientMessage message = null;
         try {
@@ -112,16 +133,29 @@ public class Client {
     }
 
     /*
-    * Sends to server LOGOUT_MESSAGE
+    * Sends LOGOUT_MESSAGE
     * */
     static void logout(){
          ClientToServerMessage message = new ClientToServerMessage( ClientToServerMessageType.LOGOUT);
+         System.out.println("Wylogowywanie...");
+         username = null;
         try {
             outObject.writeObject( message );
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+//TODO:
+    static void sendTextMessageToUser(String user, String text){
+
+    }
+
+    static void sendTextMessageToGroup(String groupName,String text){
+
+    }
+
+
 
 }
 

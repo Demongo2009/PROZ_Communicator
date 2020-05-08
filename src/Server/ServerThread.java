@@ -10,8 +10,7 @@ import Server.ServerPrinterThread;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.*;
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 public class ServerThread extends Thread{
@@ -19,16 +18,18 @@ public class ServerThread extends Thread{
     ServerSocket serverSocket;
     Socket clientSocket;
     ServerPrinterThread serverPrinterThread;
-    Map<String, Socket> connectedUsers;
+    ArrayList<User> connectedUsers;
+    User userToHandle;
     boolean shouldRun = true;
 
-    /* to send obejects */
-    static ObjectOutputStream outObject;
-    /* to receive objects */
-    static ObjectInputStream inObject;
-    DatabaseHandler databaseHandler;
+    /* to send objects and receive */
+    ObjectOutputStream outObject;
+    ObjectInputStream inObject;
 
-    ServerThread(ServerSocket serverSocket, Socket clientSocket, ServerPrinterThread serverPrinterThread, Map<String, Socket> connectedUsers){
+    static DatabaseHandler databaseHandler;
+
+
+    ServerThread(ServerSocket serverSocket, Socket clientSocket, ServerPrinterThread serverPrinterThread, ArrayList<User> connectedUsers){
         this.serverSocket = serverSocket;
         this.clientSocket = clientSocket;
         this.serverPrinterThread = serverPrinterThread;
@@ -61,11 +62,10 @@ public class ServerThread extends Thread{
         try {
             while (true) {
                 if (sendLoginAnswer(processLoginOrRegisterRequest())) {
-                    System.out.println("Serwer: użytkownik zalogowany");
-                    /* dodac uzytkownika do tablicy uzytkownikow zalogowanych*/
+                    //System.out.println("Serwer: użytkownik zalogowany");
                     break;
                 } else {
-                    System.out.println("Serwe: nie udało sie");
+                    //System.out.println("Serwer: nie udało sie");
                     break;
                 }
             }
@@ -74,35 +74,56 @@ public class ServerThread extends Thread{
         }
 /* END OF LOG IN PHASE*/
         while(shouldRun){
-            processMessage( receiveMessage() );
+            try {
+                mutex.acquire();//========================
+                processMessage( receiveMessage() );
+                mutex.release();//========================
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        System.out.println("Skończyłem wątek");
+
+
+        System.out.println("End of thread");
     }
 
     /* throws exception if message is not REQUEST_LOGIN nor REQUEST_REGISTER
     *
-    *   if operation is succesfull then add user do connectedUsers map
+    *   if operation is successful then add user do connectedUsers map
     *
-    *   return true if login or register is succesful
+    *   return true if login or register is successful
     * */
     boolean processLoginOrRegisterRequest() throws Exception{
-        boolean answer;
+        boolean answer=false;
 
         ClientToServerMessage message = (ClientToServerMessage)inObject.readObject();
-        if( message.getType() != ClientToServerMessageType.REQUEST_LOGIN
-                && message.getType() != ClientToServerMessageType.REQUEST_REGISTER){
+        if( message.getType() != ClientToServerMessageType.REQUEST_LOGIN && message.getType() != ClientToServerMessageType.REQUEST_REGISTER){
             throw new Exception();
         }
 
         String[] loginAndPass = message.getString().split("#");
+        //=========================================================================
+        CommunicatorType communicatorType = message.getCommunicatorType();
 
         if( message.getType() == ClientToServerMessageType.REQUEST_LOGIN){
+            for(User us: connectedUsers){
+                if( us.getLogin().equals(loginAndPass[0]) ){ //user is already logged in
+                    return answer;
+                }
+            }
             answer = databaseHandler.checkLogin(loginAndPass[0], loginAndPass[1]);
-        }else{
+        }else{ //cannot be other that REQUEST_REGISTER since it was already checked
             answer = databaseHandler.registerUser(loginAndPass[0], loginAndPass[1]);
         }
         if( answer ){
-            connectedUsers.put(loginAndPass[0], clientSocket);
+            //==========================================================
+            User user = new User(loginAndPass[0], clientSocket, communicatorType);
+            connectedUsers.add(user);
+            userToHandle = user;
+
+            /*for(User us: connectedUsers){
+                System.out.println( us.getLogin());
+            }*/
         }
 
         return answer;
@@ -135,7 +156,7 @@ public class ServerThread extends Thread{
     }
 
     /*
-    * returns message received by inObject recived
+    * returns message received by inObject received
     * */
     ClientToServerMessage receiveMessage(){
         ClientToServerMessage message= null;
@@ -155,23 +176,31 @@ public class ServerThread extends Thread{
     /*
     * Removes user from connectedUsers and ends thread
     * */
-    void logoutUser(String login){
-        connectedUsers.remove(login);
-        System.out.println("Kończę wątek");
+    void logoutUser(){
+        connectedUsers.remove(userToHandle);
+        userToHandle=null;
         shouldRun = false;
+        /*for(User us: connectedUsers){
+            System.out.println( us.getLogin());
+        }*/
     }
+
+
 
     /*
     * Behaves like multiplexer for messages
     * */
     void processMessage( ClientToServerMessage message ){
+        if( message == null){
+            return;
+        }
         ClientToServerMessageType type = message.getType();
         String text = message.getText();
 
         try {
             switch (type) {
                 case LOGOUT:
-                    logoutUser(text);
+                    logoutUser();
                     break;
                 default:
                     throw new Exception();
@@ -181,4 +210,5 @@ public class ServerThread extends Thread{
 
         }
     }
+
 }

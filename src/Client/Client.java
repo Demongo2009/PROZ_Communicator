@@ -184,6 +184,7 @@ public class Client {
 
     /*
     * Sends LOGOUT_MESSAGE
+    * stops listener thread
     * */
     static void logout(){
         ClientToServerMessage message = new ClientToServerMessage( ClientToServerMessageType.LOGOUT);
@@ -196,10 +197,7 @@ public class Client {
             e.printStackTrace();
         }
     }
-    //TODO: add exit function similar to logout
-    static void exit(){
 
-    }
 
 //TODO:
     static private  void sendMessage(ClientToServerMessage message){
@@ -231,6 +229,10 @@ public class Client {
 
     }
     static void sendTextMessageToGroup(String groupName,String text){
+
+    }
+    //TODO: add exit function similar to logout
+    static void exit(){
 
     }
 

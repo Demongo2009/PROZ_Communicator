@@ -16,14 +16,11 @@ import java.util.ArrayList;
 * class to receive ServerToClientMessage
 * */
 public class ClientPrinterThread extends Thread {
-    //BufferedReader in;
     ObjectInputStream inObject;
     boolean shouldRun;
-    //ArrayList<String> friends;
 
-    ClientPrinterThread(ObjectInputStream in/*, ArrayList<String> friends*/){
+    ClientPrinterThread(ObjectInputStream in){
         this.inObject = in;
-        //this.friends = friends;
         shouldRun = true;
     }
 

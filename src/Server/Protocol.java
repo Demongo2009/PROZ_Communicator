@@ -259,6 +259,15 @@ public class Protocol {
             state = AvailableStates.OUR_CLIENT_SIGN_IN;
 
         }
+//        else if(state.equals(AvailableStates.INIT)){
+//            state = AvailableStates.CHOOSING_GROUP_ACTION;
+//        }
+        else if(state.equals(AvailableStates.INIT)){
+            state = AvailableStates.WAITING_FOR_USERNAME;
+            processedInput = "Witam to jest Chat\n" +
+                    "Najpierw podaj swoje imie a po SPACE haslo";
+
+        }
 
         else if (state.equals(AvailableStates.OUR_CLIENT_LOGIN)){
             String inputSplit[] = input.split(" ");
@@ -286,12 +295,7 @@ public class Protocol {
             }
         }
 
-        else if(state.equals(AvailableStates.INIT)){
-            state = AvailableStates.WAITING_FOR_USERNAME;
-            processedInput = "Witam to jest Chat\n" +
-                    "Najpierw podaj swoje imie...";
 
-        }
 
 //         client is supposed to give its name, than its added to database
         else if(state.equals(AvailableStates.WAITING_FOR_USERNAME)){

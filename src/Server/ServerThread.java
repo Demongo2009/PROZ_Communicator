@@ -1,5 +1,6 @@
 package Server;
 
+import Messages.Message;
 import Messages.clientToServer.ClientToServerMessage;
 import Messages.clientToServer.ClientToServerMessageType;
 //import Server.Protocol;
@@ -17,7 +18,7 @@ public class ServerThread extends Thread{
     static Semaphore mutex;
     ServerSocket serverSocket;
     Socket clientSocket;
-    ServerPrinterThread serverPrinterThread;
+
     ArrayList<User> connectedUsers;
     User userToHandle;
     boolean shouldRun = true;
@@ -29,16 +30,15 @@ public class ServerThread extends Thread{
     static DatabaseHandler databaseHandler;
 
 
-    ServerThread(ServerSocket serverSocket, Socket clientSocket, ServerPrinterThread serverPrinterThread, ArrayList<User> connectedUsers){
+    ServerThread(ServerSocket serverSocket, Socket clientSocket, ArrayList<User> connectedUsers){
         this.serverSocket = serverSocket;
         this.clientSocket = clientSocket;
-        this.serverPrinterThread = serverPrinterThread;
         this.connectedUsers = connectedUsers;
         mutex = new Semaphore(1);
 
         try {
             outObject = new ObjectOutputStream( clientSocket.getOutputStream() );
-            inObject = new ObjectInputStream(( clientSocket.getInputStream()) );
+            inObject = new ObjectInputStream( clientSocket.getInputStream() );
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,17 +46,6 @@ public class ServerThread extends Thread{
     }
 
     public void run() {
-
-        PrintWriter out = null;
-        try {
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(clientSocket.getInputStream()));
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         databaseHandler = new DatabaseHandler();
 /* LOG IN PHASE*/
         try {
@@ -82,14 +71,12 @@ public class ServerThread extends Thread{
                 e.printStackTrace();
             }
         }
-
-
         System.out.println("End of thread");
     }
 
-    /* throws exception if message is not REQUEST_LOGIN nor REQUEST_REGISTER
+    /*  throws exception if message is not REQUEST_LOGIN nor REQUEST_REGISTER
     *
-    *   if operation is successful then add user do connectedUsers map
+    *   if operation is successful then add user to connectedUsers map
     *
     *   return true if login or register is successful
     * */
@@ -117,7 +104,7 @@ public class ServerThread extends Thread{
         }
         if( answer ){
             //==========================================================
-            User user = new User(loginAndPass[0], clientSocket, communicatorType);
+            User user = new User(loginAndPass[0], clientSocket, communicatorType, outObject);
             connectedUsers.add(user);
             userToHandle = user;
 
@@ -154,7 +141,36 @@ public class ServerThread extends Thread{
 
         return answer;
     }
+/*============================================================*/
+    User getUserFromConnectedUsers(String login){
+        for(User user: connectedUsers){
+            if( user.getLogin().equals(login)){
+                return user;
+            }
+        }
+        return null;//no user found
+    }
 
+
+    /* don't know that this function if for for now*/
+    ServerToClientMessage prepareMessage(ServerToClientMessageType type, String text){
+        ServerToClientMessage message = new ServerToClientMessage( type, text);
+        return message;
+    }
+
+    /* returns true if message is being sent*/
+    boolean sendMessage(ServerToClientMessage message, User userToSend){
+
+        try {
+            ObjectOutputStream tmpOut = userToSend.getObjectOutputStream();
+            tmpOut.writeObject(message);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+/*====================================================================*/
     /*
     * returns message received by inObject received
     * */
@@ -164,9 +180,8 @@ public class ServerThread extends Thread{
         try {
             message = (ClientToServerMessage) inObject.readObject();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
+            shouldRun = false; /* DON'T KNOW YET*/
             e.printStackTrace();
         }
 
@@ -180,15 +195,51 @@ public class ServerThread extends Thread{
         connectedUsers.remove(userToHandle);
         userToHandle=null;
         shouldRun = false;
-        /*for(User us: connectedUsers){
-            System.out.println( us.getLogin());
-        }*/
     }
 
+    void processTextMessage(String textMessage){
+        String userAndText[] = textMessage.split("#");
+        System.out.println("User: " + userAndText[0]);
+        System.out.println("Text: " + userAndText[1]);
 
+
+        /*TODO: check if user is connected, if not then say it to sender
+            if yes then send it to this user with a special Message
+           */
+    }
+
+    void processAddUserToFriends(String loginToAdd){
+        //System.out.println(userToAdd);
+        /*TODO: check if user is connected, if not || do nothing OR communicate it
+         *  if yes then send request to this user*/
+
+        User user = getUserFromConnectedUsers(loginToAdd);
+        if( user == null ){
+            /* Do nothing or communicate it to sender, don't know yet*/
+            System.out.println("No user found");
+        }
+        String text = userToHandle.getLogin();
+        ServerToClientMessage message = new ServerToClientMessage( ServerToClientMessageType.USER_WANTS_TO_BE_YOUR_FRIEND, text);
+        sendMessage(message, user);
+
+    }
+
+    void processConfirmationOfFriendship(String newFriend){
+        /*TODO:
+            databaseHandler.insertFriends(userToHandle.getLogin(), newFriend);
+            ServerToClientMessage message = new ServerToClientMessage( ServerToClientMessageType.CONFIRMATION_OF_FRIENDSHIP, userToHandle.getLogin() );
+            User user = getUserFromConnectedUsers( newFriend );
+            if( user == null ){
+                //do nothing since the friendship is already booked in database
+                return;
+            }
+            sendMessage( newMessage, user );
+
+         */
+    }
 
     /*
-    * Behaves like multiplexer for messages
+    * Behaves like multiplexer for messages types
     * */
     void processMessage( ClientToServerMessage message ){
         if( message == null){
@@ -202,11 +253,17 @@ public class ServerThread extends Thread{
                 case LOGOUT:
                     logoutUser();
                     break;
+                case ADD_USER_TO_FRIENDS:
+                    processAddUserToFriends(text);
+                    break;
+                case TEXT:
+                    processTextMessage(text);
+                    break;
                 default:
-                    throw new Exception();
+                    throw new Exception("Invalid message from client received");
             }
         }catch (Exception e){
-            System.out.println("ZŁA WIADOMOŚĆ");
+            e.printStackTrace();
 
         }
     }

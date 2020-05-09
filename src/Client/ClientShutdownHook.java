@@ -9,7 +9,9 @@ public class ClientShutdownHook extends Thread {
     ClientShutdownHook(Socket clientSocket){
         this.clientSocket = clientSocket;
     }
-
+/*
+* should send communicate to server to close thread
+* */
     @Override
     public void run() {
         try {

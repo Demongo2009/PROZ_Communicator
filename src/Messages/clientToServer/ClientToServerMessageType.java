@@ -5,7 +5,9 @@ public enum ClientToServerMessageType {
     REQUEST_REGISTER,
     LOGOUT,
     /**/
-    ADD_USER,
+    TEXT,
+    ADD_USER_TO_FRIENDS,
+    CONFIRMATION_OF_FRIENDSHIP,
     CREATE_GROUP,
     ADD_USER_TO_GROUP,
 

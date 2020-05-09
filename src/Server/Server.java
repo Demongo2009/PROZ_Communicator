@@ -31,13 +31,10 @@ public class Server {
 
     private static void handleServer(){
         // Main program. It should handle all connections.
-
         try{
-            ServerPrinterThread serverPrinterThread = new ServerPrinterThread();
-            serverPrinterThread.start();
             while(true){
                 Socket clientSocket= serverSocket.accept();
-                ServerThread thread = new ServerThread(serverSocket, clientSocket, serverPrinterThread, connectedUsers);
+                ServerThread thread = new ServerThread(serverSocket, clientSocket, connectedUsers);
                 thread.start();
             }
         }catch (IOException e) {

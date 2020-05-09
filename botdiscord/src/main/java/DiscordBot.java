@@ -25,13 +25,12 @@ public class DiscordBot {
 
     public static void main(String[] args) {
         // Insert your bot's token here
-        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.XrPG8w.tft_u3kOVPIJ4qvFrHZdr2oiluo";
+        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.XrZ4CQ.W_MyhESJwx2ydn4qUz4EeJbvQ0c";
 
         DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
 
 
 
-        Runtime.getRuntime().addShutdownHook(new ClientShutdownHook(echoSocket));
 
         Thread thread = new Thread(){
             public void run(){
@@ -39,6 +38,8 @@ public class DiscordBot {
                 int portNumber = 4444;
                 try {
                     echoSocket = new Socket(hostName, portNumber);
+                    Runtime.getRuntime().addShutdownHook(new ClientShutdownHook(echoSocket));
+
                     // shutdown hook added for closing the connection if client exits
                     out =
                             new PrintWriter(echoSocket.getOutputStream(), true);

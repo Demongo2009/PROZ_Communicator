@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_5">
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -11,6 +11,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="slf4j-jdk14-1.7.9" level="project" />
     <orderEntry type="library" name="Maven: org.telegram:telegrambots:4.8.1" level="project" />
     <orderEntry type="library" name="Maven: org.telegram:telegrambots-meta:4.8.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.inject:guice:4.2.2" level="project" />

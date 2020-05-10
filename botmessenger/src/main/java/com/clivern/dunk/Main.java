@@ -7,40 +7,32 @@ import com.clivern.racter.receivers.webhook.*;
 import com.clivern.racter.senders.*;
 import com.clivern.racter.senders.templates.*;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class Main {
 
+    static ObjectOutputStream outObject;
+
     static void send(String args){
 
 
 
-//            BufferedReader in =
-//                    new BufferedReader(
-//                            new InputStreamReader(echoSocket.getInputStream()));
-//            BufferedReader stdIn =
-//                    new BufferedReader(
-//                            new InputStreamReader(System.in));
-
-            // thread for printing client messages
-//            ClientPrinterThread clientPrinterThread = new ClientPrinterThread(in);
-//            clientPrinterThread.start();
 
 
 
             // sending message to server
             if (args != null) {
-                out.println(args);
-//                System.out.println("echo: " + in.readLine());
+                try {
+                    outObject.writeObject( new Messages.clientToServer.ClientToServerMessage() );
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
 

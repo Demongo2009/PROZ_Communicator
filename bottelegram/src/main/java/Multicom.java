@@ -1,3 +1,7 @@
+import Messages.clientToServer.ClientToServerMessage;
+import Messages.clientToServer.ClientToServerMessageType;
+import Messages.serverToClient.ServerToClientMessage;
+import Server.CommunicatorType;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -6,10 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -18,10 +19,14 @@ import java.util.concurrent.Semaphore;
 public class Multicom extends TelegramLongPollingBot {
     private PrintWriter out;
     private BufferedReader in;
+    private ObjectOutputStream outObject;
+    private ObjectInputStream inObject;
 
-    public Multicom( PrintWriter out, BufferedReader in){
+    public Multicom(PrintWriter out, BufferedReader in, ObjectOutputStream outObject, ObjectInputStream inObject){
         this.out = out;
         this.in = in;
+        this.outObject = outObject;
+        this.inObject = inObject;
     }
 
 //    public BotApiMethod onWebhookUpdateReceived(Update update) {
@@ -32,7 +37,30 @@ public class Multicom extends TelegramLongPollingBot {
 //            return sendMessage;
 //        }
 //        return null;
+
 //    }
+    private ServerToClientMessage receiveMessage(){
+        ServerToClientMessage message = null;
+
+        try {
+            message = (ServerToClientMessage)inObject.readObject();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return message;
+    }
+
+    private void sendMessage(ClientToServerMessage message){
+        try {
+            outObject.writeObject( message );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -47,11 +75,11 @@ public class Multicom extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
-
     enum AvailableStates{
         INIT,
         CONNECTED,
-    }
+        }
+
     private AvailableStates state = AvailableStates.INIT;
 
     private void handleIncomingMessage(Message message) throws TelegramApiException {
@@ -71,7 +99,7 @@ public class Multicom extends TelegramLongPollingBot {
 
             System.out.println(text);
 
-            out.println("init");
+            sendMessage(new ClientToServerMessage(ClientToServerMessageType.REQUEST_LOGIN,"login#password", CommunicatorType.TELEGRAM));
 
             Thread thread = new Thread(){
                 @Override
@@ -79,8 +107,10 @@ public class Multicom extends TelegramLongPollingBot {
 
                     try {
                         String inputFromServer;
-                        while ((inputFromServer = in.readLine()) != null) {
-                            if (inputFromServer == "" || inputFromServer == "\n") {
+                        ServerToClientMessage messageFromServer = null;
+                        while ((messageFromServer = receiveMessage()) != null) {
+                            inputFromServer = messageFromServer.getText();
+                            if (inputFromServer.equals("") || inputFromServer.equals("\n")) {
                                 continue;
                             }
                             echoMessage.setText(inputFromServer);
@@ -88,8 +118,6 @@ public class Multicom extends TelegramLongPollingBot {
 
                         }
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     } catch (TelegramApiException e) {
                         e.printStackTrace();
                     }
@@ -97,7 +125,7 @@ public class Multicom extends TelegramLongPollingBot {
             };
             thread.start();
         }else if(state.equals(AvailableStates.CONNECTED)){
-            out.println(text);
+            sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT,"telegram#"+text,CommunicatorType.TELEGRAM));
         }
     }
 

@@ -1,10 +1,11 @@
+import Messages.clientToServer.ClientToServerMessage;
+import Messages.clientToServer.ClientToServerMessageType;
+import Messages.serverToClient.ServerToClientMessage;
+import Server.CommunicatorType;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -15,6 +16,8 @@ public class DiscordBot {
     static PrintWriter out;
     static BufferedReader in;
     static ClientPrinterThread clientPrinterThread;
+    static ObjectOutputStream outObject;
+    static ObjectInputStream inObject;
 
     enum AvailableStates{
         INIT,
@@ -23,9 +26,19 @@ public class DiscordBot {
 
     static AvailableStates currentState = AvailableStates.INIT;
 
+
+
+    static private void sendMessage(ClientToServerMessage message){
+        try {
+            outObject.writeObject( message );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         // Insert your bot's token here
-        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.XrZ4CQ.W_MyhESJwx2ydn4qUz4EeJbvQ0c";
+        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.Xrflkg.WNNnZMiPU4D4zra6ZIY-S0egarI";
 
         DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
 
@@ -48,10 +61,12 @@ public class DiscordBot {
                                     new InputStreamReader(echoSocket.getInputStream()));
 
 
-                    clientPrinterThread = new ClientPrinterThread(in);
-                    clientPrinterThread.start();
 
-//            send("hello");
+                    outObject = new ObjectOutputStream( echoSocket.getOutputStream()) ;
+                    inObject = new ObjectInputStream( echoSocket.getInputStream() );
+
+                    clientPrinterThread = new ClientPrinterThread(in,inObject);
+                    clientPrinterThread.start();
 
                 }catch (UnknownHostException e) {
                     e.printStackTrace();
@@ -62,30 +77,24 @@ public class DiscordBot {
         };
         thread.start();
 
-        // Add a listener which answers with "Pong!" if someone writes "!ping"
-//        api.addMessageCreateListener(event -> {
-//            if (event.getMessageContent().equalsIgnoreCase("!ping")) {
-//                event.getChannel().sendMessage("Pong!");
-//            }
-//        });
-//
-//        api.addMessageCreateListener(event -> {
-//            if (event.getMessageContent().equalsIgnoreCase("!elka")) {
-//                event.getChannel().sendMessage(" * * * * * elke!");
-//            }
-//        });
+
 
 
         api.addMessageCreateListener(event -> {
             if (currentState.equals(AvailableStates.INIT) && event.getMessageContent().equalsIgnoreCase("!chat")) {
                 event.getChannel().sendMessage("Rozpoczeto czat!");
-                out.println("initiate");
+
+                sendMessage(new ClientToServerMessage(ClientToServerMessageType.REQUEST_LOGIN,"login#password", CommunicatorType.DISCORD));
+
                 clientPrinterThread.sendEventChannel(event.getChannel());
                 clientPrinterThread.releaseMutex();
+
                 currentState = AvailableStates.CONNECTED_TO_CHAT;
             }else if(currentState.equals(AvailableStates.CONNECTED_TO_CHAT) && !event.getMessageAuthor().isBotUser()){
-                out.println(event.getMessageContent().toString());
+
+                sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT,"discord#"+event.getMessageContent().toString(),CommunicatorType.DISCORD));
                 clientPrinterThread.sendEventChannel(event.getChannel());
+
             }else{
                 if (event.getMessageContent().equalsIgnoreCase("!ping")) {
                     event.getChannel().sendMessage("Pong!");

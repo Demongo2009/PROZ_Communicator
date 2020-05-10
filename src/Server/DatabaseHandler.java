@@ -3,7 +3,7 @@ package Server;
 import java.sql.*;
 
 public class DatabaseHandler {
-    private String url = "jdbc:sqlite:/home/konrad/Desktop/scratchpad/sem4/PROZ/PROZ_Communicator/src/MultiCom.db";
+    private String url = "jdbc:sqlite:/home/demongo/EITI/PROZ/PROZ_Communicator/src/MultiCom.db";
 /*
 users(
 login VARCHAR(20) NOT NULL,

@@ -2,10 +2,7 @@ import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -16,6 +13,8 @@ public class TelegramBot {
     static PrintWriter out;
     static BufferedReader in;
     static ArrayList<String> userIdArray;
+    static ObjectOutputStream outObject;
+    static ObjectInputStream inObject;
 
 
     public static void main(String[] args) {
@@ -34,6 +33,8 @@ public class TelegramBot {
                     new BufferedReader(
                             new InputStreamReader(echoSocket.getInputStream()));
 
+            outObject = new ObjectOutputStream( echoSocket.getOutputStream()) ;
+            inObject = new ObjectInputStream( echoSocket.getInputStream() );
 
         }catch (UnknownHostException e) {
             e.printStackTrace();
@@ -44,7 +45,7 @@ public class TelegramBot {
         ApiContextInitializer.init();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try {
-            telegramBotsApi.registerBot(new Multicom(out,in));
+            telegramBotsApi.registerBot(new Multicom(out,in,outObject,inObject));
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }

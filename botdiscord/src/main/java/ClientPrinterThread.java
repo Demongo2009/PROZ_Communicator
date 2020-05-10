@@ -1,15 +1,19 @@
 
+import Messages.serverToClient.ServerToClientMessage;
 import org.javacord.api.entity.channel.TextChannel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.concurrent.Semaphore;
 
 public class ClientPrinterThread extends Thread {
-    BufferedReader in;
+    private BufferedReader in;
+    private ObjectInputStream inObject;
 
-    ClientPrinterThread(BufferedReader in){
+    ClientPrinterThread(BufferedReader in, ObjectInputStream inObject){
         this.in=in;
+        this.inObject = inObject;
 
         mutex = new Semaphore(0);
 
@@ -27,25 +31,20 @@ public class ClientPrinterThread extends Thread {
         this.textChannel = textChannel;
     }
 
-//    public void initializePlatform(){
-//        platform = null;
-//        try {
-//            platform = new BotPlatform("src/main/java/resources/config.properties");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        message_tpl = platform.getBaseSender().getMessageTemplate();
-//        button_message_tpl = platform.getBaseSender().getButtonTemplate();
-//        list_message_tpl = platform.getBaseSender().getListTemplate();
-//        generic_message_tpl = platform.getBaseSender().getGenericTemplate();
-//        receipt_message_tpl = platform.getBaseSender().getReceiptTemplate();
-//    }
-//    BotPlatform platform;
-//    MessageTemplate message_tpl;
-//    ButtonTemplate button_message_tpl;
-//    ListTemplate list_message_tpl;
-//    GenericTemplate generic_message_tpl;
-//    ReceiptTemplate receipt_message_tpl;
+    private ServerToClientMessage receiveMessage(){
+        ServerToClientMessage message = null;
+
+        try {
+            message = (ServerToClientMessage)inObject.readObject();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return message;
+    }
 
     static Semaphore mutex;
 
@@ -56,25 +55,18 @@ public class ClientPrinterThread extends Thread {
     public void run(){
         try{
             String inputFromServer;
+            ServerToClientMessage message = null;
+
             mutex.acquire();
-            while((inputFromServer = in.readLine()) != null){
-                if(inputFromServer == "" || inputFromServer == "\n"){
+            while((message = receiveMessage()) != null){
+                inputFromServer = message.getText();
+                if(inputFromServer.equals("") || inputFromServer.equals("\n")){
                     continue;
                 }
-//                System.out.println("Server.Server: "+ inputFromServer);
-//                message_tpl.setRecipientId(userId);
-//                message_tpl.setMessageText("Server: "+ inputFromServer);
-//                message_tpl.setNotificationType("REGULAR");
-//                try {
-//                    platform.getBaseSender().send(message_tpl);
-//                } catch (UnirestException e) {
-//                    e.printStackTrace();
-//                }
+
                 textChannel.sendMessage(inputFromServer);
             }
 
-        }catch (IOException e){
-            e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

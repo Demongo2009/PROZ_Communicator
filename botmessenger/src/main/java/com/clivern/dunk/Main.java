@@ -28,11 +28,9 @@ public class Main {
 
             // sending message to server
             if (args != null) {
-                try {
-                    outObject.writeObject( new Messages.clientToServer.ClientToServerMessage() );
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+                out.println(args);
+
             }
 
 
@@ -122,7 +120,8 @@ public class Main {
                     };
                     thread.start();
 
-                }
+                    }
+
                 String page_id = (message.hasPageId()) ? message.getPageId() : "";
                 String message_id = (message.hasMessageId()) ? message.getMessageId() : "";
                 String message_text = (message.hasMessageText()) ? message.getMessageText() : "";

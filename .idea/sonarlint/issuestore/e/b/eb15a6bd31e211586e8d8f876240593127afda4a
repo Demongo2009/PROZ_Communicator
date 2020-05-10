@@ -1,0 +1,60 @@
+
+^
+java:S2095z"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ
+^
+java:S2095›"GUse try-with-resources or close this "ResultSet" in a "finally" clause.(¢ÿ¹
+^
+java:S2095™"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á
+]
+java:S2095{"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á
+]
+java:S2095}"GUse try-with-resources or close this "ResultSet" in a "finally" clause.(¢ÿ¹
+^
+java:S2095Z"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ
+^
+java:S2095B"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ
+]
+java:S2095h"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á
+^
+java:S2095g"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ
+_
+java:S2095˜"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ
+3
+java:S1643"Use a StringBuilder instead.(¥¸Ô›
+3
+java:S1643 "Use a StringBuilder instead.(Õş¹Ã
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¾©ò¹
+>
+java:S1148%"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+>
+java:S11485"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+>
+java:S1148N"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+>
+java:S1148p"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+?
+java:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+?
+java:S1148§"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+A
+java:S1172"+Remove this unused method parameter "conn".(Ğøûï
+M
+java:S1135"2Complete the task associated to this TODO comment.(Ì©„öüÿÿÿÿ
+?
+java:S2115B")Add password protection to this database.(¸¢ìâ
+?
+java:S2115Z")Add password protection to this database.(¸¢ìâ
+?
+java:S2115g")Add password protection to this database.(¸¢ìâ
+2
+java:S1116m"Remove this empty statement.(Üã–Ò
+?
+java:S2115z")Add password protection to this database.(¸¢ìâ
+N
+java:S1135"2Complete the task associated to this TODO comment.(ïüóøÿÿÿÿ
+@
+java:S2115˜")Add password protection to this database.(¸¢ìâ
+Q	java:S125"<This block of commented-out lines of code should be removed.(ÏĞÕ¡
+V	java:S125"<This block of commented-out lines of code should be removed.(Š¤”Öşÿÿÿÿ
+Q	java:S125"<This block of commented-out lines of code should be removed.(‰†Á¸
+R	java:S125†"<This block of commented-out lines of code should be removed.(›ß¤÷

@@ -11,6 +11,7 @@ import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /*
@@ -70,12 +71,18 @@ public class Client {
     static NotificationsHandler notificationsHandler;
     static ClientPrinterThread listener;
 
+    // static GUI_notificiation_listener (notificaionHandler)
+    //TODO: checking if we dont want to add ourselfs to friends, if we already arent friends etc
+    /*TODO: if I get USER_ACCEPTED_YOUR_FRIEND_REQUEST message, then add friend to my local friends
+        if can be done in the listener thread since its automatic, don't know if should, probably no because listener thread doesn't get our friends array*/
+
+
     public static void main(String[] args) {
        initClient();
 
 
 
-        String login = "Konrad2";
+        String login = "Konrad";
         String password = "123";
        try {
            sendLoginOrRegisterRequest(login, password, ClientToServerMessageType.REQUEST_LOGIN);
@@ -90,16 +97,21 @@ public class Client {
        }
 /*=====================================*/
         Scanner myObj = new Scanner(System.in);
-        System.out.println("Enter 'logout' to send request");
+        System.out.println("Enter 'a' to continue");
 
         while( true ){
-            if( myObj.nextLine().equals("logout")){
-                addUserToFriends("Konrad2");
+            if( myObj.nextLine().equals("a")){
+                //addUserToFriends("Konrad2");
+                confirmFriendship("Konrad6");
+                //sendTextMessageToUser("Konrad", "XDDDDDDDD");
                 break;
             }
         }
 /*=====================================*/
-       logout();
+        for(String s :friends){
+            System.out.println(s);
+        }
+        logout();
     }
 
     private static void initClient(){
@@ -172,6 +184,11 @@ public class Client {
         if( response == ServerToClientMessageType.REJECT_LOGIN ){
             return false;
         }else if( response == ServerToClientMessageType.CONFIRM_LOGIN ){
+
+            //get friends from server
+            String[] friendsArray = message.getText().split("#");
+            friends.addAll(Arrays.asList(friendsArray));//inserts all strings into array list
+
             /*Start of listener thread*/
             listener = new ClientPrinterThread(inObject/*, friends*/);
             listener.start();
@@ -209,11 +226,9 @@ public class Client {
     }
 
     static void addUserToFriends(String userToAdd){
-        for(String s: friends){
-            if(userToAdd.equals(s)){
-                System.out.println("User is already your friend");
-                return;
-            }
+        if( checkFriendship(userToAdd) ){
+            System.out.println("User is already your friend!!!");
+            return;
         }
 
         ClientToServerMessageType type = ClientToServerMessageType.ADD_USER_TO_FRIENDS;
@@ -221,9 +236,34 @@ public class Client {
         sendMessage(message);
     }
 
+    static void confirmFriendship(String friendToAdd){
+        friends.add(friendToAdd);
+        ClientToServerMessageType type = ClientToServerMessageType.CONFIRMATION_OF_FRIENDSHIP;
+        ClientToServerMessage message = new ClientToServerMessage(type, friendToAdd);
+        sendMessage(message);
+    }
+
+    static boolean checkFriendship(String friend_login){
+        for(String s: friends){
+            if( s.equals(friend_login)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     static void sendTextMessageToUser(String userToSend, String text){
+        if( !checkFriendship(userToSend) ){
+            System.out.println("User is not your friend -> you cannot write to him");
+            return;
+        }
+
+        if( text.contains("#") || userToSend.contains("#") ){
+            System.out.println("Using '#' is forbidden! ");
+        }
+
         String textMessage = userToSend + "#" + text;
-        ClientToServerMessageType type = ClientToServerMessageType.TEXT;
+        ClientToServerMessageType type = ClientToServerMessageType.TEXT_TO_USER;
         ClientToServerMessage message = new ClientToServerMessage(type, textMessage);
         sendMessage(message);
 

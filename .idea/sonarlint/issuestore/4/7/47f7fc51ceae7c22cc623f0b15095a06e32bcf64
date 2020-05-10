@@ -1,0 +1,27 @@
+
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(•İÈ‚ıÿÿÿÿ
+>
+java:S1148""#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+>
+java:S1148$"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+P
+java:S1128":Remove this unused import 'java.awt.event.ActionListener'.(Ìä¹
+I
+java:S1128	"3Remove this unused import 'java.io.BufferedReader'.(€é²Å
+M
+java:S1128"7Remove this unused import 'java.awt.event.ActionEvent'.(Úù“‘
+L
+java:S1128"6Remove this unused import 'java.io.InputStreamReader'.(ãˆÎÉ
+F
+java:S1128"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ
+Z
+java:S2147#"DCombine this catch with the one at line 33, which has the same body.(ıàÑÎ
+S	java:S106/"9Replace this use of System.out or System.err by a logger.(ù‘™§ûÿÿÿÿ
+P
+java:S1161T":Add the "@Override" annotation above this method signature(“–ış
+V	java:S1250"<This block of commented-out lines of code should be removed.(ñ¥ùšøÿÿÿÿ
+Q	java:S1253"<This block of commented-out lines of code should be removed.(Ôş¯ñ
+Q	java:S125;"<This block of commented-out lines of code should be removed.(±¯€¤
+V	java:S125="<This block of commented-out lines of code should be removed.(¢‘Ã‰ûÿÿÿÿ
+V	java:S125F"<This block of commented-out lines of code should be removed.(ÌÆŒÏşÿÿÿÿ
+Q	java:S125X"<This block of commented-out lines of code should be removed.(†£Íã

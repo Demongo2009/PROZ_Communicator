@@ -50,6 +50,7 @@ public class ClientPrinterThread extends Thread {
             return;
         }
         Client.notificationsHandler.addNotification(message);
+        System.out.println( message.getText() );
         //try {
         //    switch (message.getType()) {
         //       case USER_WANTS_TO_BE_YOUR_FRIEND:

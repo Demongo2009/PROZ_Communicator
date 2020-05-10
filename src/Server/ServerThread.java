@@ -124,15 +124,16 @@ public class ServerThread extends Thread{
     * */
     boolean sendLoginAnswer(boolean answer){
         ServerToClientMessageType type = null;
-        String text = null;
+        String text = "";
         if( answer ){
             type = ServerToClientMessageType.CONFIRM_LOGIN;
+            text = databaseHandler.getUserFriends( userToHandle.getLogin() ); //send to user his friends
         }else{
             type = ServerToClientMessageType.REJECT_LOGIN;
-            text = "Invalid login";
+            //text = "Invalid login";
         }
 
-        ServerToClientMessage message = new ServerToClientMessage(type, "");
+        ServerToClientMessage message = new ServerToClientMessage(type, text);
 
         try {
             outObject.writeObject(message);
@@ -200,13 +201,21 @@ public class ServerThread extends Thread{
 
     void processTextMessage(String textMessage){
         String userAndText[] = textMessage.split("#");
-        System.out.println("User: " + userAndText[0]);
-        System.out.println("Text: " + userAndText[1]);
+        //System.out.println("User: " + userAndText[0]);
+        //System.out.println("Text: " + userAndText[1]);
 
-
-        /*TODO: check if user is connected, if not then say it to sender
-            if yes then send it to this user with a special Message
-           */
+        User user = getUserFromConnectedUsers(userAndText[0]);
+        if( user == null ){
+            //communicate to sender that user is not connected
+            ServerToClientMessageType type = ServerToClientMessageType.USER_IS_NOT_CONNECTED;
+            ServerToClientMessage message = new ServerToClientMessage(type, userAndText[0]); /* we communicate to whom we couldn't send the message */
+            sendMessage(message, userToHandle);
+            return;
+        }
+        ServerToClientMessageType type = ServerToClientMessageType.TEXT_MESSAGE_FROM_USER;
+        String text = userToHandle.getLogin() + "#" + userAndText[1];
+        ServerToClientMessage message = new ServerToClientMessage(type, text);
+        sendMessage( message, user);
     }
 
     void processAddUserToFriends(String loginToAdd){
@@ -226,17 +235,14 @@ public class ServerThread extends Thread{
     }
 
     void processConfirmationOfFriendship(String newFriend){
-        /*TODO:
-            databaseHandler.insertFriends(userToHandle.getLogin(), newFriend);
-            ServerToClientMessage message = new ServerToClientMessage( ServerToClientMessageType.CONFIRMATION_OF_FRIENDSHIP, userToHandle.getLogin() );
-            User user = getUserFromConnectedUsers( newFriend );
-            if( user == null ){
-                //do nothing since the friendship is already booked in database
-                return;
-            }
-            sendMessage( newMessage, user );
-
-         */
+        databaseHandler.insertFriendship(newFriend, userToHandle.getLogin() );
+        User user = getUserFromConnectedUsers( newFriend );
+        if( user == null ){
+            //do nothing since the friendship is already booked in database
+            return;
+        }
+        ServerToClientMessage message = new ServerToClientMessage( ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST, newFriend);
+        sendMessage( message, user );
     }
 
     void processImage(String text){
@@ -262,7 +268,10 @@ public class ServerThread extends Thread{
                 case ADD_USER_TO_FRIENDS:
                     processAddUserToFriends(text);
                     break;
-                case TEXT:
+                case CONFIRMATION_OF_FRIENDSHIP:
+                    processConfirmationOfFriendship(text);
+                    break;
+                case TEXT_TO_USER:
                     processTextMessage(text);
                     break;
                 case IMAGE:

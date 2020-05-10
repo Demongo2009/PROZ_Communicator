@@ -15,7 +15,7 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 
 
-public class Main {
+public class MessengerBot {
 
 
     static Socket echoSocket;
@@ -33,6 +33,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException
     {
+        currentState = AvailableStates.INIT;
         String hostName = "localhost";
         int portNumber = 4444;
         try {

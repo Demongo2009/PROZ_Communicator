@@ -1,14 +1,11 @@
 package Client.GUI;
-import static Client.GUI.tools.SwingConsole.*;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-
-import javafx.util.Pair;
 
 import static Client.GUI.tools.SwingConsole.*;
-import javax.swing.*;
 
 public class StartingScreen extends JFrame
 {
@@ -22,11 +19,12 @@ public class StartingScreen extends JFrame
 
 
 
-    private void CheckLoginPassword() throws IOException {
+    private void CheckLoginPassword()
+    {
         if(login.equals("Igor") && pass.equals("dupa"))
         {
             OperationState.setText("LOGOWANIE SIE UDALO :)");
-            run(new MainWindow(login),"KOMUNIKATOR XD",800,700);
+            run(new MainWindow(),"KOMUNIKATOR XD",500,500);
             //run(new ChatWindow(login),500,650);
             dispose();
         }
@@ -39,7 +37,7 @@ public class StartingScreen extends JFrame
     private void CheckRegister()
     {
         if(!login.isEmpty())
-            OperationState.setText("DODANO UZYTKOWNIKA: "+login);
+        OperationState.setText("DODANO UZYTKOWNIKA: "+login);
     }
 
     public StartingScreen()
@@ -55,11 +53,7 @@ public class StartingScreen extends JFrame
                 dlg.setVisible(true);
                 login = dlg.getLogin();
                 pass = dlg.getPassword();
-                try {
-                    CheckLoginPassword();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                CheckLoginPassword();
             }
         });
         registerButton.addActionListener(new ActionListener() {
@@ -80,10 +74,11 @@ public class StartingScreen extends JFrame
         add(panel);
     }
 
-    public static void main(String[] args) throws IOException {
-        //run(new ChatWindow("dupek XD"),500,650);
-        //run(new StartingScreen(),"KOMUNIKATOR",300,100);
-        run(new MainWindow("IGOR"),"XDDDDD",600,600);
+    public static void main(String[] args)
+    {
+            //run(new ChatWindow("dupek XD"),500,650);
+            //run(new StartingScreen(),"KOMUNIKATOR",300,100);
+            run(new MainWindow(),"XDDDDD",600,600);
     }
 
 }

@@ -1,6 +1,7 @@
 package Client.GUI.tools;
 
 import javax.swing.*;
+
 public class SwingConsole
 {
     public static void run(final JFrame f,final int width, final int height)
@@ -45,7 +46,5 @@ public class SwingConsole
             }
         });
     }
-
-
 
 }

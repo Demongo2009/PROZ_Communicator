@@ -1,11 +1,13 @@
 package Client.GUI;
-
-import javax.swing.*;
+import static Client.GUI.tools.SwingConsole.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javafx.util.Pair;
+
 import static Client.GUI.tools.SwingConsole.*;
+import javax.swing.*;
 
 public class StartingScreen extends JFrame
 {
@@ -24,7 +26,7 @@ public class StartingScreen extends JFrame
         if(login.equals("Igor") && pass.equals("dupa"))
         {
             OperationState.setText("LOGOWANIE SIE UDALO :)");
-            run(new MainWindow(),"KOMUNIKATOR XD",500,500);
+            run(new MainWindow(login),"KOMUNIKATOR XD",800,700);
             //run(new ChatWindow(login),500,650);
             dispose();
         }
@@ -37,7 +39,7 @@ public class StartingScreen extends JFrame
     private void CheckRegister()
     {
         if(!login.isEmpty())
-        OperationState.setText("DODANO UZYTKOWNIKA: "+login);
+            OperationState.setText("DODANO UZYTKOWNIKA: "+login);
     }
 
     public StartingScreen()
@@ -76,9 +78,9 @@ public class StartingScreen extends JFrame
 
     public static void main(String[] args)
     {
-            //run(new ChatWindow("dupek XD"),500,650);
-            //run(new StartingScreen(),"KOMUNIKATOR",300,100);
-            run(new MainWindow(),"XDDDDD",600,600);
+        //run(new ChatWindow("dupek XD"),500,650);
+        run(new StartingScreen(),"KOMUNIKATOR",300,100);
+        //run(new MainWindow("IGOR"),"XDDDDD",600,600);
     }
 
 }

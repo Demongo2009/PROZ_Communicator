@@ -3,6 +3,7 @@ import static Client.GUI.tools.SwingConsole.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javafx.util.Pair;
 
@@ -21,8 +22,7 @@ public class StartingScreen extends JFrame
 
 
 
-    private void CheckLoginPassword()
-    {
+    private void CheckLoginPassword() throws IOException {
         if(login.equals("Igor") && pass.equals("dupa"))
         {
             OperationState.setText("LOGOWANIE SIE UDALO :)");
@@ -55,7 +55,11 @@ public class StartingScreen extends JFrame
                 dlg.setVisible(true);
                 login = dlg.getLogin();
                 pass = dlg.getPassword();
-                CheckLoginPassword();
+                try {
+                    CheckLoginPassword();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
         registerButton.addActionListener(new ActionListener() {
@@ -76,11 +80,10 @@ public class StartingScreen extends JFrame
         add(panel);
     }
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) throws IOException {
         //run(new ChatWindow("dupek XD"),500,650);
-        run(new StartingScreen(),"KOMUNIKATOR",300,100);
-        //run(new MainWindow("IGOR"),"XDDDDD",600,600);
+        //run(new StartingScreen(),"KOMUNIKATOR",300,100);
+        run(new MainWindow("IGOR"),"XDDDDD",600,600);
     }
 
 }

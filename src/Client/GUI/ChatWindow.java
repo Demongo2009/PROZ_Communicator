@@ -1,4 +1,5 @@
 package Client.GUI;
+import static Client.GUI.tools.SwingConsole.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +10,7 @@ import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ChatWindow extends JFrame
+public class ChatWindow extends JPanel
 {
     private JPanel mainPanel = new JPanel();
     private JPanel southPanel = new JPanel();
@@ -51,6 +52,7 @@ public class ChatWindow extends JFrame
 
     public ChatWindow(String login)
     {
+        setLayout(new BorderLayout());
         username = login;
         mainPanel.setLayout(new BorderLayout());
         southPanel.setBackground(Color.PINK);
@@ -91,15 +93,9 @@ public class ChatWindow extends JFrame
         mainPanel.add(BorderLayout.SOUTH, southPanel);
 
         add(mainPanel);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(470, 300);
         setVisible(true);
-
-
     }
-
-
-
-
 }
 

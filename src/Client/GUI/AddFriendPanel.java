@@ -12,7 +12,7 @@ import java.net.URL;
 
 public class AddFriendPanel extends JPanel
 {
-    private String[] avaliablePeople = {"Igor","Konrad","Kuba","Bartek","Szymon","Twoja Stara XD"};
+    private String[] avaliablePeople = {"Igor","Konrad","Kuba","Bartek","Szymon","Twoja Stara XD","NIE PYTAJĄC SIE O IMIE WALCZA Z OSTRYM CIENIEM MGLY"};
     private DefaultListModel lItems = new DefaultListModel();
     private JList lyst = new JList(lItems);
     private JScrollPane lst = new JScrollPane(lyst);
@@ -38,7 +38,9 @@ public class AddFriendPanel extends JPanel
         {
             lItems.addElement(d);
         }
-        lst.setBounds(30,30,150,20*avaliablePeople.length<400?20*avaliablePeople.length:400);
+        //lst.setBounds(30,30,150,400);
+        System.out.println("TYLE JEST: " + avaliablePeople.length);
+        lst.setBounds(30,30,150,22*avaliablePeople.length<400?22*avaliablePeople.length:400);
         b.setBounds(350,450,170,30);
         picLabel.setBounds(200,30,500,500);
 

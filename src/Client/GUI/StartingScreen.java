@@ -1,10 +1,13 @@
 package Client.GUI;
+import static Client.Client.receiveLoginAnswer;
+import static Client.Client.sendLoginOrRegisterRequest;
 import static Client.GUI.tools.SwingConsole.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import Messages.clientToServer.ClientToServerMessageType;
 import javafx.util.Pair;
 
 import static Client.GUI.tools.SwingConsole.*;
@@ -18,22 +21,52 @@ public class StartingScreen extends JFrame
     private JLabel OperationState =  new JLabel("");
     private String login="";
     private String pass="";
+    static String username = null;
 
 
 
+    private void CheckLoginPassword() throws IOException
+    {
+        /*
+        *
+        *
+        *
+        *
+        *
+        *
+        TUTAJ JEST TRYB DZIALANIA
+        * */
 
-    private void CheckLoginPassword() throws IOException {
-        if(login.equals("Igor") && pass.equals("dupa"))
+        if(false)
         {
-            OperationState.setText("LOGOWANIE SIE UDALO :)");
-            run(new MainWindow(login),"KOMUNIKATOR XD",800,700);
-            //run(new ChatWindow(login),500,650);
-            dispose();
+            try {
+                sendLoginOrRegisterRequest(login, pass, ClientToServerMessageType.REQUEST_LOGIN);
+                if (receiveLoginAnswer()) {
+                    OperationState.setText("LOGOWANIE SIE UDALO :)");
+                    run(new MainWindow(login), "KOMUNIKATOR XD", 600, 600);
+                    dispose();
+                } else {
+                    OperationState.setForeground(Color.RED);
+                    OperationState.setText("LOGOWANIE NIE POWIODLO SIE");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        else
+        /*
+        *Testowanie obu wariantow
+        */
+        if(true)
         {
-            OperationState.setForeground(Color.RED);
-            OperationState.setText("LOGOWANIE NIE POWIODLO SIE");
+            if (login.equals("Igor") && pass.equals("dupa")) {
+                OperationState.setText("LOGOWANIE SIE UDALO :)");
+                run(new MainWindow(login), "KOMUNIKATOR XD", 600, 600);
+                //run(new ChatWindow(login),500,650);
+                dispose();
+            } else {
+                OperationState.setForeground(Color.RED);
+                OperationState.setText("LOGOWANIE NIE POWIODLO SIE");
+            }
         }
     }
     private void CheckRegister()
@@ -78,12 +111,14 @@ public class StartingScreen extends JFrame
         panel.add(registerButton);
         panel.add(OperationState);
         add(panel);
+        loginButton.requestFocus();
+        getRootPane().setDefaultButton(loginButton);
     }
 
     public static void main(String[] args) throws IOException {
         //run(new ChatWindow("dupek XD"),500,650);
-        //run(new StartingScreen(),"KOMUNIKATOR",300,100);
-        run(new MainWindow("IGOR"),"XDDDDD",600,600);
+        run(new StartingScreen(),"KOMUNIKATOR",300,100);
+        //run(new MainWindow("Igor"),"XDDDDD",600,600);
     }
 
 }

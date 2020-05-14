@@ -42,6 +42,7 @@ public class ChatWindow extends JPanel
     }
 
 
+
     private class sendMessageButtonListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event)

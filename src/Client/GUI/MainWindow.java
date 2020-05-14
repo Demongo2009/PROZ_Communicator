@@ -12,18 +12,33 @@ public class MainWindow extends JFrame
 {
     private String Username="IGOR";
     private JTabbedPane tabs = new JTabbedPane();
-    private JPanel panel = new JPanel();
+    private JPanel panel;
     private JPanel panel1;
-    private JLabel are = new JLabel("",SwingConstants.CENTER);
+    //private JLabel are = new JLabel("",SwingConstants.CENTER);
     private JButton startChat = new JButton("START CONVERSATION");
+    //private int openedTabs=2;
     private void InitiateTabs()
     {
-        tabs.addTab("MAINTAB",panel);
+        tabs.addTab("MAIN PANEL",panel);
         tabs.addTab("ADD FRIEND",panel1);
 
     }
+    boolean OpenChatWindow(String FriendName)
+    {
+        if(tabs.indexOfTab(FriendName)==-1)
+        {
+            tabs.addTab(FriendName, new ChatWindow(Username));
+            return false;
+        }
+        else
+            return true;
 
-    public MainWindow(String user) throws IOException {
+    }
+
+    public MainWindow(String user) throws IOException
+    {
+        panel =  new MainTab(this,user);
+
         panel1 = new AddFriendPanel();
         Username = user;
         startChat.addActionListener(new ActionListener()
@@ -36,9 +51,7 @@ public class MainWindow extends JFrame
         });
 
         setTitle("KOMUNIKATOR XD");
-        panel.setLayout(new BorderLayout());
-        panel.add(are,BorderLayout.CENTER);
-        panel.add(startChat,BorderLayout.SOUTH);
+
 
         InitiateTabs();
         add(tabs);

@@ -1,11 +1,12 @@
 package Client;
 
+import Client.GUI.*;
 import Messages.clientToServer.ClientToServerMessage;
 import Messages.clientToServer.ClientToServerMessageType;
 import Messages.serverToClient.ServerToClientMessage;
 import Messages.serverToClient.ServerToClientMessageType;
 import Server.CommunicatorType;
-
+import static Client.GUI.tools.SwingConsole.*;
 import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
@@ -72,32 +73,9 @@ public class Client {
 
     public static void main(String[] args) {
        initClient();
-
-
-
-        String login = "Konrad2";
-        String password = "123";
-       try {
-           sendLoginOrRegisterRequest(login, password, ClientToServerMessageType.REQUEST_LOGIN);
-           if (receiveLoginAnswer()){
-               System.out.println("Client: udało się zalogować");
-               username = login;
-           }else{
-               System.out.println("Client: NIE udało się zalogować");
-           }
-       } catch (Exception e) {
-           e.printStackTrace();
-       }
+        run(new StartingScreen(),"KOMUNIKATOR",300,100);
 /*=====================================*/
-        Scanner myObj = new Scanner(System.in);
-        System.out.println("Enter 'logout' to send request");
-
-        while( true ){
-            if( myObj.nextLine().equals("logout")){
-                addUserToFriends("Konrad2");
-                break;
-            }
-        }
+        /*ZEBY ZADZIALALO TRZEBA ZMIENIC TRYB W PLIKU STARTINGSCREEN*/
 /*=====================================*/
        logout();
     }
@@ -140,7 +118,7 @@ public class Client {
     * Sends to server LOGIN_REQUEST or REGISTER_REQUEST(decided by argument) with login and password.
     * Throws Exception if type is none of above OR login or password contain '#' OR they are shorter than 4 characters
     * */
-    static void sendLoginOrRegisterRequest(String login, String password, ClientToServerMessageType type) throws Exception{
+    public static void sendLoginOrRegisterRequest(String login, String password, ClientToServerMessageType type) throws Exception{
         if( type != ClientToServerMessageType.REQUEST_LOGIN && type != ClientToServerMessageType.REQUEST_REGISTER){
             throw new Exception("Only REQUEST_LOGIN or REQUEST_REGISTER");
         }
@@ -160,7 +138,7 @@ public class Client {
     * Throws exception if received message is not CONFIRM nor REJECT
     * starts listener thread
     * */
-    static boolean receiveLoginAnswer() throws Exception{
+    public static boolean receiveLoginAnswer() throws Exception{
         ServerToClientMessage message = null;
         try {
             message = (ServerToClientMessage)inObject.readObject();
@@ -200,7 +178,7 @@ public class Client {
 
 
 //TODO:
-    static private  void sendMessage(ClientToServerMessage message){
+    static  void sendMessage(ClientToServerMessage message){
         try {
             outObject.writeObject( message );
         } catch (IOException e) {

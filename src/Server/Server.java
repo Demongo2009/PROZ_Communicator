@@ -13,7 +13,9 @@ import java.util.Map;
 public class Server {
     static int serverPort = 4444;
     static ServerSocket serverSocket;
+    static DatabaseHandler databaseHandler;
     static ArrayList<User> connectedUsers;
+    static ArrayList<Group> groups;
 
     public static void main(String[] args) {
         initServer();
@@ -21,12 +23,14 @@ public class Server {
 
     }
     private static void initServer(){
+        databaseHandler = new DatabaseHandler();
         try {
             serverSocket = new ServerSocket(serverPort);
         } catch (IOException e) {
             e.printStackTrace();
         }
         connectedUsers = new ArrayList<User>();
+        groups = databaseHandler.getGroups();
     }
 
     private static void handleServer(){
@@ -34,7 +38,7 @@ public class Server {
         try{
             while(true){
                 Socket clientSocket= serverSocket.accept();
-                ServerThread thread = new ServerThread(serverSocket, clientSocket, connectedUsers);
+                ServerThread thread = new ServerThread(serverSocket, clientSocket, connectedUsers, groups);
                 thread.start();
             }
         }catch (IOException e) {

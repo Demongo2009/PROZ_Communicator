@@ -2,7 +2,7 @@
 <project version="4">
   <component name="DBNavigator.Project.DataEditorManager">
     <record-view-column-sorting-type value="BY_INDEX" />
-    <value-preview-text-wrapping value="true" />
+    <value-preview-text-wrapping value="false" />
     <value-preview-pinned value="false" />
   </component>
   <component name="DBNavigator.Project.DataExportManager">
@@ -25,7 +25,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="41a203ad-a215-4808-8b62-2b8ddd69c268">
-        <schema name="main" object-types="view, index, column, dataset trigger, constraint, table" />
+        <schema name="main" object-types="view, table, column" />
       </connection>
     </loaded-nodes>
   </component>
@@ -35,10 +35,16 @@
 
 select * from friends;
 
+select * from groups;
+
 insert into friends values ("Konrad", "Konrad2");
 insert into friends values ("Konrad", "Konrad3");
 insert into friends values ("Konrad", "Konrad4");
 insert into friends values ("Konrad5", "Konrad");
+
+insert into groups(group_name, user1) values("Essssa", "Konrad");
+
+DELETE FROM friends;
 commit;]]></console>
     </connection>
   </component>

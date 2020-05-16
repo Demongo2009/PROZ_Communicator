@@ -4,10 +4,12 @@ import Messages.serverToClient.ServerToClientMessage;
 import Server.CommunicatorType;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
+import org.javacord.api.entity.message.MessageAttachment;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.List;
 
 public class DiscordBot {
 
@@ -38,7 +40,7 @@ public class DiscordBot {
 
     public static void main(String[] args) {
         // Insert your bot's token here
-        String token = "token";
+        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.Xr-iIA.G4x6ie7HdZlRTbd4GX6BvKsK5VY";
 
         DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
 
@@ -92,7 +94,14 @@ public class DiscordBot {
                 currentState = AvailableStates.CONNECTED_TO_CHAT;
             }else if(currentState.equals(AvailableStates.CONNECTED_TO_CHAT) && !event.getMessageAuthor().isBotUser()){
 
-                sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT,"discord#"+event.getMessageContent().toString(),CommunicatorType.DISCORD));
+                if(event.getMessageAttachments() != null){
+                    List<MessageAttachment> attachmentArray = event.getMessage().getAttachments();
+                    sendMessage(new ClientToServerMessage(ClientToServerMessageType.IMAGE,attachmentArray.get(0).getUrl().toString(),CommunicatorType.DISCORD));
+
+                }else {
+
+                    sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT,"discord#"+event.getMessageContent().toString(),CommunicatorType.DISCORD));
+                }
                 clientPrinterThread.sendEventChannel(event.getChannel());
 
             }else{

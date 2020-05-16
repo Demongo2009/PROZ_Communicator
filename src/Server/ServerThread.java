@@ -1,5 +1,6 @@
 package Server;
 
+import Client.ClientPrinterThread;
 import Messages.Message;
 import Messages.clientToServer.ClientToServerMessage;
 import Messages.clientToServer.ClientToServerMessageType;
@@ -238,6 +239,11 @@ public class ServerThread extends Thread{
          */
     }
 
+    void processImage(String text){
+        System.out.println(text);
+        ClientPrinterThread.imageMessage(text);
+    }
+
     /*
     * Behaves like multiplexer for messages types
     * */
@@ -258,6 +264,9 @@ public class ServerThread extends Thread{
                     break;
                 case TEXT:
                     processTextMessage(text);
+                    break;
+                case IMAGE:
+                    processImage(text);
                     break;
                 default:
                     throw new Exception("Invalid message from client received");

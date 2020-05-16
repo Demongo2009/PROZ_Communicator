@@ -1,10 +1,14 @@
 
 import Messages.serverToClient.ServerToClientMessage;
+import Messages.serverToClient.ServerToClientMessageType;
 import org.javacord.api.entity.channel.TextChannel;
+import org.javacord.api.entity.message.MessageBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.Semaphore;
 
 public class ClientPrinterThread extends Thread {
@@ -64,10 +68,17 @@ public class ClientPrinterThread extends Thread {
                     continue;
                 }
 
-                textChannel.sendMessage(inputFromServer);
+                if(message.getType().equals(ServerToClientMessageType.IMAGE)){
+                    new MessageBuilder().addAttachment(new URL(inputFromServer)).send(textChannel);
+                }else{
+
+                    textChannel.sendMessage(inputFromServer);
+                }
             }
 
         } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }

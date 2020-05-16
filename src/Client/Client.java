@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-
-
 public class Client {
 
     static String hostName = "localhost";
@@ -192,7 +190,7 @@ public class Client {
     }
 
 
-    static private  void sendMessage(ClientToServerMessage message){
+    private static void sendMessage(ClientToServerMessage message){
         try {
             outObject.writeObject( message );
         } catch (IOException e) {
@@ -210,7 +208,10 @@ public class Client {
         ClientToServerMessage message = new ClientToServerMessage(type, userToAdd);
         sendMessage(message);
     }
-
+    /*
+    * Sends message to server that we are now friends with friendToAdd
+    * Add friend's nickname to friends ArrayList
+    * */
     static void confirmFriendship(String friendToAdd){
         if(checkFriendship( friendToAdd)){
             return;
@@ -221,10 +222,16 @@ public class Client {
         sendMessage(message);
     }
 
-    static boolean checkFriendship(String friendUsername){
+    /*
+    * Checks if username is on our friends Arraylist
+    * */
+    private static boolean checkFriendship(String friendUsername){
         return friends.contains(friendUsername);
     }
 
+    /*
+    * Sends to out friend a text message
+    * */
     static void sendTextMessageToUser(String userToSend, String text){
         if( !checkFriendship(userToSend) ){
             System.out.println("User is not your friend -> you cannot write to him");
@@ -243,11 +250,16 @@ public class Client {
 
     }
 
-
-    static boolean checkMembership(String groupName){
+    /*
+    * Checks if groupName in on our groups ArrayList
+    * */
+    private static boolean checkMembership(String groupName){
         return groups.contains(groupName);
     }
 
+    /*
+    * Sends message to server a request to create a group
+    * */
     static void createGroup(String groupName){
         if( checkMembership(groupName)){
             System.out.println("You are in such group already");
@@ -273,6 +285,9 @@ public class Client {
 
     }
 
+    /*
+    *
+    * */
     static void sendTextMessageToGroup(String groupName,String text){
         if(checkMembership(groupName)){
             System.out.println("You are not a part of this group");
@@ -285,6 +300,9 @@ public class Client {
 
     }
 
+    /*
+    * Adds our friend to group we are into
+    * */
     static void addUserToGroup(String group, String user){
         if( !checkMembership(group)){
             System.out.println("You are not a member of this group");

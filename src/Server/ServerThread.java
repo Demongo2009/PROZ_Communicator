@@ -29,11 +29,14 @@ public class ServerThread extends Thread{
 
     static DatabaseHandler databaseHandler;
 
+    ArrayList<Group> groups;
 
-    ServerThread(ServerSocket serverSocket, Socket clientSocket, ArrayList<User> connectedUsers){
+
+    ServerThread(ServerSocket serverSocket, Socket clientSocket, ArrayList<User> connectedUsers, ArrayList<Group> groups){
         this.serverSocket = serverSocket;
         this.clientSocket = clientSocket;
         this.connectedUsers = connectedUsers;
+        this.groups = groups;
         mutex = new Semaphore(1);
 
         try {
@@ -51,10 +54,10 @@ public class ServerThread extends Thread{
         try {
             while (true) {
                 if (sendLoginAnswer(processLoginOrRegisterRequest())) {
-                    //System.out.println("Serwer: użytkownik zalogowany");
+                    System.out.println("Serwer: użytkownik zalogowany");
                     break;
                 } else {
-                    //System.out.println("Serwer: nie udało sie");
+                    System.out.println("Serwer: nie udało sie");
                     break;
                 }
             }
@@ -116,6 +119,8 @@ public class ServerThread extends Thread{
         return answer;
     }
 
+
+
     /*
     *   sends ServerToClientMessage with adequate MessageType and text
     *
@@ -123,15 +128,19 @@ public class ServerThread extends Thread{
     * */
     boolean sendLoginAnswer(boolean answer){
         ServerToClientMessageType type = null;
-        String text = null;
+        String text = "";
         if( answer ){
             type = ServerToClientMessageType.CONFIRM_LOGIN;
+            text = databaseHandler.getUserFriends( userToHandle.getLogin() ); //send to user his friends
+            text += "@";
+            text += getUserGroups(userToHandle.getLogin());
+            //text += databaseHandler.getUserGroups(userToHandle.getLogin());
         }else{
             type = ServerToClientMessageType.REJECT_LOGIN;
-            text = "Invalid login";
+            //text = "Invalid login";
         }
 
-        ServerToClientMessage message = new ServerToClientMessage(type, "");
+        ServerToClientMessage message = new ServerToClientMessage(type, text);
 
         try {
             outObject.writeObject(message);
@@ -141,7 +150,10 @@ public class ServerThread extends Thread{
 
         return answer;
     }
-/*============================================================*/
+
+    /*
+    * Returns User object based on given login
+    * */
     User getUserFromConnectedUsers(String login){
         for(User user: connectedUsers){
             if( user.getLogin().equals(login)){
@@ -152,13 +164,15 @@ public class ServerThread extends Thread{
     }
 
 
-    /* don't know that this function if for for now*/
+    /* don't know what this function is for for now*/
     ServerToClientMessage prepareMessage(ServerToClientMessageType type, String text){
         ServerToClientMessage message = new ServerToClientMessage( type, text);
         return message;
     }
 
-    /* returns true if message is being sent*/
+    /*
+    * returns true if message is being sent
+    * */
     boolean sendMessage(ServerToClientMessage message, User userToSend){
 
         try {
@@ -170,7 +184,7 @@ public class ServerThread extends Thread{
         }
         return false;
     }
-/*====================================================================*/
+
     /*
     * returns message received by inObject received
     * */
@@ -192,31 +206,63 @@ public class ServerThread extends Thread{
     * Removes user from connectedUsers and ends thread
     * */
     void logoutUser(){
+        /* send to user listener thread that he can stop listening*/
+        ServerToClientMessage message = new ServerToClientMessage( ServerToClientMessageType.LOGOUT, "");
+        sendMessage(message, userToHandle);
+
         connectedUsers.remove(userToHandle);
         userToHandle=null;
         shouldRun = false;
     }
 
+    /*
+    * sends text message to user
+    * if user is not connected it sends the message to sender that communicates it
+    * */
     void processTextMessage(String textMessage){
+        if( textMessage == null ){
+            return; // should never occur
+        }
         String userAndText[] = textMessage.split("#");
-        System.out.println("User: " + userAndText[0]);
-        System.out.println("Text: " + userAndText[1]);
 
+        if( databaseHandler.checkFriendship(userToHandle.getLogin(), userAndText[0]) ){
+            System.out.println("USERS ARE NOT FRIENDS - something went wrong, client should check it");
+            return;
+        }
 
-        /*TODO: check if user is connected, if not then say it to sender
-            if yes then send it to this user with a special Message
-           */
+        User user = getUserFromConnectedUsers(userAndText[0]);
+        if( user == null ){
+            //communicate to sender that user is not connected
+            ServerToClientMessageType type = ServerToClientMessageType.USER_IS_NOT_CONNECTED;
+            ServerToClientMessage message = new ServerToClientMessage(type, userAndText[0]); /* we communicate to whom we couldn't send the message */
+            sendMessage(message, userToHandle);
+            return;
+        }
+        ServerToClientMessageType type = ServerToClientMessageType.TEXT_MESSAGE_FROM_USER;
+        String text = userToHandle.getLogin() + "#" + userAndText[1];
+        ServerToClientMessage message = new ServerToClientMessage(type, text);
+        sendMessage( message, user);
     }
-
+    /*
+    * sends to user that userToHandle wants to add to friends a USER_WANT_TO_BE_YOUR_FRIEND message
+    * if that user does not exit =============================
+    * if users are already friend then does nothing
+    * */
     void processAddUserToFriends(String loginToAdd){
         //System.out.println(userToAdd);
         /*TODO: check if user is connected, if not || do nothing OR communicate it
          *  if yes then send request to this user*/
 
+        if( databaseHandler.checkFriendship( userToHandle.getLogin(), loginToAdd) ){
+            System.out.println("USERS ARE FRIENDS ALREADY");
+            return;//users are friends already, no reason to send it further, should never occur since client checks it
+        }
+
         User user = getUserFromConnectedUsers(loginToAdd);
         if( user == null ){
             /* Do nothing or communicate it to sender, don't know yet*/
             System.out.println("No user found");
+            return;
         }
         String text = userToHandle.getLogin();
         ServerToClientMessage message = new ServerToClientMessage( ServerToClientMessageType.USER_WANTS_TO_BE_YOUR_FRIEND, text);
@@ -224,19 +270,137 @@ public class ServerThread extends Thread{
 
     }
 
+    /*
+    * registers both users as friends in database
+    * and communicates it to first_user
+    * */
     void processConfirmationOfFriendship(String newFriend){
-        /*TODO:
-            databaseHandler.insertFriends(userToHandle.getLogin(), newFriend);
-            ServerToClientMessage message = new ServerToClientMessage( ServerToClientMessageType.CONFIRMATION_OF_FRIENDSHIP, userToHandle.getLogin() );
+        if( databaseHandler.checkFriendship( userToHandle.getLogin(), newFriend)) { // it is possible to send few requests and to confirm these few requests, so we check if friendship is not already booked
+            databaseHandler.insertFriendship(newFriend, userToHandle.getLogin());
             User user = getUserFromConnectedUsers( newFriend );
             if( user == null ){
-                //do nothing since the friendship is already booked in database
+                //do nothing since the friendship is already booked in database and user will get this friendship when he log in
                 return;
             }
-            sendMessage( newMessage, user );
-
-         */
+            ServerToClientMessage message = new ServerToClientMessage( ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST, newFriend);
+            sendMessage( message, user );
+        }
     }
+
+    /*
+    * returns group_names, in which given user is, separated by '#'
+    * */
+    String getUserGroups(String user){
+        String userGroups = "";
+        for(Group group: groups){
+            for(int i=0; i<group.getSize(); ++i){
+                if( group.getUser(i).equals(user)){
+                    userGroups += group.getGroupName() + "#";
+                    break;
+                }
+            }
+        }
+        return userGroups;
+    }
+
+    /*
+    * create group if group_name is not occupied
+    * if it is occpied then communicate it to user
+    * */
+    void processCreateGroup(String groupName){
+        ServerToClientMessage message;
+        if( databaseHandler.checkIfGroupExists(groupName)){
+            ServerToClientMessageType type = ServerToClientMessageType.GROUP_NAME_OCCUPIED;
+            message = new ServerToClientMessage(type, groupName);
+        }else{
+            Group newGroup = new Group(groupName);
+            newGroup.addUser(userToHandle.getLogin());
+            groups.add(newGroup);
+            databaseHandler.createGroup(newGroup);
+
+            ServerToClientMessageType type = ServerToClientMessageType.USER_ADDED_YOU_TO_GROUP;
+            message = new ServerToClientMessage(type, groupName);
+        }
+
+        sendMessage( message, userToHandle);
+    }
+
+
+    //TODO:
+    void processTextGroupMessage(String text){
+        String[] groupAndUserAndText = text.split("#");
+        Group group=null;
+        for( Group g: groups){
+            if( g.getGroupName().equals(groupAndUserAndText[0])){
+                group = g;
+                break;
+            }
+        }
+        if( group == null){
+            System.out.println("GROUP DOES NOT EXIST");
+            return;
+        }
+
+        for(int i=0; i<group.getSize(); ++i){
+            String login = group.getUser(i);
+            User user = getUserFromConnectedUsers(login);
+            if( user == null ){
+                continue;//user is not connected
+            }
+
+            switch(user.getCommunicatorType()){
+                case MULTI_COM:
+                    //TODO
+                    break;
+                case MESSENGER:
+                    //TODO
+                    break;
+                case DISCORD:
+                    //TODO
+                    break;
+                case TELEGRAM:
+                    //TODO
+                    break;
+                default:
+                    System.out.println("WRONG");
+            }
+        }
+    }
+
+    void processAddUserToGroup(String text){
+        String[] groupAndUser = text.split("#");
+
+        Group group = null;
+        for( Group g: groups){
+            if( g.getGroupName().equals(groupAndUser[0])){
+                group = g;
+                break;
+            }
+        }
+        if(group == null){
+            System.out.println("Group does not exist");
+            return;
+        }
+        if( group.getSize() >= 4){
+            System.out.println("Group is full");
+            return;
+        }
+        if( !databaseHandler.checkIfUserExists( groupAndUser[1])){
+            System.out.println("User does not exists");
+        }
+        for(int i=0; i<group.getSize(); ++i){
+            if( group.getUser(i).equals(groupAndUser[1])){
+                System.out.println("User is already in group");
+                return;
+            }
+        }
+
+        //TODO: send to user that he is added to group
+        databaseHandler.addUserToGroup(groupAndUser[0], groupAndUser[1]);
+        group.addUser(groupAndUser[1]);
+
+    }
+
 
     /*
     * Behaves like multiplexer for messages types
@@ -256,8 +420,20 @@ public class ServerThread extends Thread{
                 case ADD_USER_TO_FRIENDS:
                     processAddUserToFriends(text);
                     break;
+                case CONFIRMATION_OF_FRIENDSHIP:
+                    processConfirmationOfFriendship(text);
+                    break;
                 case TEXT_TO_USER:
                     processTextMessage(text);
+                    break;
+                case CREATE_GROUP:
+                    processCreateGroup(text);
+                    break;
+                case ADD_USER_TO_GROUP:
+                    processAddUserToGroup(text);
+                    break;
+                case TEXT_TO_GROUP:
+                    processTextGroupMessage(text);
                     break;
                 default:
                     throw new Exception("Invalid message from client received");

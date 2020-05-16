@@ -117,8 +117,8 @@ public class StartingScreen extends JFrame
 
     public static void main(String[] args) throws IOException {
         //run(new ChatWindow("dupek XD"),500,650);
-        run(new StartingScreen(),"KOMUNIKATOR",300,100);
-        //run(new MainWindow("Igor"),"XDDDDD",600,600);
+        //run(new StartingScreen(),"KOMUNIKATOR",300,100);
+        run(new MainWindow("Igor"),"XDDDDD",600,600);
     }
 
 }

@@ -14,43 +14,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-/*
-* IGOR TO DO CIEBIE
-*
-* W sumie to powinna interesować Cię tylko ta klasa
-*
-* ================================Logowanie/Rejestracja:
-*
-* sendLoginOrRegisterRequest( String login, String password ClientToSeverMessageType type);
-*   Ta funckja, jak się pewnie domyślasz, wysyła zapytanie do serwera odnośnie logowania lub rejestracji.
-*   Przyjmuje login, hasło, oraz typ zapytania. Możliwymi typami są LOGIN_REQUEST i REGISTER_REQUEST
-*   Funkcja rzuci wyjątkiem gdy:
-*       *podany typ zapytania będzie inny np. ADD_USER_TO_FRIENDS (co nie powinno dziać się nigdy)
-*       *hasło lub login zawiera znak '#'
-*       *hasło lub login ma mniej niż 3 znaki długości
-*
-*
-* receiveLoginAnswer()
-*   Odbiera odpowiedź od serwera dotyczącą zalogowania.
-*   Gdy uda się zalgować(zarejestrować) to zwraca prawdę.
-*   Gdy uda się zalogować, to funkcja automatycznie zaczyna wątek nasłuchiwacza (ClientPrinterThread).
-*   Od tego momentu klient przechodzi do 'normalnego' trybu pracy, tj. może wysyłać/odbierać wiadomości, dodawać znajomych itd.
-*   Rzuca wyjątkiem gdy:
-*       *komunikat otrzymany od serwera nie jest ani CONFIRM_LOGIN ani REJECT_LOGIN( też nigdy nie powinno się zdarzyć)
-*
-* ========================Koniec logowania/rejestracji
-*
-*
-* ========================Wylogowywanie
-* logout()
-*   Wysyła komunikat do serwera, że kończymy pracę jako dany użytkownik. Nie czekamy na żadną odpowiedź.
-* =========================Koniec wylogowywania
-*
-*
-*
-* A co do powiadomień to możesz spojrzeć do pliku NotificationHandler.java, ale to jeszcze nie jest dobrze zrobione, prawdopodobnie sie zmieni. Ale główna idea raczej zostanie
-*
-* */
+
 
 public class Client {
 
@@ -201,7 +165,7 @@ public class Client {
 
     static void sendTextMessageToUser(String userToSend, String text){
         String textMessage = userToSend + "#" + text;
-        ClientToServerMessageType type = ClientToServerMessageType.TEXT;
+        ClientToServerMessageType type = ClientToServerMessageType.TEXT_TO_USER;
         ClientToServerMessage message = new ClientToServerMessage(type, textMessage);
         sendMessage(message);
 

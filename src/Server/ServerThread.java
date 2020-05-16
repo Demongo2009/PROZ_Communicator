@@ -256,7 +256,7 @@ public class ServerThread extends Thread{
                 case ADD_USER_TO_FRIENDS:
                     processAddUserToFriends(text);
                     break;
-                case TEXT:
+                case TEXT_TO_USER:
                     processTextMessage(text);
                     break;
                 default:

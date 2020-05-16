@@ -39,10 +39,10 @@ public class ClientPrinterThread extends Thread {
         return message;
     }
 
-    private void processMessage(ServerToClientMessage message){
+    private void processMessage(ServerToClientMessage message)
+    {
         if( message == null){
-            return;
-        }
+            return; }
         Client.notificationsHandler.addNotification(message);
         //try {
         //    switch (message.getType()) {

@@ -6,15 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="botdiscord" />
         <module name="bottelegram" />
+        <module name="botdiscord" />
         <module name="botmessengerV2" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="bothangouts" target="1.5" />
-      <module name="botmessenger" target="11" />
-      <module name="botmessengerV3" target="1.11" />
     </bytecodeTargetLevel>
   </component>
 </project>

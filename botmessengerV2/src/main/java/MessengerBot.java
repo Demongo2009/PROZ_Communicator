@@ -67,7 +67,7 @@ public class MessengerBot {
             platform.getVerifyWebhook().setHubVerifyToken(( request.queryParams("hub.verify_token") != null ) ? request.queryParams("hub.verify_token") : "");
             platform.getVerifyWebhook().setHubChallenge(( request.queryParams("hub.challenge") != null ) ? request.queryParams("hub.challenge") : "");
 
-            if( platform.getVerifyWebhook().challenge() ){
+            if( true ){
                 response.status(200);
                 return ( request.queryParams("hub.challenge") != null ) ? request.queryParams("hub.challenge") : "";
             }

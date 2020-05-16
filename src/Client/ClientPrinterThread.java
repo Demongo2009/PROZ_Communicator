@@ -3,6 +3,7 @@ package Client;
 import Messages.clientToServer.ClientToServerMessage;
 import Messages.clientToServer.ClientToServerMessageType;
 import Messages.serverToClient.ServerToClientMessage;
+import Messages.serverToClient.ServerToClientMessageType;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,44 +40,21 @@ public class ClientPrinterThread extends Thread {
         return message;
     }
 
-    private void processMessage(ServerToClientMessage message)
-    {
+    private void processMessage(ServerToClientMessage message){
+        //TODO: we need to handle these messages
+
+        //todo add user when we get USER_ACCEPTED_YOUR_FRIEND_REQUEST,
+        //todo add group when we get USER_ADDED_YOU_TO_GROUP,
+        //todo and more probably...
         if( message == null){
-            return; }
-        Client.notificationsHandler.addNotification(message);
-        //try {
-        //    switch (message.getType()) {
-        //       case USER_WANTS_TO_BE_YOUR_FRIEND:
-        //            System.out.println("USER WANTS TO BE YOUR FRIEND");
-        //            /*
-        //             * TUTAJ BĘDZIE TRZEBA ZROBIĆ POWIADOMIENIE, KTORE PO WYKONANIU ZWOLNI WĄTEK
-        //             * if yes
-        //             *      save his nickname to 'friends' arrayList and send to server confirmation
-        //             * if no
-        //             *      do nothing
-        //             */
-        //            break;
-        //        default:
-        //            throw new Exception("Invalid message from server received");
-        //    }
-        //}catch (Exception e){
-        //    e.printStackTrace();
-        //}
-
-    }
-
-    void confirmFriendship(String newFriend){
-        /*for(String s: friends){
-            if( s.equals(newFriend)){
-                System.out.println("USER IS ALREADY YOUR FRIEND");//should never be executed in normal circumnstances
-                return;
-            }
+            return;
         }
-
-        friends.add(newFriend);
-        ClientToServerMessageType type = ClientToServerMessageType.CONFIRMATION_OF_FRIENDSHIP;
-        ClientToServerMessage message = new ClientToServerMessage(type, newFriend);
-*/
+        if( message.getType() == ServerToClientMessageType.LOGOUT){
+            this.stopRunning();
+            return;
+        }
+        Client.notificationsHandler.addNotification(message);
+        System.out.println( message.getText() );
 
     }
 

@@ -13,6 +13,7 @@ import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class MessengerBot {
@@ -104,20 +105,20 @@ public class MessengerBot {
                     Logger.info("Attachment#:" + attachment);
                 }
 
-                String text = message.getMessageText();
+
                 MessageTemplate message_tpl = platform.getBaseSender().getMessageTemplate();
                 ButtonTemplate button_message_tpl = platform.getBaseSender().getButtonTemplate();
                 ListTemplate list_message_tpl = platform.getBaseSender().getListTemplate();
                 GenericTemplate generic_message_tpl = platform.getBaseSender().getGenericTemplate();
                 ReceiptTemplate receipt_message_tpl = platform.getBaseSender().getReceiptTemplate();
 
-                clientPrinterThread.initializeMessage(text,message.getUserId());
+                clientPrinterThread.initializeMessage(message_text,message.getUserId());
                 clientPrinterThread.initializePlatform();
                 clientPrinterThread.releaseMutex();
 
 //            outObject.writeObject(new ClientToServerMessage(ClientToServerMessageType.TEXT,"dsa#sda",CommunicatorType.MESSENGER));
 
-                if( text.equals("hello") && currentState == AvailableStates.INIT ){
+                if( message_text.equals("hello") && currentState == AvailableStates.INIT ){
 
 //                    System.out.println("ty");
                     outObject.writeObject(new ClientToServerMessage(ClientToServerMessageType.REQUEST_LOGIN,"login#password", CommunicatorType.MESSENGER));
@@ -127,36 +128,42 @@ public class MessengerBot {
                 }
                 else if( currentState == AvailableStates.CONNECTED ){
 
-                    outObject.writeObject(new ClientToServerMessage(ClientToServerMessageType.TEXT,"messenger#"+text,CommunicatorType.MESSENGER));
+                    for(String a: attachments.values()){
+                        outObject.writeObject(new ClientToServerMessage(ClientToServerMessageType.IMAGE,a,CommunicatorType.MESSENGER));
+                    }
+                    if(!message_text.equals("")){
+                        outObject.writeObject(new ClientToServerMessage(ClientToServerMessageType.TEXT,"messenger#"+message_text,CommunicatorType.MESSENGER));
+                    }
 
-                    if (text == "Quit"){
+
+                    if (message_text == "Quit"){
                         currentState = AvailableStates.INIT;
                     }
 
                 }
 
 
-                else if( text.equals("image") ){
+                else if( message_text.equals("image") ){
 
                     message_tpl.setRecipientId(message.getUserId());
                     message_tpl.setAttachment("image", "http://techslides.com/demos/samples/sample.jpg", false);
                     message_tpl.setNotificationType("SILENT_PUSH");
                     platform.getBaseSender().send(message_tpl);
 
-                }else if( text.equals("file") ){
+                }else if( message_text.equals("file") ){
 
                     message_tpl.setRecipientId(message.getUserId());
                     message_tpl.setAttachment("file", "http://techslides.com/demos/samples/sample.pdf", false);
                     message_tpl.setNotificationType("NO_PUSH");
                     platform.getBaseSender().send(message_tpl);
 
-                }else if( text.equals("video") ){
+                }else if( message_text.equals("video") ){
 
                     message_tpl.setRecipientId(message.getUserId());
                     message_tpl.setAttachment("video", "http://techslides.com/demos/samples/sample.mp4", false);
                     platform.getBaseSender().send(message_tpl);
 
-                }else if( text.equals("audio") ){
+                }else if( message_text.equals("audio") ){
 
                     message_tpl.setRecipientId(message.getUserId());
                     message_tpl.setAttachment("audio", "http://techslides.com/demos/samples/sample.mp3", false);

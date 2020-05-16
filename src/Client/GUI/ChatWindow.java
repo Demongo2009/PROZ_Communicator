@@ -1,12 +1,17 @@
 package Client.GUI;
 import static Client.GUI.tools.SwingConsole.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -46,8 +51,27 @@ public class ChatWindow extends JPanel
     {
         public void actionPerformed(ActionEvent event)
         {
-           TryToSend();
+            TryToSend();
         }
+    }
+    public static void addImage(String url){
+        JFrame imageFrame = new JFrame();
+
+        JLabel label = null;
+        try {
+
+            URL link = new URL(url);
+            BufferedImage image = ImageIO.read(link);
+            label = new JLabel(new ImageIcon(image));
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        imageFrame.add(label);
+        imageFrame.pack();
+        imageFrame.setVisible(true);
     }
 
     public ChatWindow(String login)
@@ -98,4 +122,3 @@ public class ChatWindow extends JPanel
         setVisible(true);
     }
 }
-

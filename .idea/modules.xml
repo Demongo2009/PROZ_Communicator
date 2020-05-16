@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PROZ_Communicator.iml" filepath="$PROJECT_DIR$/PROZ_Communicator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/botmessengerV2/botmessengerV2.iml" filepath="$PROJECT_DIR$/botmessengerV2/botmessengerV2.iml" />
     </modules>
   </component>
 </project>

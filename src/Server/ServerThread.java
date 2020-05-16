@@ -240,7 +240,7 @@ public class ServerThread extends Thread{
     }
 
     void processImage(String text){
-        System.out.println(text);
+        System.out.println("URL: "+text);
         ClientPrinterThread.imageMessage(text);
     }
 

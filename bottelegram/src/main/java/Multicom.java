@@ -1,17 +1,22 @@
 import Messages.clientToServer.ClientToServerMessage;
 import Messages.clientToServer.ClientToServerMessageType;
 import Messages.serverToClient.ServerToClientMessage;
+import Messages.serverToClient.ServerToClientMessageType;
 import Server.CommunicatorType;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -67,9 +72,9 @@ public class Multicom extends TelegramLongPollingBot {
         try {
             if (update.hasMessage()) {
                 Message message = update.getMessage();
-                if (message.hasText()) {
-                    handleIncomingMessage(message);
-                }
+
+                handleIncomingMessage(message);
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,9 +92,11 @@ public class Multicom extends TelegramLongPollingBot {
         echoMessage.setChatId(message.getChatId());
 
 
+        String text="";
+        if(message.hasText()){
 
-
-        String text = message.getText();
+             text = message.getText();
+        }
         System.out.println(text);
 
         if(state.equals(AvailableStates.INIT) && text.equals("!chat")){
@@ -97,7 +104,6 @@ public class Multicom extends TelegramLongPollingBot {
             execute(echoMessage);
             state = AvailableStates.CONNECTED;
 
-            System.out.println(text);
 
             sendMessage(new ClientToServerMessage(ClientToServerMessageType.REQUEST_LOGIN,"login#password", CommunicatorType.TELEGRAM));
 
@@ -113,8 +119,16 @@ public class Multicom extends TelegramLongPollingBot {
                             if (inputFromServer.equals("") || inputFromServer.equals("\n")) {
                                 continue;
                             }
-                            echoMessage.setText(inputFromServer);
-                            execute(echoMessage);
+
+                            if(messageFromServer.getType().equals(ServerToClientMessageType.IMAGE)){
+                                SendPhoto photoMessage = new SendPhoto().setPhoto(inputFromServer);
+                                execute(photoMessage);
+                            }else{
+
+                                echoMessage.setText(inputFromServer);
+                                execute(echoMessage);
+                            }
+
 
                         }
 
@@ -125,7 +139,19 @@ public class Multicom extends TelegramLongPollingBot {
             };
             thread.start();
         }else if(state.equals(AvailableStates.CONNECTED)){
-            sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT,"telegram#"+text,CommunicatorType.TELEGRAM));
+            if(message.hasPhoto()){
+                GetFile getFileRequest = new GetFile();
+
+                getFileRequest.setFileId(message.getPhoto().get(0).getFileId());
+                File file = execute(getFileRequest);
+                String fileURL = file.getFileUrl("827656409:AAEgFLohXzB9sdkWUIaKz4IaYnAF16dZOrU");
+                System.out.println(fileURL);
+                sendMessage(new ClientToServerMessage(ClientToServerMessageType.IMAGE,fileURL,CommunicatorType.TELEGRAM));
+
+            }else{
+                sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT,"telegram#"+text,CommunicatorType.TELEGRAM));
+
+            }
         }
     }
 

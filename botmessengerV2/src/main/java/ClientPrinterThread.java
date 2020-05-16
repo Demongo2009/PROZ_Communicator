@@ -1,4 +1,5 @@
 import Messages.serverToClient.ServerToClientMessage;
+import Messages.serverToClient.ServerToClientMessageType;
 import com.clivern.racter.BotPlatform;
 import com.clivern.racter.senders.templates.*;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -82,8 +83,14 @@ public class ClientPrinterThread extends Thread {
                     continue;
                 }
 //                System.out.println("Server.Server: "+ inputFromServer);
+
                 message_tpl.setRecipientId(userId);
-                message_tpl.setMessageText("Server: "+ inputFromServer);
+                if(message.getType().equals(ServerToClientMessageType.IMAGE)){
+                    message_tpl.setAttachment("image",inputFromServer,true);
+                }else{
+                    message_tpl.setMessageText("Server: "+ inputFromServer);
+
+                }
                 message_tpl.setNotificationType("REGULAR");
                 try {
                     platform.getBaseSender().send(message_tpl);

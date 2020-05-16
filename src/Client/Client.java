@@ -14,44 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-/*
-* IGOR TO DO CIEBIE
-*
-* W sumie to powinna interesować Cię tylko ta klasa
-*
-* ================================Logowanie/Rejestracja:
-*
-* sendLoginOrRegisterRequest( String login, String password ClientToSeverMessageType type);
-*   Ta funckja, jak się pewnie domyślasz, wysyła zapytanie do serwera odnośnie logowania lub rejestracji.
-*   Przyjmuje login, hasło, oraz typ zapytania. Możliwymi typami są LOGIN_REQUEST i REGISTER_REQUEST
-*   Funkcja rzuci wyjątkiem gdy:
-*       *podany typ zapytania będzie inny np. ADD_USER_TO_FRIENDS (co nie powinno dziać się nigdy)
-*       *hasło lub login zawiera znak '#'
-*       *hasło lub login ma mniej niż 3 znaki długości
-*
-*
-* receiveLoginAnswer()
-*   Odbiera odpowiedź od serwera dotyczącą zalogowania.
-*   Gdy uda się zalgować(zarejestrować) to zwraca prawdę.
-*   Gdy uda się zalogować, to funkcja automatycznie zaczyna wątek nasłuchiwacza (ClientPrinterThread).
-*   Od tego momentu klient przechodzi do 'normalnego' trybu pracy, tj. może wysyłać/odbierać wiadomości, dodawać znajomych itd.
-*   Rzuca wyjątkiem gdy:
-*       *komunikat otrzymany od serwera nie jest ani CONFIRM_LOGIN ani REJECT_LOGIN( też nigdy nie powinno się zdarzyć)
-*
-* ========================Koniec logowania/rejestracji
-*
-*
-* ========================Wylogowywanie
-* logout()
-*   Wysyła komunikat do serwera, że kończymy pracę jako dany użytkownik. Nie czekamy na żadną odpowiedź.
-* =========================Koniec wylogowywania
-*
-*
-*
-* A co do powiadomień to możesz spojrzeć do pliku NotificationHandler.java, ale to jeszcze nie jest dobrze zrobione, prawdopodobnie sie zmieni. Ale główna idea raczej zostanie
-*
-* */
-
 public class Client {
 
     static String hostName = "localhost";
@@ -228,7 +190,7 @@ public class Client {
     }
 
 
-    static private  void sendMessage(ClientToServerMessage message){
+    private static void sendMessage(ClientToServerMessage message){
         try {
             outObject.writeObject( message );
         } catch (IOException e) {
@@ -246,7 +208,10 @@ public class Client {
         ClientToServerMessage message = new ClientToServerMessage(type, userToAdd);
         sendMessage(message);
     }
-
+    /*
+    * Sends message to server that we are now friends with friendToAdd
+    * Add friend's nickname to friends ArrayList
+    * */
     static void confirmFriendship(String friendToAdd){
         if(checkFriendship( friendToAdd)){
             return;
@@ -257,10 +222,16 @@ public class Client {
         sendMessage(message);
     }
 
-    static boolean checkFriendship(String friendUsername){
+    /*
+    * Checks if username is on our friends Arraylist
+    * */
+    private static boolean checkFriendship(String friendUsername){
         return friends.contains(friendUsername);
     }
 
+    /*
+    * Sends to out friend a text message
+    * */
     static void sendTextMessageToUser(String userToSend, String text){
         if( !checkFriendship(userToSend) ){
             System.out.println("User is not your friend -> you cannot write to him");
@@ -279,11 +250,16 @@ public class Client {
 
     }
 
-
-    static boolean checkMembership(String groupName){
+    /*
+    * Checks if groupName in on our groups ArrayList
+    * */
+    private static boolean checkMembership(String groupName){
         return groups.contains(groupName);
     }
 
+    /*
+    * Sends message to server a request to create a group
+    * */
     static void createGroup(String groupName){
         if( checkMembership(groupName)){
             System.out.println("You are in such group already");
@@ -309,6 +285,9 @@ public class Client {
 
     }
 
+    /*
+    *
+    * */
     static void sendTextMessageToGroup(String groupName,String text){
         if(checkMembership(groupName)){
             System.out.println("You are not a part of this group");
@@ -321,6 +300,9 @@ public class Client {
 
     }
 
+    /*
+    * Adds our friend to group we are into
+    * */
     static void addUserToGroup(String group, String user){
         if( !checkMembership(group)){
             System.out.println("You are not a member of this group");

@@ -21,3 +21,11 @@ P
  src/Server/CommunicatorType.java,f/2/f21d5459d34415781e7c013658ae206a278f12f8
 D
 src/Server/User.java,3/e/3e8de50985ed02949588a4a994bdebeaa70461ef
+j
+:src/Messages/clientToServer/ClientToServerMessageType.java,b/7/b7f15e1102cddc4aaf161ed1bef1d854a5e383f9
+F
+src/Server/Server.java,a/9/a9588fce1c3bc78ec27bdea72c1267a00a95124e
+E
+src/Server/Group.java,0/6/06d572629fd48125d046d96f3cd8915d2d6fb86d
+T
+$src/Client/NotificationsHandler.java,2/d/2d65eb0ee601d4f9337d520742476269e0f6bee1

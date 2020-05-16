@@ -272,6 +272,7 @@ public class ServerThread extends Thread{
 
     /*
     * registers both users as friends in database
+    * and communicates it to first_user
     * */
     void processConfirmationOfFriendship(String newFriend){
         if( databaseHandler.checkFriendship( userToHandle.getLogin(), newFriend)) { // it is possible to send few requests and to confirm these few requests, so we check if friendship is not already booked
@@ -286,6 +287,9 @@ public class ServerThread extends Thread{
         }
     }
 
+    /*
+    * returns group_names, in which given user is, separated by '#'
+    * */
     String getUserGroups(String user){
         String userGroups = "";
         for(Group group: groups){
@@ -299,6 +303,10 @@ public class ServerThread extends Thread{
         return userGroups;
     }
 
+    /*
+    * create group if group_name is not occupied
+    * if it is occpied then communicate it to user
+    * */
     void processCreateGroup(String groupName){
         ServerToClientMessage message;
         if( databaseHandler.checkIfGroupExists(groupName)){
@@ -317,6 +325,8 @@ public class ServerThread extends Thread{
         sendMessage( message, userToHandle);
     }
 
+
+    //TODO:
     void processTextGroupMessage(String text){
         String[] groupAndUserAndText = text.split("#");
         Group group=null;

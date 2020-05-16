@@ -16,8 +16,11 @@ public class ChatWindow extends JPanel
     private JPanel southPanel = new JPanel();
     private  JTextField  messageBox = new JTextField(30);
     JButton     sendMessage = new JButton("Send Message");
+    JButton     closeButton = new JButton("Close chat");
     JTextArea   chatBox = new JTextArea();
+    MainWindow upRef;
     String  username="Igor";
+    String receiver;
     Date date = new Date();
     SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
     private void TryToSend()
@@ -42,28 +45,35 @@ public class ChatWindow extends JPanel
     }
 
 
+    public ChatWindow(String login,String FriendName, MainWindow upRef)
 
-    private class sendMessageButtonListener implements ActionListener
     {
-        public void actionPerformed(ActionEvent event)
-        {
-           TryToSend();
-        }
-    }
-
-    public ChatWindow(String login)
-    {
+        this.upRef = upRef;
+        receiver= FriendName;
         setLayout(new BorderLayout());
         username = login;
         mainPanel.setLayout(new BorderLayout());
         southPanel.setBackground(Color.PINK);
         southPanel.setLayout(new GridBagLayout());
         messageBox.requestFocusInWindow();
-        sendMessage.addActionListener(new sendMessageButtonListener());
         chatBox.setEditable(false);
         chatBox.setFont(new Font("Serif", Font.PLAIN, 15));
         chatBox.setLineWrap(true);
         mainPanel.add(new JScrollPane(chatBox), BorderLayout.CENTER);
+
+        closeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                upRef.CloseChatWindow(receiver);
+            }
+        });
+        sendMessage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TryToSend();
+            }
+        });
 
         GridBagConstraints left = new GridBagConstraints();
         left.anchor = GridBagConstraints.LINE_START;
@@ -92,7 +102,7 @@ public class ChatWindow extends JPanel
         southPanel.add(sendMessage, right);
 
         mainPanel.add(BorderLayout.SOUTH, southPanel);
-
+        mainPanel.add(BorderLayout.NORTH, closeButton);
         add(mainPanel);
         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(470, 300);

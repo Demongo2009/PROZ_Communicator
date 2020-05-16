@@ -15,7 +15,6 @@ public class MainWindow extends JFrame
     private JPanel panel;
     private JPanel panel1;
     //private JLabel are = new JLabel("",SwingConstants.CENTER);
-    private JButton startChat = new JButton("START CONVERSATION");
     //private int openedTabs=2;
     private void InitiateTabs()
     {
@@ -27,32 +26,23 @@ public class MainWindow extends JFrame
     {
         if(tabs.indexOfTab(FriendName)==-1)
         {
-            tabs.addTab(FriendName, new ChatWindow(Username));
+            tabs.addTab(FriendName, new ChatWindow(Username,FriendName,this));
             return false;
         }
         else
             return true;
 
     }
-
+    void CloseChatWindow(String closedTabUserName)
+    {
+        tabs.removeTabAt(tabs.indexOfTab(closedTabUserName));
+    }
     public MainWindow(String user) throws IOException
     {
+        MainWindow tmpRef =this;
         panel =  new MainTab(this,user);
-
         panel1 = new AddFriendPanel();
         Username = user;
-        startChat.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                tabs.addTab("CZAT",new ChatWindow(Username));
-            }
-        });
-
-        setTitle("KOMUNIKATOR XD");
-
-
         InitiateTabs();
         add(tabs);
     }

@@ -40,7 +40,7 @@ public class DiscordBot {
 
     public static void main(String[] args) {
         // Insert your bot's token here
-        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.Xr-iIA.G4x6ie7HdZlRTbd4GX6BvKsK5VY";
+        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.Xr-sNQ.QBfv1X1mikAekMqQoqQGjRKPSZY";
 
         DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
 
@@ -96,6 +96,7 @@ public class DiscordBot {
 
                 if(event.getMessageAttachments() != null){
                     List<MessageAttachment> attachmentArray = event.getMessage().getAttachments();
+                    if(attachmentArray.get(0)!=null)
                     sendMessage(new ClientToServerMessage(ClientToServerMessageType.IMAGE,attachmentArray.get(0).getUrl().toString(),CommunicatorType.DISCORD));
 
                 }else {

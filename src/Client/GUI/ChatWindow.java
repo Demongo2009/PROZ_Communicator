@@ -1,12 +1,17 @@
 package Client.GUI;
 import static Client.GUI.tools.SwingConsole.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -16,11 +21,8 @@ public class ChatWindow extends JPanel
     private JPanel southPanel = new JPanel();
     private  JTextField  messageBox = new JTextField(30);
     JButton     sendMessage = new JButton("Send Message");
-    JButton     closeButton = new JButton("Close chat");
     JTextArea   chatBox = new JTextArea();
-    MainWindow upRef;
     String  username="Igor";
-    String receiver;
     Date date = new Date();
     SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
     private void TryToSend()
@@ -45,35 +47,46 @@ public class ChatWindow extends JPanel
     }
 
 
-    public ChatWindow(String login,String FriendName, MainWindow upRef)
-
+    private class sendMessageButtonListener implements ActionListener
     {
-        this.upRef = upRef;
-        receiver= FriendName;
+        public void actionPerformed(ActionEvent event)
+        {
+            TryToSend();
+        }
+    }
+    public static void addImage(String url){
+        JFrame imageFrame = new JFrame();
+
+        JLabel label = null;
+        try {
+
+            URL link = new URL(url);
+            BufferedImage image = ImageIO.read(link);
+            label = new JLabel(new ImageIcon(image));
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        imageFrame.add(label);
+        imageFrame.pack();
+        imageFrame.setVisible(true);
+    }
+
+    public ChatWindow(String login)
+    {
         setLayout(new BorderLayout());
         username = login;
         mainPanel.setLayout(new BorderLayout());
         southPanel.setBackground(Color.PINK);
         southPanel.setLayout(new GridBagLayout());
         messageBox.requestFocusInWindow();
+        sendMessage.addActionListener(new sendMessageButtonListener());
         chatBox.setEditable(false);
         chatBox.setFont(new Font("Serif", Font.PLAIN, 15));
         chatBox.setLineWrap(true);
         mainPanel.add(new JScrollPane(chatBox), BorderLayout.CENTER);
-
-        closeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                upRef.CloseChatWindow(receiver);
-            }
-        });
-        sendMessage.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                TryToSend();
-            }
-        });
 
         GridBagConstraints left = new GridBagConstraints();
         left.anchor = GridBagConstraints.LINE_START;
@@ -102,11 +115,10 @@ public class ChatWindow extends JPanel
         southPanel.add(sendMessage, right);
 
         mainPanel.add(BorderLayout.SOUTH, southPanel);
-        mainPanel.add(BorderLayout.NORTH, closeButton);
+
         add(mainPanel);
         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(470, 300);
         setVisible(true);
     }
 }
-

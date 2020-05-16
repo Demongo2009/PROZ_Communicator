@@ -1,5 +1,6 @@
 package Client;
 
+import Client.GUI.ChatWindow;
 import Messages.clientToServer.ClientToServerMessage;
 import Messages.clientToServer.ClientToServerMessageType;
 import Messages.serverToClient.ServerToClientMessage;
@@ -39,6 +40,11 @@ public class ClientPrinterThread extends Thread {
 
         return message;
     }
+
+    public static void imageMessage(String url){
+        ChatWindow.addImage(url);
+    }
+
 
     private void processMessage(ServerToClientMessage message){
         if( message == null){

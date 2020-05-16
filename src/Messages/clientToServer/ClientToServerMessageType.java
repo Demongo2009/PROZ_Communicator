@@ -12,6 +12,7 @@ public enum ClientToServerMessageType
     CONFIRMATION_OF_FRIENDSHIP,
     CREATE_GROUP,
     ADD_USER_TO_GROUP,
+    IMAGE,
 
 
 }

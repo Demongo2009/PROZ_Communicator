@@ -3,7 +3,10 @@ package Client.GUI;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -12,42 +15,38 @@ import java.net.URL;
 
 public class AddFriendPanel extends JPanel
 {
-    private String[] avaliablePeople = {"Igor","Konrad","Kuba","Bartek","Szymon","Twoja Stara XD","NIE PYTAJĄC SIE O IMIE WALCZA Z OSTRYM CIENIEM MGLY"};
-    private DefaultListModel lItems = new DefaultListModel();
-    private JList lyst = new JList(lItems);
-    private JScrollPane lst = new JScrollPane(lyst);
+
     private JButton b = new JButton("Add Friend");
-    private BufferedImage image;
-    JLabel picLabel;
+    private JPanel AddFriendArea;
+    private JTextField FriendNameInput = new JTextField(20);
+    private MainWindow ReferenceToMain;
 
-    public AddFriendPanel() throws IOException {
 
-        String path = "https://cdn.natemat.pl/5c6979ac9be18ad6c14f773fc606b87d,382,0,0,0.jpg";
-        URL link = new URL(path);
-        image = ImageIO.read(link);
-        picLabel = new JLabel(new ImageIcon(image));
-        //picLabel = new JLabel((new ImageIcon("addFriend.gif")));
-        //meme = new ImageIcon(getClass().getResource("addFriend.gif"));
+
+    public AddFriendPanel(MainWindow upRef)
+    {
+        ReferenceToMain = upRef;
         setLayout(null);
-        Border brd = BorderFactory.createMatteBorder(
-                1, 1, 2, 2, Color.BLACK);
-        lst.setBorder(brd);
 
+        b.setBounds(50,60,95,30);
+        FriendNameInput.setBounds(10,20,135,30);
 
-        for(Object d :avaliablePeople)
-        {
-            lItems.addElement(d);
-        }
-        //lst.setBounds(30,30,150,400);
-        System.out.println("TYLE JEST: " + avaliablePeople.length);
-        lst.setBounds(30,30,150,22*avaliablePeople.length<400?22*avaliablePeople.length:400);
-        b.setBounds(350,450,170,30);
-        picLabel.setBounds(200,30,500,500);
+        b.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
 
-        add(lst);
-        add(b);
-        add(picLabel);
-        // Register event listeners
+            }
+        });
+
+        AddFriendArea = new JPanel();
+        AddFriendArea.setBorder(new TitledBorder("Add Friend"));
+        AddFriendArea.setLayout(null);
+        AddFriendArea.add(FriendNameInput);
+        AddFriendArea.add(b);
+        AddFriendArea.setSize(155,110);
+        add(AddFriendArea);
+
 
     }
 

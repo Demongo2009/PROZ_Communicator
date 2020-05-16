@@ -1,27 +1,20 @@
 package Client.GUI;
 
+import Client.Client;
+
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.IOException;
 
-import static Client.GUI.tools.SwingConsole.*;
+import static Client.Client.addUserToFriends;
+import static Client.Client.logout;
 
 public class MainWindow extends JFrame
 {
     private String Username="IGOR";
     private JTabbedPane tabs = new JTabbedPane();
     private JPanel panel;
-    private JPanel panel1;
-    //private JLabel are = new JLabel("",SwingConstants.CENTER);
-    //private int openedTabs=2;
-    private void InitiateTabs()
-    {
-        tabs.addTab("MAIN PANEL",panel);
-        tabs.addTab("ADD FRIEND",panel1);
 
-    }
     boolean OpenChatWindow(String FriendName)
     {
         if(tabs.indexOfTab(FriendName)==-1)
@@ -37,15 +30,39 @@ public class MainWindow extends JFrame
     {
         tabs.removeTabAt(tabs.indexOfTab(closedTabUserName));
     }
+
+    void SendFriendRequest(String AddedFriend)
+    {
+        addUserToFriends(AddedFriend);
+        //WYSYLANIE ZAPROSZENIA DO ZNAJOMYCH (DO SERWERA)
+    }
+
+
     public MainWindow(String user) throws IOException
     {
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+
+                super.windowClosing(e);
+                System.out.println("WLASNIE SIE ZESRALEM XDDDD");
+                logout();
+                //System.exit(0);
+                dispose();
+            }
+        });
         MainWindow tmpRef =this;
         panel =  new MainTab(this,user);
-        panel1 = new AddFriendPanel();
+        tabs.addTab("MAIN PANEL",panel);
         Username = user;
-        InitiateTabs();
         add(tabs);
+
+
+
+
     }
+
+
 
 
 }

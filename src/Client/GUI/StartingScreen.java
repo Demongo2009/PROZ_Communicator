@@ -1,12 +1,12 @@
 package Client.GUI;
-import static Client.Client.receiveLoginAnswer;
-import static Client.Client.sendLoginOrRegisterRequest;
+import static Client.Client.*;
 import static Client.GUI.tools.SwingConsole.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import Client.Client;
 import Messages.clientToServer.ClientToServerMessageType;
 import javafx.util.Pair;
 
@@ -15,6 +15,7 @@ import javax.swing.*;
 
 public class StartingScreen extends JFrame
 {
+    private String STARTING_SCREEN_TITLE = "Komunikator";
     private JPanel panel = new JPanel();
     private JButton loginButton = new JButton("LOGIN");
     private JButton registerButton = new JButton("REGISTER");
@@ -22,8 +23,6 @@ public class StartingScreen extends JFrame
     private String login="";
     private String pass="";
     static String username = null;
-
-
 
     private void CheckLoginPassword() throws IOException
     {
@@ -37,17 +36,17 @@ public class StartingScreen extends JFrame
         TUTAJ JEST TRYB DZIALANIA
         * */
 
-        if(false)
+        if(true)
         {
             try {
                 sendLoginOrRegisterRequest(login, pass, ClientToServerMessageType.REQUEST_LOGIN);
                 if (receiveLoginAnswer()) {
-                    OperationState.setText("LOGOWANIE SIE UDALO :)");
-                    run(new MainWindow(login), "KOMUNIKATOR XD", 600, 600);
+                    OperationState.setText("Logged in succesfully :)");
+                    run(new MainWindow(login), STARTING_SCREEN_TITLE, 600, 600);
                     dispose();
                 } else {
                     OperationState.setForeground(Color.RED);
-                    OperationState.setText("LOGOWANIE NIE POWIODLO SIE");
+                    OperationState.setText("\t\tCouldn't log in");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -56,11 +55,11 @@ public class StartingScreen extends JFrame
         /*
         *Testowanie obu wariantow
         */
-        if(true)
+        if(false)
         {
             if (login.equals("Igor") && pass.equals("dupa")) {
-                OperationState.setText("LOGOWANIE SIE UDALO :)");
-                run(new MainWindow(login), "KOMUNIKATOR XD", 600, 600);
+                OperationState.setText("Logged in succesfully :)");
+                run(new MainWindow(login), STARTING_SCREEN_TITLE, 600, 600);
                 //run(new ChatWindow(login),500,650);
                 dispose();
             } else {
@@ -71,12 +70,35 @@ public class StartingScreen extends JFrame
     }
     private void CheckRegister()
     {
-        if(!login.isEmpty())
-            OperationState.setText("DODANO UZYTKOWNIKA: "+login);
+        if(true)
+        {
+            try {
+                System.out.println("CHECKIGN REGISTER");
+                sendLoginOrRegisterRequest(login, pass, ClientToServerMessageType.REQUEST_REGISTER);
+                //TUTAJ MUSI BYC Receiveloginanswer do potwierdzenia ze sie udalo
+                //sendLoginOrRegisterRequest(login, pass, ClientToServerMessageType.REQUEST_LOGIN);
+                OperationState.setText("Succesfully signed up :)");
+                run(new MainWindow(login), STARTING_SCREEN_TITLE, 600, 600);
+                dispose();
+//                if (receiveLoginAnswer())
+//                {
+//                    System.out.println("HERE1");
+//
+//                }
+//                else {
+//                    System.out.println("HERE2");
+//                    OperationState.setForeground(Color.RED);
+//                    OperationState.setText("Error, couldn't sing up");
+//                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public StartingScreen()
+    public StartingScreen( )
     {
+        initClient();
         setTitle("CHOOSE LOGIN OR REGISTER");
         panel.setLayout(new FlowLayout());
         loginButton.addActionListener(new ActionListener() {
@@ -117,8 +139,8 @@ public class StartingScreen extends JFrame
 
     public static void main(String[] args) throws IOException {
         //run(new ChatWindow("dupek XD"),500,650);
-        //run(new StartingScreen(),"KOMUNIKATOR",300,100);
-        run(new MainWindow("Igor"),"XDDDDD",600,600);
+        run(new StartingScreen(),"KOMUNIKATOR",300,100);
+        //run(new MainWindow("Igor"),"XDDDDD",600,600);
     }
 
 }

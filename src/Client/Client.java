@@ -1,5 +1,6 @@
 package Client;
 
+import Client.GUI.MainWindow;
 import Client.GUI.StartingScreen;
 import Messages.clientToServer.ClientToServerMessage;
 import Messages.clientToServer.ClientToServerMessageType;
@@ -150,7 +151,7 @@ public class Client {
      * Throws exception if received message is not CONFIRM nor REJECT
      * starts listener thread
      * */
-    public static boolean receiveLoginAnswer() throws Exception{
+    public static boolean receiveLoginAnswer(MainWindow refToWindow) throws Exception{
         ServerToClientMessage message = null;
         try {
             message = (ServerToClientMessage)inObject.readObject();
@@ -172,7 +173,7 @@ public class Client {
 
             System.out.println("NO I ELEGANCKO DZIALA :))))");
             /*Start of listener thread*/
-            listener = new ClientPrinterThread(inObject/*, friends*/);
+            listener = new ClientPrinterThread(inObject,refToWindow);
             listener.start();
             return true;
         }else{
@@ -199,6 +200,11 @@ public class Client {
         {
             e.printStackTrace();
         }
+    }
+
+    public static ServerToClientMessage getNotification()
+    {
+        return notificationsHandler.getNotification();
     }
 
 
@@ -247,13 +253,16 @@ public class Client {
     /*
      * Sends to out friend a text message
      * */
-    static void sendTextMessageToUser(String userToSend, String text){
-        if( !checkFriendship(userToSend) ){
+    public static void sendTextMessageToUser(String userToSend, String text)
+    {
+        if( !checkFriendship(userToSend) )
+        {
             System.out.println("User is not your friend -> you cannot write to him");
             return;
         }
 
-        if( text.contains("#") || userToSend.contains("#") ){
+        if( text.contains("#") || userToSend.contains("#") )
+        {
             System.out.println("Using '#' is forbidden! ");
             return;
         }

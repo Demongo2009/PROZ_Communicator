@@ -9,6 +9,7 @@ import java.io.IOException;
 import Client.Client;
 import Messages.clientToServer.ClientToServerMessageType;
 import javafx.util.Pair;
+import sun.applet.Main;
 
 import static Client.GUI.tools.SwingConsole.*;
 import javax.swing.*;
@@ -38,19 +39,27 @@ public class StartingScreen extends JFrame
 
         if(true)
         {
-            try {
+            try
+            {
+                System.out.println("CHECKIGN LOGIN");
                 sendLoginOrRegisterRequest(login, pass, ClientToServerMessageType.REQUEST_LOGIN);
-                if (receiveLoginAnswer()) {
-                    OperationState.setText("Logged in succesfully :)");
-                    run(new MainWindow(login), STARTING_SCREEN_TITLE, 600, 600);
-                    dispose();
-                } else {
-                    OperationState.setForeground(Color.RED);
-                    OperationState.setText("\t\tCouldn't log in");
-                }
-            } catch (Exception e) {
+                //TUTAJ MUSI BYC Receiveloginanswer do potwierdzenia ze sie udalo
+                /*Tworzymy okno głownej aplikacji i wysyłamy referencje do niej do oblugi powiadomien
+                 * sama aplikacja pokaze sie wtedy, gdy serwer zweryfikuje uzytkownika, w przeciwnym razie
+                 * sproboj jeszcze raz*/
+                MainWindow MainClientApp = new MainWindow(login);
+                receiveLoginAnswer(MainClientApp);
+                //wszysyko w porzadku? to odslon okno głowne
+                OperationState.setText("Succesfully signed in :)");
+                run(MainClientApp, STARTING_SCREEN_TITLE, 600, 600);
+                //zamknij okno startowe
+                dispose();
+            }
+            catch (Exception e)
+            {
                 e.printStackTrace();
             }
+
         }
         /*
         *Testowanie obu wariantow
@@ -76,20 +85,16 @@ public class StartingScreen extends JFrame
                 System.out.println("CHECKIGN REGISTER");
                 sendLoginOrRegisterRequest(login, pass, ClientToServerMessageType.REQUEST_REGISTER);
                 //TUTAJ MUSI BYC Receiveloginanswer do potwierdzenia ze sie udalo
-                //sendLoginOrRegisterRequest(login, pass, ClientToServerMessageType.REQUEST_LOGIN);
+                /*Tworzymy okno głownej aplikacji i wysyłamy referencje do niej do oblugi powiadomien
+                * sama aplikacja pokaze sie wtedy, gdy serwer zweryfikuje uzytkownika, w przeciwnym razie
+                * sproboj jeszcze raz*/
+                MainWindow MainClientApp = new MainWindow(login);
+                receiveLoginAnswer(MainClientApp);
+                //wszysyko w porzadku? to odslon okno głowne
                 OperationState.setText("Succesfully signed up :)");
-                run(new MainWindow(login), STARTING_SCREEN_TITLE, 600, 600);
+                run(MainClientApp, STARTING_SCREEN_TITLE, 600, 600);
+                //zamknij okno startowe
                 dispose();
-//                if (receiveLoginAnswer())
-//                {
-//                    System.out.println("HERE1");
-//
-//                }
-//                else {
-//                    System.out.println("HERE2");
-//                    OperationState.setForeground(Color.RED);
-//                    OperationState.setText("Error, couldn't sing up");
-//                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -137,10 +142,10 @@ public class StartingScreen extends JFrame
         getRootPane().setDefaultButton(loginButton);
     }
 
-    public static void main(String[] args) throws IOException {
-        //run(new ChatWindow("dupek XD"),500,650);
-        run(new StartingScreen(),"KOMUNIKATOR",300,100);
-        //run(new MainWindow("Igor"),"XDDDDD",600,600);
+    public static void main(String[] args) throws IOException
+    {
+        //run(new StartingScreen(),"KOMUNIKATOR",300,100);
+        run(new MainWindow("Igor"),"XDDDDD",600,600);
     }
 
 }

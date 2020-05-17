@@ -14,6 +14,7 @@ public class MainTab extends JPanel
     private JList lyst = new JList(lItems);
     private JScrollPane lst = new JScrollPane(lyst);
     private JPanel AddFriend;
+    private JPanel notificationPanel;
     private MainWindow referenceToMain;
     private JLabel state = new JLabel("");
     private JLabel loggedAs = new JLabel("");
@@ -21,11 +22,11 @@ public class MainTab extends JPanel
     String []Friends = {"Igor","Konrad","Kuba","Bartek","Szymon","Twoja Stara XD","Ruchadło leśne", "Dupa","Odbyt XD"};
 
 
-
     public MainTab(MainWindow upRef, String User)
     {
         referenceToMain=upRef;
         AddFriend = new AddFriendPanel(upRef);
+        notificationPanel = new NotoficationPanel();
         setLayout(null);
 
         loggedAs.setText("ZALOGOWANO JAKO:  "+User);
@@ -35,23 +36,27 @@ public class MainTab extends JPanel
                 1, 1, 2, 2, Color.BLACK);
         lst.setBorder(brd);
         //LISTA PRZYJACIOL
-//        for(Object d :Friends)
-//        {
-//            //lItems.addElement(d);
-//        }
-        friends.add("Igor");
-        friends.add("DUpek ");
-        friends.add("Cwel");
-        friends.add("Ciota");
-
-        for(String s: friends)
+        for(Object d :Friends)
         {
-            System.out.print("PRZYJACIEL: ");
-            System.out.println(s);
-            lItems.addElement(s);
+            lItems.addElement(d);
         }
+
+//        friends.add("Igor");
+//        friends.add("ddd ");
+//        friends.add("dddf");
+//        friends.add("ggggg");
+//
+//        for(String s: friends)
+//        {
+//            System.out.print("PRZYJACIEL: ");
+//            System.out.println(s);
+//            lItems.addElement(s);
+//        }
         //USTAWIANIE ELEMENTOW
+       // lst.setBounds(30,30,150,20*friends.size()<400?20*friends.size():400);
+
         lst.setBounds(30,30,150,20*Friends.length<400?20*Friends.length:400);
+
         state.setBounds(335,410,200,20);
         loggedAs.setBounds(355,30,250,70);
         b.setBounds(350,450,170,30);
@@ -63,11 +68,13 @@ public class MainTab extends JPanel
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                int []tab;
                 if(lyst.isSelectionEmpty())
                 {
-                    state.setText("NAJPIERW COS ZAZNACZ KOLES");
+                    state.setText("Select at least one friend first!");
                 }
-                else
+                tab= lyst.getSelectedIndices();
+                if(tab.length==1)
                 {
                     state.setText("");
                     //System.out.println(lyst.getSelectedValue().toString());
@@ -77,6 +84,11 @@ public class MainTab extends JPanel
                     }
 
                     //tabs.addTab("CZAT", new ChatWindow(Username));
+                }
+                //rozmowa grupowa - utworzenie
+                else
+                {
+
                 }
             }
         });

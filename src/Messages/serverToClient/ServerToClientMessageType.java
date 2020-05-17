@@ -11,5 +11,4 @@ public enum ServerToClientMessageType {
     GROUP_NAME_OCCUPIED,
     USER_ADDED_YOU_TO_GROUP,
 
-
 }

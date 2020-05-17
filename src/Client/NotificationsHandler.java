@@ -15,7 +15,8 @@ public class NotificationsHandler {
     }
 
     /* removes first notification and returns it*/
-    ServerToClientMessage getNotification(){
+    ServerToClientMessage getNotification()
+    {
         ServerToClientMessage notification = notifications.get(0);
         notifications.remove(0);
         return notification;

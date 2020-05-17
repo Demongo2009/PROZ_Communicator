@@ -1,4 +1,5 @@
 package Client.GUI;
+import static Client.Client.sendTextMessageToUser;
 import static Client.GUI.tools.SwingConsole.*;
 
 import javax.swing.*;
@@ -23,6 +24,14 @@ public class ChatWindow extends JPanel
     String receiver;
     Date date = new Date();
     SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+    public void receiveMessage(String messageText)
+    {
+        date = new Date();
+        chatBox.append("<" + receiver +" "+ formatter.format(date)+ ">:  " + messageText
+                + "\n");
+    }
+
+
     private void TryToSend()
     {
         if (messageBox.getText().length() < 1)
@@ -39,12 +48,15 @@ public class ChatWindow extends JPanel
             date = new Date();
             chatBox.append("<" + username +" "+ formatter.format(date)+ ">:  " + messageBox.getText()
                     + "\n");
+            sendTextMessageToUser(receiver,messageBox.getText());
             messageBox.setText("");
+
         }
         messageBox.requestFocusInWindow();
     }
 
-
+    //public ChatWindow(String login,String)
+//KOnstruktor dla grupowego czatu
     public ChatWindow(String login,String FriendName, MainWindow upRef)
 
     {

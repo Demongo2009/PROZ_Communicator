@@ -2,6 +2,7 @@ package Client.GUI;
 
 import Client.Client;
 import Messages.serverToClient.ServerToClientMessage;
+import Server.Group;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -11,7 +12,8 @@ import static Client.Client.addUserToFriends;
 import static Client.Client.*;
 
 /*TODO: ZROBIC WSZYSTKIE PRZYPADKI POWIADOMIEN I ICH OBSLUZENIA
-* Zrobic panel NotificationPanel i on bedzie wyswietlal w formie listy wszystkie powiadomienia
+* Zrobic zakladke dla kazdego rodzaju powiadomien
+* zrobic panel NotificationPanel i on bedzie wyswietlal w formie listy wszystkie powiadomienia
 *
 * Trzeba zrobic mozliwosc czatu grupowego
 *   -konstruktor dla Chatwindow dla kilku osob
@@ -39,6 +41,18 @@ public class MainWindow extends JFrame
             return true;
 
     }
+    boolean OpenGroupChatWindow(String GroupName)
+    {
+        if(tabs.indexOfTab(GroupName)==-1)
+        {
+            tabs.addTab(GroupName, new GroupChatWindow(Username,GroupName,this));
+            return false;
+        }
+        else
+            return true;
+
+    }
+
     void CloseChatWindow(String closedTabUserName)
     {
         tabs.removeTabAt(tabs.indexOfTab(closedTabUserName));
@@ -85,6 +99,11 @@ public class MainWindow extends JFrame
             {
                 getMessageFromUser(messageSender,messageContent);
             }
+            case TEXT_MESSAGE_FROM_GROUP:
+            {
+                /*tmp0 = group name, tmp1 = sender, tmp2 = content*/
+                getMessageFromGroup(tmp[0],tmp[1],tmp[2]);
+            }
             case USER_ADDED_YOU_TO_GROUP:
             {
 
@@ -103,8 +122,27 @@ public class MainWindow extends JFrame
 
 
 
+    private void getMessageFromGroup(String groupName,String Sender,String Content)
+    {
+        /*Jezeli ta karta czatu nie jest otwarta to otworz*/
+        if(tabs.indexOfTab(groupName)==-1)
+        {
+            tabs.addTab(groupName,new GroupChatWindow(Username,groupName,this));
+        }
+        else
+        {
+            //WYSLIJ POWIADOMIENIE
+            System.out.println("XDDDD");
+        }
+
+        //Wypisz te wiadomosc
+        ((GroupChatWindow)tabs.getTabComponentAt(tabs.indexOfTab(groupName))).receiveMessage(Content,Sender);
+
+    }
+
     private void getMessageFromUser(String sender, String messageText)
     {
+        /*Jezeli ta karta czatu nie jest otwarta to otworz*/
         if(tabs.indexOfTab(sender)==-1)
         {
             tabs.addTab(sender, new ChatWindow(Username, sender, this));
@@ -112,17 +150,23 @@ public class MainWindow extends JFrame
         //jezeli to okno czatu nie ma aktualnie focusu to niech pojawi sie powiadomienie
         if(!tabs.getTabComponentAt(tabs.indexOfTab(sender)).hasFocus())
         {
+
+            //WYSLIJ POWIADOMIENIE
             System.out.println("XDDDD");
         }
+
+        //wypisywanie wiadomosci na czacie
         ((ChatWindow)tabs.getTabComponentAt(tabs.indexOfTab(sender))).receiveMessage(messageText);
 
     }
 
     public MainWindow(String user) throws IOException
     {
-        addWindowListener(new WindowAdapter() {
+        addWindowListener(new WindowAdapter()
+        {
             @Override
-            public void windowClosing(WindowEvent e) {
+            public void windowClosing(WindowEvent e)
+            {
 
                 super.windowClosing(e);
                 //logout();

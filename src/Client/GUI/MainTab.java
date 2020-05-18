@@ -2,43 +2,60 @@ package Client.GUI;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static Client.Client.friends;
+import static Client.Client.*;
+
+
 
 public class MainTab extends JPanel
 {
-    private DefaultListModel lItems = new DefaultListModel();
-    private JList lyst = new JList(lItems);
-    private JScrollPane lst = new JScrollPane(lyst);
+    private DefaultListModel FriendList = new DefaultListModel();
+    private JList FriendL = new JList(FriendList);
+    private JScrollPane FriendScroll = new JScrollPane(FriendL);
+    private DefaultListModel GroupList = new DefaultListModel();
+    private JList GroupL = new JList(GroupList);
+    private JScrollPane GroupScroll = new JScrollPane(GroupL);
+
     private JPanel AddFriend;
     private JPanel notificationPanel;
     private MainWindow referenceToMain;
     private JLabel state = new JLabel("");
     private JLabel loggedAs = new JLabel("");
-    private JButton b = new JButton("Start Chat");
+    private JLabel FriendsText = new JLabel("Friends:");
+    private JLabel GroupsText = new JLabel("Groups:");
+    private JButton StartChatButton = new JButton("Start Chat");
+    private JButton CreateGroupButton = new JButton("Create Group");
+    private JButton AddToGroupButton = new JButton("Add to Group");
     String []Friends = {"Igor","Konrad","Kuba","Bartek","Szymon","Twoja Stara XD","Ruchadło leśne", "Dupa","Odbyt XD"};
 
 
     public MainTab(MainWindow upRef, String User)
     {
         referenceToMain=upRef;
-        AddFriend = new AddFriendPanel(upRef);
+        AddFriend = new AddFriendPanel(state);
         notificationPanel = new NotoficationPanel();
         setLayout(null);
+        // Nie można zaznaczac kilku na raz, grupy sie tworzy inaczej
+        FriendL.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        GroupL.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        loggedAs.setText( "<html>LOGGED AS: <font size=\"+1\">"+User+"</font></html>");
 
-        loggedAs.setText("ZALOGOWANO JAKO:  "+User);
 
 
         Border brd = BorderFactory.createMatteBorder(
                 1, 1, 2, 2, Color.BLACK);
-        lst.setBorder(brd);
+        FriendScroll.setBorder(brd);
+        GroupScroll.setBorder(brd);
         //LISTA PRZYJACIOL
         for(Object d :Friends)
         {
-            lItems.addElement(d);
+            FriendList.addElement(d);
+            GroupList.addElement(d);
         }
 
 //        friends.add("Igor");
@@ -52,52 +69,112 @@ public class MainTab extends JPanel
 //            System.out.println(s);
 //            lItems.addElement(s);
 //        }
+//        for(String s: groups)
+//        {
+//            GroupList.addElement(s);
+//        }
         //USTAWIANIE ELEMENTOW
        // lst.setBounds(30,30,150,20*friends.size()<400?20*friends.size():400);
 
-        lst.setBounds(30,30,150,20*Friends.length<400?20*Friends.length:400);
+        FriendsText.setBounds(30,10,150,20);
+        GroupsText.setBounds(200,10,150,20);
+        FriendScroll.setBounds(30,30,150,20*Friends.length<270?20*Friends.length:270);
+        GroupScroll.setBounds(200,30,150,20*Friends.length<270?20*Friends.length:270);
 
-        state.setBounds(335,410,200,20);
-        loggedAs.setBounds(355,30,250,70);
-        b.setBounds(350,450,170,30);
-        AddFriend.setBounds(30,370,155,110);
+
+        loggedAs.setBounds(370,30,130,70);
+        loggedAs.setVerticalAlignment(JLabel.TOP);
+
+        AddToGroupButton.setBounds(30,315,145,30);
+        CreateGroupButton.setBounds(205,450,140,30);
+        StartChatButton.setBounds(375,450,140,30);
+        AddFriend.setBounds(30,370,155,140);
+
+        state.setBounds(320,390,200,60);
+        state.setVerticalAlignment(JLabel.TOP);
         state.setForeground(Color.RED);
-        //AKCJE PRZYCISKOW
-        b.addActionListener(new ActionListener()
+
+
+        FriendL.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e)
+            {
+                GroupL.clearSelection();
+            }
+        });
+        GroupL.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                FriendL.clearSelection();
+            }
+        });
+
+        StartChatButton.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                int []tab;
-                if(lyst.isSelectionEmpty())
+                if(FriendL.isSelectionEmpty() && GroupL.isSelectionEmpty())
                 {
-                    state.setText("Select at least one friend first!");
+                    state.setText("<html>Select at least one friend or group first!</html>");
                 }
-                tab= lyst.getSelectedIndices();
-                if(tab.length==1)
+                else if(FriendL.isSelectionEmpty())
                 {
                     state.setText("");
                     //System.out.println(lyst.getSelectedValue().toString());
-                    if(referenceToMain.OpenChatWindow(lyst.getSelectedValue().toString()))
+                    if(referenceToMain.OpenGroupChatWindow(GroupL.getSelectedValue().toString()))
                     {
-                        state.setText("Rozmowa z tym userem juz trwa!");
+                        state.setText("<html>Chat Window already opened!</html>");
                     }
-
-                    //tabs.addTab("CZAT", new ChatWindow(Username));
                 }
-                //rozmowa grupowa - utworzenie
                 else
                 {
+                    state.setText("");
+                    //System.out.println(lyst.getSelectedValue().toString());
+                    if(referenceToMain.OpenChatWindow(FriendL.getSelectedValue().toString()))
+                    {
+                        state.setText("<html>Chat Window already opened!</html>");
+                    }
 
                 }
             }
         });
+        CreateGroupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                CreateNewGroupDialog CNGD = new CreateNewGroupDialog(null,FriendList);
+                CNGD.setSize(400,400);
+                CNGD.setVisible(true);
+
+            }
+        });
+        AddToGroupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(FriendL.isSelectionEmpty())
+                {
+                    state.setText("<html>Choose one user!</html>");
+                }
+                else
+                {
+                    AddToGroupDialog tmp =new AddToGroupDialog(GroupList,"Adding " +FriendL.getSelectedValue().toString()+" to group");
+                    tmp.setSize(210,300);
+                    tmp.setVisible(true);
+                }
+            }
+        });
         //WSTAWIANIE DO PANELU
+        add(AddToGroupButton);
+        add(FriendsText);
+        add(GroupsText);
+        add(GroupScroll);
+        add(CreateGroupButton);
         add(AddFriend);
         add(loggedAs);
         add(state);
-        add(lst);
-        add(b);
+        add(FriendScroll);
+        add(StartChatButton);
 
     }
 }

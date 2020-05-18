@@ -38,7 +38,7 @@ public class Client {
     static ClientPrinterThread listener;
 
     public static ArrayList<String> friends;
-    static ArrayList<String> groups;
+    public static ArrayList<String> groups;
 
     // static GUI_notificiation_listener (notificaionHandler)
     //TODO: checking if we dont want to add ourselfs to friends, if we already arent friends etc
@@ -171,12 +171,14 @@ public class Client {
             friends.addAll(Arrays.asList(friendsArray));//inserts all strings into array list
             groups.addAll(Arrays.asList(groupsArray));
 
-            System.out.println("NO I ELEGANCKO DZIALA :))))");
+            //System.out.println("NO I ELEGANCKO DZIALA :))))");
             /*Start of listener thread*/
             listener = new ClientPrinterThread(inObject,refToWindow);
             listener.start();
             return true;
-        }else{
+        }
+        else
+        {
             throw new Exception(" NOT CONFIRM NOR REJECTION");
         }
 
@@ -245,6 +247,8 @@ public class Client {
 
     /*
      * Checks if username is on our friends Arraylist
+     *
+     * NIEPOTRZEBNE - NIE WYSWIETLI SIE W OGOLE NA LISCIE KTOS, KTO NIE JEST PRZYJACIELEM
      * */
     public static boolean checkFriendship(String friendUsername){
         return friends.contains(friendUsername);
@@ -255,11 +259,11 @@ public class Client {
      * */
     public static void sendTextMessageToUser(String userToSend, String text)
     {
-        if( !checkFriendship(userToSend) )
-        {
-            System.out.println("User is not your friend -> you cannot write to him");
-            return;
-        }
+//        if( !checkFriendship(userToSend) )
+//        {
+//            System.out.println("User is not your friend -> you cannot write to him");
+//            return;
+//        }
 
         if( text.contains("#") || userToSend.contains("#") )
         {
@@ -312,7 +316,7 @@ public class Client {
     /*
      *
      * */
-    static void sendTextMessageToGroup(String groupName,String text){
+        public static void sendTextMessageToGroup(String groupName,String text){
         if(checkMembership(groupName)){
             System.out.println("You are not a part of this group");
             return;

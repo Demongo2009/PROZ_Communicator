@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static Client.Client.sendTextMessageToGroup;
-import static Client.Client.sendTextMessageToUser;
+
 
 public class GroupChatWindow  extends JPanel
 {

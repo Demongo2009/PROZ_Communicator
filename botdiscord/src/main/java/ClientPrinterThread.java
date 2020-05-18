@@ -61,7 +61,7 @@ public class ClientPrinterThread extends Thread {
             String inputFromServer;
             ServerToClientMessage message = null;
 
-            mutex.acquire();
+//            mutex.acquire();
             while((message = receiveMessage()) != null){
                 inputFromServer = message.getText();
                 if(inputFromServer.equals("") || inputFromServer.equals("\n")){
@@ -70,14 +70,25 @@ public class ClientPrinterThread extends Thread {
 
                 if(message.getType().equals(ServerToClientMessageType.IMAGE)){
                     new MessageBuilder().addAttachment(new URL(inputFromServer)).send(textChannel);
-                }else{
 
+                }else if(message.getType().equals(ServerToClientMessageType.CONFIRM_LOGIN)) {
+                    System.out.println("tak");
+                    DiscordBot.loginResult =true;
+                    DiscordBot.loginResultAvailable.release();
+
+                }else if(message.getType().equals(ServerToClientMessageType.REJECT_LOGIN)) {
+                    System.out.println("nie");
+                    DiscordBot.loginResult = false;
+                    DiscordBot.loginResultAvailable.release();
+
+
+                }else{
                     textChannel.sendMessage(inputFromServer);
                 }
             }
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

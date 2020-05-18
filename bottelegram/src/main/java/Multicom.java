@@ -149,7 +149,7 @@ public class Multicom extends TelegramLongPollingBot {
                 sendMessage(new ClientToServerMessage(ClientToServerMessageType.IMAGE,fileURL,CommunicatorType.TELEGRAM));
 
             }else{
-                sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT,"telegram#"+text,CommunicatorType.TELEGRAM));
+                sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_USER,"telegram#"+text,CommunicatorType.TELEGRAM));
 
             }
         }

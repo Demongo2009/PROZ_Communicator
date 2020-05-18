@@ -1,5 +1,7 @@
 package Client;
 
+import Client.GUI.ChatWindow;
+import Client.GUI.MainWindow;
 import Messages.clientToServer.ClientToServerMessage;
 import Messages.clientToServer.ClientToServerMessageType;
 import Messages.serverToClient.ServerToClientMessage;

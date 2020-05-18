@@ -132,7 +132,7 @@ public class MessengerBot {
                         outObject.writeObject(new ClientToServerMessage(ClientToServerMessageType.IMAGE,a,CommunicatorType.MESSENGER));
                     }
                     if(!message_text.equals("")){
-                        outObject.writeObject(new ClientToServerMessage(ClientToServerMessageType.TEXT,"messenger#"+message_text,CommunicatorType.MESSENGER));
+                        outObject.writeObject(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_USER,"messenger#"+message_text,CommunicatorType.MESSENGER));
                     }
 
 

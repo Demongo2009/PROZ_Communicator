@@ -1,5 +1,7 @@
 package Client;
 
+import Client.GUI.ChatWindow;
+import Client.GUI.MainTab;
 import Client.GUI.MainWindow;
 import Client.GUI.StartingScreen;
 import Messages.clientToServer.ClientToServerMessage;
@@ -33,7 +35,7 @@ public class Client {
     static ObjectOutputStream outObject;
     static ObjectInputStream inObject;
 
-    static String username = null;
+    public static String username = null;
     static NotificationsHandler notificationsHandler;
     static ClientPrinterThread listener;
 
@@ -51,44 +53,7 @@ public class Client {
 
 
 
-        String login = "Konrad";
-        String password = "123";
-       try {
-           sendLoginOrRegisterRequest(login, password, ClientToServerMessageType.REQUEST_LOGIN);
-           if (receiveLoginAnswer()){
-               System.out.println("Client: udało się zalogować");
-               username = login;
-           }else{
-               System.out.println("Client: NIE udało się zalogować");
-           }
-       } catch (Exception e) {
-           e.printStackTrace();
-       }
-        Scanner myObj = new Scanner(System.in);
-        System.out.println("Enter 'a' to continue");
 
-        while( true ){
-            if( myObj.nextLine().equals("a")){
-                //sendTextMessageToUser("Konrad2", "pierwsza wiadomosczxczxcasdasddasdadsad");
-
-                //addUserToFriends("Konrad3");
-
-                //confirmFriendship("Konrad3");
-
-                //createGroup("Grupa");
-
-                //addUserToGroup("Essssa", "Konrad3");
-
-                sendTextMessageToGroup("Essssa", "wiadomoc grupowa2");
-                break;
-            }
-        }
-        for(String s :friends){
-            System.out.println(s);
-        }
-        for(String s: groups){
-            System.out.println(s);
-        }
         run(new StartingScreen(),"KOMUNIKATOR",300,100);
         logout();
     }
@@ -155,7 +120,7 @@ public class Client {
      * Throws exception if received message is not CONFIRM nor REJECT
      * starts listener thread
      * */
-    public static boolean receiveLoginAnswer(MainWindow refToWindow) throws Exception{
+    public static boolean receiveLoginAnswer(MainWindow ref) throws Exception{
         ServerToClientMessage message = null;
         try {
             message = (ServerToClientMessage)inObject.readObject();
@@ -176,8 +141,10 @@ public class Client {
             groups.addAll(Arrays.asList(groupsArray));
 
 
+
+
             /*Start of listener thread*/
-            listener = new ClientPrinterThread(inObject/*, friends*/);
+            listener = new ClientPrinterThread(inObject,ref);
             listener.start();
             return true;
         }else{
@@ -256,7 +223,7 @@ public class Client {
      * Sends to out friend a text message
      * */
 
-    static void sendTextMessageToUser(String userToSend, String text){
+    public static void sendTextMessageToUser(String userToSend, String text){
         if( !checkFriendship(userToSend) ){
             System.out.println("User is not your friend -> you cannot write to him");
             return;

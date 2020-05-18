@@ -5,11 +5,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Scanner;
 
 import Client.Client;
 import Messages.clientToServer.ClientToServerMessageType;
 import javafx.util.Pair;
-import sun.applet.Main;
+
 
 import static Client.GUI.tools.SwingConsole.*;
 import javax.swing.*;
@@ -42,13 +43,58 @@ public class StartingScreen extends JFrame
             try
             {
                 System.out.println("CHECKIGN LOGIN");
-                sendLoginOrRegisterRequest(login, pass, ClientToServerMessageType.REQUEST_LOGIN);
+//                sendLoginOrRegisterRequest(login, pass, ClientToServerMessageType.REQUEST_LOGIN);
                 //TUTAJ MUSI BYC Receiveloginanswer do potwierdzenia ze sie udalo
                 /*Tworzymy okno głownej aplikacji i wysyłamy referencje do niej do oblugi powiadomien
                  * sama aplikacja pokaze sie wtedy, gdy serwer zweryfikuje uzytkownika, w przeciwnym razie
                  * sproboj jeszcze raz*/
                 MainWindow MainClientApp = new MainWindow(login);
-                receiveLoginAnswer(MainClientApp);
+
+
+                login = "Konrad";
+                pass = "123";
+
+                try {
+                    sendLoginOrRegisterRequest(login, pass, ClientToServerMessageType.REQUEST_LOGIN);
+                    if (receiveLoginAnswer(MainClientApp)){
+                        System.out.println("Client: udało się zalogować");
+                        username = login;
+                        Client.username = login;
+                    }else{
+                        System.out.println("Client: NIE udało się zalogować");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Scanner myObj = new Scanner(System.in);
+//                System.out.println("Enter 'a' to continue");
+
+//                while( true ){
+//                    if( myObj.nextLine().equals("a")){
+//                        //sendTextMessageToUser("Konrad2", "pierwsza wiadomosczxczxcasdasddasdadsad");
+//
+//                        //addUserToFriends("Konrad3");
+//
+//                        //confirmFriendship("Konrad3");
+//
+//                        //createGroup("Grupa");
+//
+//                        //addUserToGroup("Essssa", "Konrad3");
+//
+////                        sendTextMessageToGroup("Essssa", "wiadomoc grupowa2");
+//                        break;
+//                    }
+//                }
+                for(String s :friends){
+                    System.out.println(s);
+                }
+                for(String s: groups){
+                    System.out.println(s);
+                }
+
+
+
+
                 //wszysyko w porzadku? to odslon okno głowne
                 OperationState.setText("Succesfully signed in :)");
                 run(MainClientApp, STARTING_SCREEN_TITLE, 600, 600);
@@ -103,7 +149,7 @@ public class StartingScreen extends JFrame
 
     public StartingScreen( )
     {
-        initClient();
+
         setTitle("CHOOSE LOGIN OR REGISTER");
         panel.setLayout(new FlowLayout());
         loginButton.addActionListener(new ActionListener() {

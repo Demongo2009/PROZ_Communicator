@@ -1,6 +1,6 @@
 
-o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(京蚬
-B
-java:S1128",Remove this unused import 'java.nio.Buffer'.(瞀项
 J
 java:S1128	"4Remove this unused import 'java.util.stream.Stream'.(篦帞
+B
+java:S1128",Remove this unused import 'java.nio.Buffer'.(瞀项
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(京蚬

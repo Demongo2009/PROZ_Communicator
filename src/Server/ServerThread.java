@@ -127,13 +127,9 @@ public class ServerThread extends Thread{
         String text = "";
         if( answer ){
             type = ServerToClientMessageType.CONFIRM_LOGIN;
-            text += "#"; //in order to not split empty array
             text += databaseHandler.getUserFriends( userToHandle.getLogin() ); //send to user his friends
-            text += "@";
+            text += "#@#"; //in order to not split empty array
             text += getUserGroups(userToHandle.getLogin());
-            text += "#"; //in order to not split empty array
-
-            //if user has no friend and do not belong to any group then text is "#@#"
         }else{
             type = ServerToClientMessageType.REJECT_LOGIN;
         }
@@ -345,23 +341,13 @@ public class ServerThread extends Thread{
             if( user == null ){
                 continue;//user is not connected
             }
-
-            switch(user.getCommunicatorType()){
-                case MULTI_COM:
-                    //TODO
-                    break;
-                case MESSENGER:
-                    //TODO
-                    break;
-                case DISCORD:
-                    //TODO
-                    break;
-                case TELEGRAM:
-                    //TODO
-                    break;
-                default:
-                    System.out.println("WRONG");
+            if( userToHandle == user){
+                continue;//don't send to message to yourself
             }
+
+            ServerToClientMessageType type = ServerToClientMessageType.TEXT_MESSAGE_FROM_GROUP;
+            ServerToClientMessage message = new ServerToClientMessage(type, text);
+            sendMessage(message, user);
         }
     }
 

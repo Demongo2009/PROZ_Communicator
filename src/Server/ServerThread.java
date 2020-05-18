@@ -133,6 +133,7 @@ public class ServerThread extends Thread{
             text += getUserGroups(userToHandle.getLogin());
         }else{
             type = ServerToClientMessageType.REJECT_LOGIN;
+            System.out.println("reject");
         }
 
         ServerToClientMessage message = new ServerToClientMessage(type, text);

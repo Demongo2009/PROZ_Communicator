@@ -6,6 +6,7 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.message.MessageAttachment;
 
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -23,8 +24,10 @@ public class DiscordBot {
     static ObjectInputStream inObject;
     static String username;
     static String password;
-    public static Semaphore loginResultAvailable;
+    public static Semaphore loginResultAvailable = new Semaphore(0);
     public static boolean loginResult;
+    public static String friend;
+    static boolean isGroupSending = false;
 
     enum AvailableStates{
         INIT,
@@ -34,7 +37,11 @@ public class DiscordBot {
         LOGIN_PASSWORD,
         REGISTER_USERNAME,
         REGISTER_PASSWORD,
-        WAIT_FOR_LOGIN_RESULT
+        FRIEND_REQUEST_PENDING,
+        IMAGE_SENDING,
+        ADD_TO_FRIENDS,
+        CREATE_GROUP,
+        ADD_TO_GROUP,
     }
 
     static AvailableStates currentState = AvailableStates.INIT;
@@ -49,18 +56,20 @@ public class DiscordBot {
         }
     }
 
-
+    static public void friendRequest(){
+        currentState = AvailableStates.FRIEND_REQUEST_PENDING;
+    }
 
 
 
     public static void main(String[] args) {
         // Insert your bot's token here
-        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.XsKA2Q.sCpCCLwzuRtv9_tIb6Oo3p0ElXU";
+        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.XsKkzg.hxQf5HAH9fK3r40-nq9GFTkA_7s";
 
         DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
 
 
-        loginResultAvailable = new Semaphore(0);
+
 
         Thread thread = new Thread(){
             public void run(){
@@ -139,15 +148,28 @@ public class DiscordBot {
                 password = event.getMessageContent();
 
                 sendMessage(new ClientToServerMessage(ClientToServerMessageType.REQUEST_LOGIN,username+"#"+password,CommunicatorType.DISCORD));
-
-                currentState = AvailableStates.WAIT_FOR_LOGIN_RESULT;
-                System.out.println("gere");
+                System.out.println("Waiting for login result");
                 try {
                     loginResultAvailable.acquire();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                System.out.println("here");
+                System.out.println("Result got!");
+
+                if(loginResult){
+                    event.getChannel().sendMessage("Login successful. Send messages: username#message_text.\n" +
+                            "Send images: !image\n" +
+                            "Add to friends: !friend\n" +
+                            "Create group: !creategroup\n" +
+                            "Add user to group: !addtogroup\n" +
+                            "Change text sending to group sending: !group. Then groupname#message_text\n" +
+                            "Quit: !q");
+                    currentState = AvailableStates.CONNECTED_TO_CHAT;
+                }else {
+                    event.getChannel().sendMessage("Incorrect data. Try again.\nPlease login[l] or sign in[s]...");
+                    currentState = AvailableStates.SELECT_LOGIN_OR_REGISTER;
+                }
+
             }
 
             else if(currentState.equals(AvailableStates.REGISTER_USERNAME)){
@@ -160,31 +182,29 @@ public class DiscordBot {
                 password = event.getMessageContent();
 
                 sendMessage(new ClientToServerMessage(ClientToServerMessageType.REQUEST_REGISTER,username+"#"+password,CommunicatorType.DISCORD));
-                currentState = AvailableStates.WAIT_FOR_LOGIN_RESULT;
+
                 try {
                     loginResultAvailable.acquire();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
-
-            else if(currentState.equals(AvailableStates.WAIT_FOR_LOGIN_RESULT)){
-
 
                 if(loginResult){
-                    event.getChannel().sendMessage("Login successful.");
+                    event.getChannel().sendMessage("Login successful. Send messages: username#message_text.\\n\" +\n" +
+                            "                            \"Send images: !image\\n\" +\n" +
+                            "                            \"Add to friends: !friend\\n\" +\n" +
+                            "                            \"Create group: !creategroup\\n\" +\n" +
+                            "                            \"Add user to group: !addtogroup\\n\" +\n" +
+                            "                            \"Change text sending to group sending: !group. Then groupname#message_text\n" +
+                            "Quit: !q");
                     currentState = AvailableStates.CONNECTED_TO_CHAT;
                 }else {
                     event.getChannel().sendMessage("Incorrect data. Try again.\nPlease login[l] or sign in[s]...");
                     currentState = AvailableStates.SELECT_LOGIN_OR_REGISTER;
                 }
-
             }
 
-            else if(currentState.equals(AvailableStates.CONNECTED_TO_CHAT)){
-
-
-                sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_USER,event.getMessageContent().toString(),CommunicatorType.DISCORD));
+            else if(currentState.equals(AvailableStates.IMAGE_SENDING)){
                 if(event.getMessageAttachments().size() > 0 ){
                     List<MessageAttachment> attachmentArray = event.getMessage().getAttachments();
                     if(attachmentArray.get(0)!=null) {
@@ -192,7 +212,72 @@ public class DiscordBot {
                     }
 
                 }
+                currentState = AvailableStates.CONNECTED_TO_CHAT;
+            }
 
+            else if(currentState.equals(AvailableStates.ADD_TO_FRIENDS)){
+                sendMessage(new ClientToServerMessage(ClientToServerMessageType.ADD_USER_TO_FRIENDS,event.getMessageContent(),CommunicatorType.DISCORD));
+                currentState = AvailableStates.CONNECTED_TO_CHAT;
+            }
+
+            else if(currentState.equals(AvailableStates.CREATE_GROUP)){
+                sendMessage(new ClientToServerMessage(ClientToServerMessageType.CREATE_GROUP,event.getMessageContent(),CommunicatorType.DISCORD));
+
+                currentState = AvailableStates.CONNECTED_TO_CHAT;
+            }
+
+            else if(currentState.equals(AvailableStates.ADD_TO_GROUP)){
+                sendMessage(new ClientToServerMessage(ClientToServerMessageType.ADD_USER_TO_GROUP,event.getMessageContent(),CommunicatorType.DISCORD));
+
+                currentState = AvailableStates.CONNECTED_TO_CHAT;
+            }
+
+            else if(currentState.equals(AvailableStates.CONNECTED_TO_CHAT)){
+
+                if(event.getMessageContent().equalsIgnoreCase("!q")){
+                    try {
+                        echoSocket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return;
+
+                }else if(event.getMessageContent().equalsIgnoreCase("!image")){
+                    currentState = AvailableStates.IMAGE_SENDING;
+                    event.getChannel().sendMessage("Input image");
+                }else if(event.getMessageContent().equalsIgnoreCase("!friend")){
+                    currentState  = AvailableStates.ADD_TO_FRIENDS;
+                    event.getChannel().sendMessage("Input friend to add name...");
+                }else if(event.getMessageContent().equalsIgnoreCase("!creategroup")){
+                    currentState = AvailableStates.CREATE_GROUP;
+                    event.getChannel().sendMessage("Input group name to create...");
+                }else if(event.getMessageContent().equalsIgnoreCase("!addtogroup")){
+                    currentState  = AvailableStates.ADD_TO_GROUP;
+                    event.getChannel().sendMessage("Input groupname#usertoadd...");
+                }else if(event.getMessageContent().equalsIgnoreCase("!group")){
+                    isGroupSending = true;
+                }else if(isGroupSending) {
+                    sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_GROUP,event.getMessageContent(),CommunicatorType.DISCORD));
+
+                }else{
+                    sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_USER,event.getMessageContent().toString(),CommunicatorType.DISCORD));
+
+                }
+
+
+
+
+
+            }
+
+            else if(currentState.equals(AvailableStates.FRIEND_REQUEST_PENDING)){
+                if(event.getMessageContent().equalsIgnoreCase("Y")){
+                    sendMessage(new ClientToServerMessage(ClientToServerMessageType.CONFIRMATION_OF_FRIENDSHIP,friend,CommunicatorType.DISCORD));
+                }else if(event.getMessageContent().equalsIgnoreCase("N")){
+
+                }else {
+                    event.getChannel().sendMessage("Not recognised sign");
+                }
             }
             else{
                 if (event.getMessageContent().equalsIgnoreCase("!ping")) {

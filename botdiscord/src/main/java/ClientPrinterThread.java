@@ -68,21 +68,31 @@ public class ClientPrinterThread extends Thread {
                     continue;
                 }
 
-                if(message.getType().equals(ServerToClientMessageType.IMAGE)){
+                ServerToClientMessageType messageType= message.getType();
+                if(messageType.equals(ServerToClientMessageType.IMAGE)){
                     new MessageBuilder().addAttachment(new URL(inputFromServer)).send(textChannel);
 
-                }else if(message.getType().equals(ServerToClientMessageType.CONFIRM_LOGIN)) {
+                }else if(messageType.equals(ServerToClientMessageType.CONFIRM_LOGIN)) {
                     System.out.println("tak");
                     DiscordBot.loginResult =true;
                     DiscordBot.loginResultAvailable.release();
 
-                }else if(message.getType().equals(ServerToClientMessageType.REJECT_LOGIN)) {
+                }else if(messageType.equals(ServerToClientMessageType.REJECT_LOGIN)) {
                     System.out.println("nie");
                     DiscordBot.loginResult = false;
                     DiscordBot.loginResultAvailable.release();
 
 
-                }else{
+                }else if(messageType.equals(ServerToClientMessageType.USER_WANTS_TO_BE_YOUR_FRIEND)) {
+                    System.out.println("friend attempt");
+                    DiscordBot.friend = inputFromServer;
+                    textChannel.sendMessage("User \""+inputFromServer+"\" wants to be your friend. [Y] accept [N] refuse");
+                    DiscordBot.friendRequest();
+
+                }else if(messageType.equals(ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST)){
+                    textChannel.sendMessage("\""+inputFromServer + "\" accepted your friend request");
+                }
+                else {
                     textChannel.sendMessage(inputFromServer);
                 }
             }

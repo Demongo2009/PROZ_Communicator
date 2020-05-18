@@ -1,0 +1,31 @@
+
+S
+#src/Client/ClientPrinterThread.java,4/7/47f7fc51ceae7c22cc623f0b15095a06e32bcf64
+L
+src/Server/ServerThread.java,2/1/2124d5bfa00c7dd50d11652032e737456427617d
+S
+#src/Server/ServerPrinterThread.java,0/c/0c080aa601d1daa01e6e05cf314abf41375f139b
+j
+:src/Messages/serverToClient/ServerToClientMessageType.java,e/a/ea7949eaaa2359b25cd8fec8442b671789b7e98f
+F
+src/Client/Client.java,7/a/7abe22d64543205426e0ef1b36158ede3632b727
+O
+src/Server/DatabaseHandler.java,e/b/eb15a6bd31e211586e8d8f876240593127afda4a
+I
+botmessenger/build.gradle,f/7/f7b7ab4465c72e86bd854b962f648e9ea7402b9c
+H
+botmessenger/gradlew.bat,9/3/93781cc00669cbe035adc39e8b62946a9ddb6dae
+f
+6src/Messages/clientToServer/ClientToServerMessage.java,8/2/8298d13e1f537bfafe346220efa364c6cff9ab77
+P
+ src/Server/CommunicatorType.java,f/2/f21d5459d34415781e7c013658ae206a278f12f8
+D
+src/Server/User.java,3/e/3e8de50985ed02949588a4a994bdebeaa70461ef
+j
+:src/Messages/clientToServer/ClientToServerMessageType.java,b/7/b7f15e1102cddc4aaf161ed1bef1d854a5e383f9
+F
+src/Server/Server.java,a/9/a9588fce1c3bc78ec27bdea72c1267a00a95124e
+E
+src/Server/Group.java,0/6/06d572629fd48125d046d96f3cd8915d2d6fb86d
+T
+$src/Client/NotificationsHandler.java,2/d/2d65eb0ee601d4f9337d520742476269e0f6bee1

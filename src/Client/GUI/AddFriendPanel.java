@@ -1,51 +1,52 @@
 package Client.GUI;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
-import java.awt.*;
-import java.io.File;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import javax.swing.border.TitledBorder;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import static Client.Client.addUserToFriends;
 
 public class AddFriendPanel extends JPanel
 {
-    private String[] avaliablePeople = {"Igor","Konrad","Kuba","Bartek","Szymon","Twoja Stara XD"};
-    private DefaultListModel lItems = new DefaultListModel();
-    private JList lyst = new JList(lItems);
-    private JScrollPane lst = new JScrollPane(lyst);
+
     private JButton b = new JButton("Add Friend");
-    private BufferedImage image;
-    JLabel picLabel;
+    private JPanel AddFriendArea;
+    private JTextField FriendNameInput = new JTextField(20);
+    private JLabel MainTabLabel;
+    private JLabel AddFriendText = new JLabel("Enter user name:");
 
-    public AddFriendPanel() throws IOException {
 
-        String path = "https://cdn.natemat.pl/5c6979ac9be18ad6c14f773fc606b87d,382,0,0,0.jpg";
-        URL link = new URL(path);
-        image = ImageIO.read(link);
-        picLabel = new JLabel(new ImageIcon(image));
-        //picLabel = new JLabel((new ImageIcon("addFriend.gif")));
-        //meme = new ImageIcon(getClass().getResource("addFriend.gif"));
+
+    public AddFriendPanel(JLabel upRef)
+    {
+        MainTabLabel = upRef;
         setLayout(null);
-        Border brd = BorderFactory.createMatteBorder(
-                1, 1, 2, 2, Color.BLACK);
-        lst.setBorder(brd);
+        AddFriendText.setBounds(10,20,135,30);
+        b.setBounds(50,90,95,30);
+        FriendNameInput.setBounds(10,50,135,30);
 
+        b.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if(addUserToFriends(FriendNameInput.getText())==-1)
+                {
+                    MainTabLabel.setText("<html>User is already your friend!</html>");
+                }
 
-        for(Object d :avaliablePeople)
-        {
-            lItems.addElement(d);
-        }
-        lst.setBounds(30,30,150,20*avaliablePeople.length<400?20*avaliablePeople.length:400);
-        b.setBounds(350,450,170,30);
-        picLabel.setBounds(200,30,500,500);
+            }
+        });
 
-        add(lst);
-        add(b);
-        add(picLabel);
-        // Register event listeners
+        AddFriendArea = new JPanel();
+        AddFriendArea.setBorder(new TitledBorder("Add Friend"));
+        AddFriendArea.setLayout(null);
+        AddFriendArea.add(FriendNameInput);
+        AddFriendArea.add(b);
+        AddFriendArea.setSize(155,140);
+        AddFriendArea.add(AddFriendText);
+        add(AddFriendArea);
+
 
     }
 

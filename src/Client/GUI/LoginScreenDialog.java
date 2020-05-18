@@ -85,6 +85,8 @@ public class LoginScreenDialog extends JDialog
         panel.add(login_button);
         panel.add(close_button);
         add(panel);
+        userName.requestFocus();
+
     }
     String getLogin()
     {return  login;}

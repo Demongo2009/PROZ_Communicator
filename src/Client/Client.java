@@ -46,7 +46,7 @@ public class Client {
 
 
 
-        String login = "Konrad";
+        String login = "Konrad3";
         String password = "123";
        try {
            sendLoginOrRegisterRequest(login, password, ClientToServerMessageType.REQUEST_LOGIN);
@@ -64,13 +64,17 @@ public class Client {
 
         while( true ){
             if( myObj.nextLine().equals("a")){
-                //sendTextMessageToUser("Konrad", "pierwsza wiadomosczxczxcasdasddasdadsad");
+                //sendTextMessageToUser("Konrad2", "pierwsza wiadomosczxczxcasdasddasdadsad");
 
-                //addUserToFriends("Konrad4");
+                //addUserToFriends("Konrad3");
 
-                //confirmFriendship("Konrad4");
+                //confirmFriendship("Konrad3");
 
                 //createGroup("Grupa");
+
+                //addUserToGroup("Essssa", "Konrad3");
+
+                sendTextMessageToGroup("Essssa", "wiadomoc grupowa2");
 
 
                 break;
@@ -155,6 +159,8 @@ public class Client {
             return false;
         }else if( response == ServerToClientMessageType.CONFIRM_LOGIN ){
 
+
+
             //get friends and groups from server
             String[] friendsAndGroups = message.getText().split("@");
             String[] friendsArray = friendsAndGroups[0].split("#");
@@ -162,7 +168,6 @@ public class Client {
 
             friends.addAll(Arrays.asList(friendsArray));//inserts all strings into array list
             groups.addAll(Arrays.asList(groupsArray));
-
 
             /*Start of listener thread*/
             listener = new ClientPrinterThread(inObject/*, friends*/);
@@ -294,7 +299,7 @@ public class Client {
     *
     * */
     static void sendTextMessageToGroup(String groupName,String text){
-        if(checkMembership(groupName)){
+        if( !checkMembership(groupName) ){
             System.out.println("You are not a part of this group");
             return;
         }
@@ -302,7 +307,6 @@ public class Client {
         String messageText = groupName + "#"+ username + "#" + text;
         ClientToServerMessage message = new ClientToServerMessage(type, messageText);
         sendMessage( message );
-
     }
 
     /*

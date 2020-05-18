@@ -1,135 +1,135 @@
 
-e
-java:S2095E"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8’¬øÄ¡.
-e
-java:S2095“"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á8’¬øÄ¡.
-e
-java:S2095­"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á8Í÷Å¡.
-e
-java:S2095_"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8’¬øÄ¡.
->
-java:S1148&"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
-e
-java:S2095"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8­”è ¢.
-V	java:S125"<This block of commented-out lines of code should be removed.(Š¤”Öþÿÿÿÿ
-F
-java:S2115_")Add password protection to this database.(¸¢ìâ8’¬øÄ¡.
-o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¾©ò¹
+G
+java:S2115ø")Add password protection to this database.(¸¢ìâ8šÒ…·¢.
+J
+java:S1481À"'Remove this unused "rs" local variable.(ÀÇÄûÿÿÿÿ8šÒ…·¢.
 Q	java:S125"<This block of commented-out lines of code should be removed.(ÏÐÕ¡
-e
-java:S2095‚"GUse try-with-resources or close this "ResultSet" in a "finally" clause.(¢ÿ¹8­”è ¢.
-A
-java:S1172"+Remove this unused method parameter "conn".(Ðøûï
-e
-java:S2095Ñ"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á8’¬øÄ¡.
-e
-java:S2095Ã"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á8’¬øÄ¡.
-f
-java:S2095™"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8­”è ¢.
-E
-java:S1148p"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8­”è ¢.
-H
-java:S1135"2Complete the task associated to this TODO comment.(ç¥®‰
-d
-java:S1192¸"FDefine a constant instead of duplicating this literal "user2" 5 times.(¥¸Ô›8’¬øÄ¡.
-F
-java:S1148‹"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8­”è ¢.
-F
-java:S2115")Add password protection to this database.(¸¢ìâ8­”è ¢.
-e
-java:S2095Ö"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á8ü¦èÆ¡.
-E
-java:S11488"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8’¬øÄ¡.
+:
+java:S1643¸"Use a StringBuilder instead.(¥¸Ô›8šÒ…·¢.
 G
 java:S2115™")Add password protection to this database.(¸¢ìâ8­”è ¢.
-e
-java:S2095ù"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á8’¬øÄ¡.
-E
-java:S1148Q"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8’¬øÄ¡.
+f
+java:S2095™"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8­”è ¢.
+f
+java:S2095Ð"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8šÒ…·¢.
 F
 java:S2115E")Add password protection to this database.(¸¢ìâ8’¬øÄ¡.
+A
+java:S1172"+Remove this unused method parameter "conn".(Ðøûï
+G
+java:S2115Õ")Add password protection to this database.(¸¢ìâ8šÒ…·¢.
 e
-java:S2095³"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á8’¬øÄ¡.
-e
-java:S2095€"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á8’¬øÄ¡.
-e
-java:S2095š"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á8’¬øÄ¡.
-f
-java:S2095Â"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8šÒ…·¢.
-f
-java:S2095’"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8šÒ…·¢.
-f
-java:S2095¬"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8šÒ…·¢.
-f
-java:S2095²"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8šÒ…·¢.
-f
-java:S2095ø"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8šÒ…·¢.
-e
-java:S2095µ"GUse try-with-resources or close this "ResultSet" in a "finally" clause.(¢ÿ¹8šÒ…·¢.
-e
-java:S2095Ó"GUse try-with-resources or close this "ResultSet" in a "finally" clause.(¢ÿ¹8šÒ…·¢.
-e
-java:S2095¯"GUse try-with-resources or close this "ResultSet" in a "finally" clause.(¢ÿ¹8šÒ…·¢.
-e
-java:S2095û"GUse try-with-resources or close this "ResultSet" in a "finally" clause.(¢ÿ¹8šÒ…·¢.
-e
-java:S2095Ù"GUse try-with-resources or close this "ResultSet" in a "finally" clause.(¢ÿ¹8šÒ…·¢.
-e
-java:S2095•"GUse try-with-resources or close this "ResultSet" in a "finally" clause.(¢ÿ¹8šÒ…·¢.
+java:S2095­"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á8Í÷Å¡.
 f
 java:S2095Õ"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8šÒ…·¢.
 f
-java:S2095Ð"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8šÒ…·¢.
-d
-java:S1192·"FDefine a constant instead of duplicating this literal "user1" 4 times.(©á»Á8šÒ…·¢.
+java:S2095ø"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8šÒ…·¢.
+e
+java:S2095³"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á8’¬øÄ¡.
 d
 java:S1192Ü"FDefine a constant instead of duplicating this literal "user3" 4 times.(¾¢çÔ8šÒ…·¢.
+Y	java:S125Ç"<This block of commented-out lines of code should be removed.(øê€©8šÒ…·¢.
 d
-java:S1192ß"FDefine a constant instead of duplicating this literal "user4" 4 times.(™¾ì†8šÒ…·¢.
-:
-java:S1643¸"Use a StringBuilder instead.(¥¸Ô›8šÒ…·¢.
+java:S1192¸"FDefine a constant instead of duplicating this literal "user2" 5 times.(¥¸Ô›8’¬øÄ¡.
+f
+java:S2095¬"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8šÒ…·¢.
+P
+java:S1135Î"2Complete the task associated to this TODO comment.(ÓñàÍ8šÒ…·¢.
+e
+java:S2095€"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á8’¬øÄ¡.
+F
+java:S2115_")Add password protection to this database.(¸¢ìâ8’¬øÄ¡.
+P
+java:S1135¼"2Complete the task associated to this TODO comment.(Õë©¬8šÒ…·¢.
+H
+java:S1135"2Complete the task associated to this TODO comment.(ç¥®‰
+[	java:S106å"9Replace this use of System.out or System.err by a logger.(«ô¾þÿÿÿÿ8šÒ…·¢.
+e
+java:S2095_"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8’¬øÄ¡.
+w
+java:S2293Î"YReplace the type specification in this constructor call with the diamond operator ("<>").(Œ²ìÂ8šÒ…·¢.
+e
+java:S2095•"GUse try-with-resources or close this "ResultSet" in a "finally" clause.(¢ÿ¹8šÒ…·¢.
 :
 java:S1643º"Use a StringBuilder instead.(Õþ¹Ã8šÒ…·¢.
-?
-java:S1643ý"Use a StringBuilder instead.(ÎÚÜùÿÿÿÿ8šÒ…·¢.
-F
-java:S1148¤"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8šÒ…·¢.
-F
-java:S1148Á"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8šÒ…·¢.
-F
-java:S1148ê"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8šÒ…·¢.
-F
-java:S1148„"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8šÒ…·¢.
-F
-java:S1148ž"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8šÒ…·¢.
-F
-java:S1148·"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8šÒ…·¢.
-F
-java:S1148Ë"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8šÒ…·¢.
+e
+java:S2095Ã"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á8’¬øÄ¡.
 F
 java:S1148ï"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8šÒ…·¢.
 G
+java:S2115’")Add password protection to this database.(¸¢ìâ8šÒ…·¢.
+F
+java:S1148¤"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8šÒ…·¢.
+e
+java:S2095Ñ"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á8’¬øÄ¡.
+e
+java:S2095‚"GUse try-with-resources or close this "ResultSet" in a "finally" clause.(¢ÿ¹8­”è ¢.
+e
+java:S2095ù"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á8’¬øÄ¡.
+e
+java:S2095û"GUse try-with-resources or close this "ResultSet" in a "finally" clause.(¢ÿ¹8šÒ…·¢.
+F
+java:S1148Ë"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8šÒ…·¢.
+e
+java:S2095µ"GUse try-with-resources or close this "ResultSet" in a "finally" clause.(¢ÿ¹8šÒ…·¢.
+d
+java:S1192ß"FDefine a constant instead of duplicating this literal "user4" 4 times.(™¾ì†8šÒ…·¢.
+F
+java:S1148„"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8šÒ…·¢.
+?
+java:S1643ý"Use a StringBuilder instead.(ÎÚÜùÿÿÿÿ8šÒ…·¢.
+>
+java:S1148&"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+G
 java:S2115²")Add password protection to this database.(¸¢ìâ8šÒ…·¢.
-w
-java:S2293Î"YReplace the type specification in this constructor call with the diamond operator ("<>").(Œ²ìÂ8šÒ…·¢.
+e
+java:S2095“"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á8’¬øÄ¡.
+V	java:S125"<This block of commented-out lines of code should be removed.(Š¤”Öþÿÿÿÿ
+F
+java:S1148Á"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8šÒ…·¢.
+e
+java:S2095E"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8’¬øÄ¡.
+e
+java:S2095š"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á8’¬øÄ¡.
+E
+java:S1148p"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8­”è ¢.
+f
+java:S2095²"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8šÒ…·¢.
+d
+java:S1192·"FDefine a constant instead of duplicating this literal "user1" 4 times.(©á»Á8šÒ…·¢.
 G
 java:S2115Ð")Add password protection to this database.(¸¢ìâ8šÒ…·¢.
-G
-java:S2115ø")Add password protection to this database.(¸¢ìâ8šÒ…·¢.
-G
-java:S2115’")Add password protection to this database.(¸¢ìâ8šÒ…·¢.
+e
+java:S2095"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8­”è ¢.
 G
 java:S2115¬")Add password protection to this database.(¸¢ìâ8šÒ…·¢.
-P
-java:S1135¼"2Complete the task associated to this TODO comment.(Õë©¬8šÒ…·¢.
+^	java:S125Å"<This block of commented-out lines of code should be removed.(Ðåò…ûÿÿÿÿ8šÒ…·¢.
+f
+java:S2095Â"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8šÒ…·¢.
+F
+java:S1148‹"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8­”è ¢.
+E
+java:S11488"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8’¬øÄ¡.
+F
+java:S1148·"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8šÒ…·¢.
+F
+java:S2115")Add password protection to this database.(¸¢ìâ8­”è ¢.
+F
+java:S1148ž"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8šÒ…·¢.
+f
+java:S2095’"HUse try-with-resources or close this "Connection" in a "finally" clause.(¸¢ìâ8šÒ…·¢.
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¾©ò¹
+e
+java:S2095¯"GUse try-with-resources or close this "ResultSet" in a "finally" clause.(¢ÿ¹8šÒ…·¢.
 G
 java:S2115Â")Add password protection to this database.(¸¢ìâ8šÒ…·¢.
-P
-java:S1135Î"2Complete the task associated to this TODO comment.(ÓñàÍ8šÒ…·¢.
-G
-java:S2115Õ")Add password protection to this database.(¸¢ìâ8šÒ…·¢.
-[	java:S106å"9Replace this use of System.out or System.err by a logger.(«ô¾þÿÿÿÿ8šÒ…·¢.
-J
-java:S1481À"'Remove this unused "rs" local variable.(ÀÇÄûÿÿÿÿ8šÒ…·¢.
-^	java:S125Å"<This block of commented-out lines of code should be removed.(Ðåò…ûÿÿÿÿ8šÒ…·¢.
-Y	java:S125Ç"<This block of commented-out lines of code should be removed.(øê€©8šÒ…·¢.
+e
+java:S2095Ó"GUse try-with-resources or close this "ResultSet" in a "finally" clause.(¢ÿ¹8šÒ…·¢.
+F
+java:S1148ê"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8šÒ…·¢.
+E
+java:S1148Q"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8’¬øÄ¡.
+e
+java:S2095Ö"GUse try-with-resources or close this "Statement" in a "finally" clause.(£í’á8ü¦èÆ¡.
+e
+java:S2095Ù"GUse try-with-resources or close this "ResultSet" in a "finally" clause.(¢ÿ¹8šÒ…·¢.

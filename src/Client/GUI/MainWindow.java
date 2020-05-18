@@ -5,24 +5,16 @@ import Messages.serverToClient.ServerToClientMessage;
 import Server.Group;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 import static Client.Client.addUserToFriends;
-import static Client.Client.*;
-
-/*TODO: ZROBIC WSZYSTKIE PRZYPADKI POWIADOMIEN I ICH OBSLUZENIA
-* Zrobic zakladke dla kazdego rodzaju powiadomien
-* zrobic panel NotificationPanel i on bedzie wyswietlal w formie listy wszystkie powiadomienia
-*
-* Trzeba zrobic mozliwosc czatu grupowego
-*   -konstruktor dla Chatwindow dla kilku osob
-*
-*
-* prawdopodobnie dziala juz odbieranie wiadomosci
-*
-* */
-
+import static Client.Client.getNotification;
+import static Client.GUI.tools.SwingConsole.*;
 
 public class MainWindow extends JFrame
 {
@@ -63,6 +55,7 @@ public class MainWindow extends JFrame
         addUserToFriends(AddedFriend);
         //WYSYLANIE ZAPROSZENIA DO ZNAJOMYCH (DO SERWERA)
     }
+
 
     /*Otrzymalismy informacje, ze cos przyszlo - sprawdzmy co to*/
     public void ReceiveNotification()
@@ -179,13 +172,7 @@ public class MainWindow extends JFrame
         tabs.addTab("MAIN PANEL",panel);
         Username = user;
         add(tabs);
-
-
-
-
     }
-
-
 
 
 }

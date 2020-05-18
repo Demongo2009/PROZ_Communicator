@@ -90,6 +90,7 @@ public class ServerThread extends Thread{
         String[] loginAndPass = message.getString().split("#");
         //=========================================================================
         CommunicatorType communicatorType = message.getCommunicatorType();
+        System.out.println(message.getText());
 
         if( message.getType() == ClientToServerMessageType.REQUEST_LOGIN){
             for(User us: connectedUsers){

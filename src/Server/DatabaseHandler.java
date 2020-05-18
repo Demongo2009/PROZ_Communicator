@@ -3,10 +3,9 @@ package Server;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class DatabaseHandler
-{
+public class DatabaseHandler {
     //private String url = "jdbc:sqlite:/home/demongo/EITI/PROZ/PROZ_Communicator/src/MultiCom.db";
-    private String url = "jdbc:sqlite:S:/Programowanie/JAVA/PROZ_Communicatorl/srcMultiCom.db";
+    private String url = "jdbc:sqlite:src/MultiCom.db";
 /*
 users(
 login VARCHAR(20) NOT NULL,
@@ -197,6 +196,7 @@ user4 VARCHAR(20)
     }
 
 
+
     ArrayList<Group> getGroups(){
         Statement statement = null;
         Connection conn = null;
@@ -366,6 +366,12 @@ user4 VARCHAR(20)
         }catch(Exception e){
             e.printStackTrace();
         }
+
         return true;
     }
+
+
+
+
+
 }

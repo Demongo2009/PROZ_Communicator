@@ -7,6 +7,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.Semaphore;
 
 import static Client.Client.*;
 
@@ -52,23 +53,24 @@ public class MainTab extends JPanel
         FriendScroll.setBorder(brd);
         GroupScroll.setBorder(brd);
         //LISTA PRZYJACIOL
-        for(Object d :Friends)
-        {
-            FriendList.addElement(d);
-            GroupList.addElement(d);
-        }
+//        for(Object d :Friends)
+//        {
+//            FriendList.addElement(d);
+//            GroupList.addElement(d);
+//        }
 
 //        friends.add("Igor");
 //        friends.add("ddd ");
 //        friends.add("dddf");
 //        friends.add("ggggg");
 //
-//        for(String s: friends)
-//        {
-//            System.out.print("PRZYJACIEL: ");
-//            System.out.println(s);
-//            lItems.addElement(s);
-//        }
+
+        for(String s: friends)
+        {
+            System.out.print("PRZYJACIEL: ");
+            System.out.println(s);
+            FriendList.addElement(s);
+        }
 //        for(String s: groups)
 //        {
 //            GroupList.addElement(s);

@@ -52,14 +52,10 @@ public class ServerThread extends Thread{
         databaseHandler = new DatabaseHandler();
 /* LOG IN PHASE*/
         try {
-            while (true) {
-                if (sendLoginAnswer(processLoginOrRegisterRequest())) {
-                    System.out.println("Serwer: użytkownik zalogowany");
-                    break;
-                } else {
-                    System.out.println("Serwer: nie udało sie");
-                    break;
-                }
+            if (sendLoginAnswer(processLoginOrRegisterRequest())) {
+                System.out.println("Serwer: użytkownik zalogowany");
+            } else {
+                System.out.println("Serwer: nie udało sie");
             }
         }catch( Exception e){
             e.printStackTrace();
@@ -131,13 +127,11 @@ public class ServerThread extends Thread{
         String text = "";
         if( answer ){
             type = ServerToClientMessageType.CONFIRM_LOGIN;
-            text = databaseHandler.getUserFriends( userToHandle.getLogin() ); //send to user his friends
-            text += "@";
+            text += databaseHandler.getUserFriends( userToHandle.getLogin() ); //send to user his friends
+            text += "#@#"; //in order to not split empty array
             text += getUserGroups(userToHandle.getLogin());
-            //text += databaseHandler.getUserGroups(userToHandle.getLogin());
         }else{
             type = ServerToClientMessageType.REJECT_LOGIN;
-            //text = "Invalid login";
         }
 
         ServerToClientMessage message = new ServerToClientMessage(type, text);
@@ -225,7 +219,7 @@ public class ServerThread extends Thread{
         }
         String userAndText[] = textMessage.split("#");
 
-        if( databaseHandler.checkFriendship(userToHandle.getLogin(), userAndText[0]) ){
+        if( !databaseHandler.checkFriendship(userToHandle.getLogin(), userAndText[0]) ){
             System.out.println("USERS ARE NOT FRIENDS - something went wrong, client should check it");
             return;
         }
@@ -275,7 +269,7 @@ public class ServerThread extends Thread{
     * and communicates it to first_user
     * */
     void processConfirmationOfFriendship(String newFriend){
-        if( databaseHandler.checkFriendship( userToHandle.getLogin(), newFriend)) { // it is possible to send few requests and to confirm these few requests, so we check if friendship is not already booked
+        if( !databaseHandler.checkFriendship( userToHandle.getLogin(), newFriend)) { // it is possible to send few requests and to confirm these few requests, so we check if friendship is not already booked
             databaseHandler.insertFriendship(newFriend, userToHandle.getLogin());
             User user = getUserFromConnectedUsers( newFriend );
             if( user == null ){
@@ -336,7 +330,7 @@ public class ServerThread extends Thread{
                 break;
             }
         }
-        if( group == null){
+        if( group == null){//should never occur
             System.out.println("GROUP DOES NOT EXIST");
             return;
         }
@@ -347,23 +341,13 @@ public class ServerThread extends Thread{
             if( user == null ){
                 continue;//user is not connected
             }
-
-            switch(user.getCommunicatorType()){
-                case MULTI_COM:
-                    //TODO
-                    break;
-                case MESSENGER:
-                    //TODO
-                    break;
-                case DISCORD:
-                    //TODO
-                    break;
-                case TELEGRAM:
-                    //TODO
-                    break;
-                default:
-                    System.out.println("WRONG");
+            if( userToHandle == user){
+                continue;//don't send to message to yourself
             }
+
+            ServerToClientMessageType type = ServerToClientMessageType.TEXT_MESSAGE_FROM_GROUP;
+            ServerToClientMessage message = new ServerToClientMessage(type, text);
+            sendMessage(message, user);
         }
     }
 
@@ -411,6 +395,10 @@ public class ServerThread extends Thread{
         }
         ClientToServerMessageType type = message.getType();
         String text = message.getText();
+
+        //=============
+        //System.out.println(text);
+        ////===========
 
         try {
             switch (type) {

@@ -99,12 +99,11 @@ user4 VARCHAR(20)
                 successful = false;
             }
 
+            if( successful ) {
+                String query = "INSERT INTO users VALUES (\"" + login + "\", \"" + password + "\")";
+                statement.executeUpdate(query);
+            }
 
-            String query = "INSERT INTO users VALUES (\"" + login + "\", \"" + password + "\")";
-
-            conn = DriverManager.getConnection(url);
-            statement = conn.createStatement();
-            statement.executeUpdate(query);
 
             rs.close();
             statement.close();
@@ -130,7 +129,6 @@ user4 VARCHAR(20)
             String query = "SELECT * FROM friends WHERE (user1 = \"" + user1 + "\" AND user2 = \"" + user2 +"\") OR (user1 = \"" + user2  +"\" AND user2 = \"" + user1 + "\")";
             rs = statement.executeQuery(query);
             if( rs.next() ){
-                System.out.println("juz sa znajomymi");
                 areTheyFriends = true;
             }
 
@@ -150,12 +148,7 @@ user4 VARCHAR(20)
     void insertFriendship(String user1, String user2){
         Statement statement = null;
         Connection conn = null;
-        ResultSet rs = null;
         try{
-            if( checkFriendship(user1, user2)){
-                System.out.println("USERS ARE FRIENDS ALREADY");
-                return;
-            }
 
             conn = DriverManager.getConnection(url);
             statement = conn.createStatement();
@@ -165,7 +158,6 @@ user4 VARCHAR(20)
 
             statement.executeUpdate(query);
 
-            rs.close();
             statement.close();
             conn.close();
         }catch(Exception e){
@@ -330,7 +322,8 @@ user4 VARCHAR(20)
             conn = DriverManager.getConnection(url);
             statement = conn.createStatement();
             String query = "INSERT INTO groups(group_name, user1) VALUES (\""+ group.getGroupName() +"\",\"" + group.getUser(0) + "\")";
-            statement.executeQuery(query);
+//            statement.executeQuery(query);
+            statement.executeUpdate(query);
             //rs.close();
             statement.close();
             conn.close();

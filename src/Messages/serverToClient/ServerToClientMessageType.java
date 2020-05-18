@@ -10,6 +10,5 @@ public enum ServerToClientMessageType {
     USER_IS_NOT_CONNECTED,
     GROUP_NAME_OCCUPIED,
     USER_ADDED_YOU_TO_GROUP,
-
-
+    TEXT_MESSAGE_FROM_GROUP,
 }

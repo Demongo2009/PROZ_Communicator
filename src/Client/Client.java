@@ -64,19 +64,19 @@ public class Client {
 
         while( true ){
             if( myObj.nextLine().equals("a")){
-                //addUserToGroup("Essssa", "Konrad2");
-                createGroup("GRUPA");
-                //confirmFriendship("Konrad");
-                //sendTextMessageToUser("Konrad", "XDDDDDDDD");
+                //sendTextMessageToUser("Konrad", "pierwsza wiadomosczxczxcasdasddasdadsad");
+
+                //addUserToFriends("Konrad4");
+
+                //confirmFriendship("Konrad4");
+
+                //createGroup("Grupa");
+
+
                 break;
             }
         }
-        for(String s :friends){
-            System.out.println(s);
-        }
-        for(String s: groups){
-            System.out.println(s);
-        }
+
         logout();
     }
 
@@ -159,6 +159,7 @@ public class Client {
             String[] friendsAndGroups = message.getText().split("@");
             String[] friendsArray = friendsAndGroups[0].split("#");
             String[] groupsArray = friendsAndGroups[1].split("#");
+
             friends.addAll(Arrays.asList(friendsArray));//inserts all strings into array list
             groups.addAll(Arrays.asList(groupsArray));
 
@@ -201,6 +202,10 @@ public class Client {
     static void addUserToFriends(String userToAdd){
         if( checkFriendship(userToAdd) ){
             System.out.println("User is already your friend!!!");
+            return;
+        }
+        if( userToAdd.equals(username)){
+            System.out.println("You cannot add yourself to friends");
             return;
         }
 
@@ -309,6 +314,9 @@ public class Client {
         }
         if( !checkFriendship(user)){
             System.out.println("you cannot add this user to group because he is not your friend");
+        }
+        if( user.equals(username)){
+            System.out.println("You cannot add yourself to group");
         }
         ClientToServerMessageType type = ClientToServerMessageType.ADD_USER_TO_GROUP;
         String text = group + "#" + user;

@@ -23,25 +23,29 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="41a203ad-a215-4808-8b62-2b8ddd69c268">
+        <schema name="main" object-types="table, column, view" />
+      </connection>
+    </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="41a203ad-a215-4808-8b62-2b8ddd69c268">
-      <console name="MultiCom" type="STANDARD" schema="main" session="Main"><![CDATA[select * from users; 
+      <console name="MultiCom" type="STANDARD" schema="main" session="Main">select * from users; 
 
 select * from friends;
 
 select * from groups;
 
-insert into friends values ("Konrad", "Konrad2");
-insert into friends values ("Konrad", "Konrad3");
-insert into friends values ("Konrad", "Konrad4");
-insert into friends values ("Konrad5", "Konrad");
+insert into friends values (&quot;Konrad&quot;, &quot;Konrad2&quot;);
+insert into friends values (&quot;Konrad&quot;, &quot;Konrad3&quot;);
+insert into friends values (&quot;Konrad&quot;, &quot;Konrad4&quot;);
+insert into friends values (&quot;Konrad5&quot;, &quot;Konrad&quot;);
 
-insert into groups(group_name, user1) values("Essssa", "Konrad");
+insert into groups(group_name, user1) values(&quot;Essssa&quot;, &quot;Konrad&quot;);
 
 DELETE FROM friends;
-commit;]]></console>
+commit;</console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">

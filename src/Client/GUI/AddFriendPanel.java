@@ -1,17 +1,11 @@
 package Client.GUI;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+
+import static Client.Client.addUserToFriends;
 
 public class AddFriendPanel extends JPanel
 {
@@ -19,22 +13,27 @@ public class AddFriendPanel extends JPanel
     private JButton b = new JButton("Add Friend");
     private JPanel AddFriendArea;
     private JTextField FriendNameInput = new JTextField(20);
-    private MainWindow ReferenceToMain;
+    private JLabel MainTabLabel;
+    private JLabel AddFriendText = new JLabel("Enter user name:");
 
 
 
-    public AddFriendPanel(MainWindow upRef)
+    public AddFriendPanel(JLabel upRef)
     {
-        ReferenceToMain = upRef;
+        MainTabLabel = upRef;
         setLayout(null);
-
-        b.setBounds(50,60,95,30);
-        FriendNameInput.setBounds(10,20,135,30);
+        AddFriendText.setBounds(10,20,135,30);
+        b.setBounds(50,90,95,30);
+        FriendNameInput.setBounds(10,50,135,30);
 
         b.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                if(addUserToFriends(FriendNameInput.getText())==-1)
+                {
+                    MainTabLabel.setText("<html>User is already your friend!</html>");
+                }
 
             }
         });
@@ -44,7 +43,8 @@ public class AddFriendPanel extends JPanel
         AddFriendArea.setLayout(null);
         AddFriendArea.add(FriendNameInput);
         AddFriendArea.add(b);
-        AddFriendArea.setSize(155,110);
+        AddFriendArea.setSize(155,140);
+        AddFriendArea.add(AddFriendText);
         add(AddFriendArea);
 
 

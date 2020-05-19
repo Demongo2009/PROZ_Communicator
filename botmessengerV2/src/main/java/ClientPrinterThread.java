@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
+import java.net.URL;
 import java.util.concurrent.Semaphore;
 
 //import com.clivern.racter.BotPlatform;
@@ -34,7 +35,7 @@ public class ClientPrinterThread extends Thread {
     public void initializePlatform(){
         platform = null;
         try {
-            platform = new BotPlatform("src/main/java/resources/config.properties");
+            platform = new BotPlatform("config.properties");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -72,6 +73,17 @@ public class ClientPrinterThread extends Thread {
         return message;
     }
 
+    public void sendRegularMessage(String text){
+        message_tpl.setRecipientId(userId);
+        message_tpl.setNotificationType("REGULAR");
+        message_tpl.setMessageText(text);
+        try {
+            platform.getBaseSender().send(message_tpl);
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void run(){
         try{
             String inputFromServer;
@@ -85,13 +97,33 @@ public class ClientPrinterThread extends Thread {
 //                System.out.println("Server.Server: "+ inputFromServer);
 
                 message_tpl.setRecipientId(userId);
-                if(message.getType().equals(ServerToClientMessageType.IMAGE)){
-                    message_tpl.setAttachment("image",inputFromServer,true);
-                }else{
-                    message_tpl.setMessageText("Server: "+ inputFromServer);
-
-                }
                 message_tpl.setNotificationType("REGULAR");
+
+                ServerToClientMessageType messageType= message.getType();
+                if(messageType.equals(ServerToClientMessageType.IMAGE)){
+                    message_tpl.setAttachment("image",inputFromServer,true);
+
+                }else if(messageType.equals(ServerToClientMessageType.CONFIRM_LOGIN)) {
+                    System.out.println("tak");
+                    MessengerBot.setLoginResultAvailable(true);
+
+                }else if(messageType.equals(ServerToClientMessageType.REJECT_LOGIN)) {
+                    System.out.println("nie");
+                    MessengerBot.setLoginResultAvailable(false);
+
+
+                }else if(messageType.equals(ServerToClientMessageType.USER_WANTS_TO_BE_YOUR_FRIEND)) {
+                    System.out.println("friend attempt");
+                    message_tpl.setMessageText("User \""+inputFromServer+"\" wants to be your friend. [Y] accept [N] refuse");
+                    MessengerBot.friendRequest(inputFromServer);
+
+                }else if(messageType.equals(ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST)){
+                    message_tpl.setMessageText("\""+inputFromServer + "\" accepted your friend request");
+                }
+                else {
+                    message_tpl.setMessageText(inputFromServer);
+                }
+
                 try {
                     platform.getBaseSender().send(message_tpl);
                 } catch (UnirestException e) {

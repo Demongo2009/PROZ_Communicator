@@ -4,6 +4,7 @@ import Messages.serverToClient.ServerToClientMessage;
 import Server.CommunicatorType;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
+import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.MessageAttachment;
 
 import java.awt.event.ActionListener;
@@ -24,9 +25,9 @@ public class DiscordBot {
     static ObjectInputStream inObject;
     static String username;
     static String password;
-    public static Semaphore loginResultAvailable = new Semaphore(0);
-    public static boolean loginResult;
-    public static String friend;
+    static Semaphore loginResultAvailable = new Semaphore(0);
+    static boolean loginResult;
+    static String friend;
     static boolean isGroupSending = false;
 
     enum AvailableStates{
@@ -46,6 +47,11 @@ public class DiscordBot {
 
     static AvailableStates currentState = AvailableStates.INIT;
 
+    static public void setLoginResultAvailable(boolean result){
+        loginResultAvailable.release();
+        loginResult = result;
+    }
+
 
 
     static private void sendMessage(ClientToServerMessage message){
@@ -56,15 +62,16 @@ public class DiscordBot {
         }
     }
 
-    static public void friendRequest(){
+    static public void friendRequest(String friendName){
         currentState = AvailableStates.FRIEND_REQUEST_PENDING;
+        friend = friendName;
     }
 
 
 
     public static void main(String[] args) {
         // Insert your bot's token here
-        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.XsKkzg.hxQf5HAH9fK3r40-nq9GFTkA_7s";
+        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.XsP0bg.hTnOSJ9pjele63phslaH09bBteA";
 
         DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
 
@@ -77,7 +84,7 @@ public class DiscordBot {
                 int portNumber = 4444;
                 try {
                     echoSocket = new Socket(hostName, portNumber);
-                    Runtime.getRuntime().addShutdownHook(new ClientShutdownHook(echoSocket));
+
 
                     // shutdown hook added for closing the connection if client exits
                     out =
@@ -110,46 +117,50 @@ public class DiscordBot {
             if(event.getMessageAuthor().isBotUser()){
                 return;
             }
-            if (currentState.equals(AvailableStates.INIT) && event.getMessageContent().equalsIgnoreCase("!chat")) {
-                event.getChannel().sendMessage("Initiated chat!\nPlease login[l] or sign in[s]...");
-                clientPrinterThread.sendEventChannel(event.getChannel());
+            
+            String messageContent = event.getMessageContent();
+            TextChannel channel = event.getChannel();
+            if (currentState.equals(AvailableStates.INIT) && messageContent.equalsIgnoreCase("!chat")) {
+                channel.sendMessage("Initiated chat!\nPlease login[l] or sign in[s]...");
+                clientPrinterThread.sendEventChannel(channel);
 
                 currentState = AvailableStates.SELECT_LOGIN_OR_REGISTER;
             }
 
             else if(currentState.equals(AvailableStates.SELECT_LOGIN_OR_REGISTER)){
 
-                if(event.getMessageContent().equalsIgnoreCase("l")){
-                    event.getChannel().sendMessage("You selected login. Input your Username:...");
+                if(messageContent.equalsIgnoreCase("l")){
+                    channel.sendMessage("You selected login. Input your Username:...");
                     currentState = AvailableStates.LOGIN_USERNAME;
 
-                }else if(event.getMessageContent().equalsIgnoreCase("s")){
-                    event.getChannel().sendMessage("You selected sign in. Input your Username:...");
+                }else if(messageContent.equalsIgnoreCase("s")){
+                    channel.sendMessage("You selected sign in. Input your Username:...");
                     currentState = AvailableStates.REGISTER_USERNAME;
                 }
 
 
 //                sendMessage(new ClientToServerMessage(ClientToServerMessageType.REQUEST_LOGIN,"login#password", CommunicatorType.DISCORD));
 //
-//                clientPrinterThread.sendEventChannel(event.getChannel());
+//                clientPrinterThread.sendEventChannel(channel);
 //                clientPrinterThread.releaseMutex();
 //
 //                currentState = AvailableStates.CONNECTED_TO_CHAT;
             }
 
             else if(currentState.equals(AvailableStates.LOGIN_USERNAME)){
-                username = event.getMessageContent();
+                username = messageContent;
                 System.out.println(username);
-                event.getChannel().sendMessage("Input your Password:...");
+                channel.sendMessage("Input your Password:...");
                 currentState = AvailableStates.LOGIN_PASSWORD;
             }
 
             else if(currentState.equals(AvailableStates.LOGIN_PASSWORD)){
-                password = event.getMessageContent();
+                password = messageContent;
 
                 sendMessage(new ClientToServerMessage(ClientToServerMessageType.REQUEST_LOGIN,username+"#"+password,CommunicatorType.DISCORD));
                 System.out.println("Waiting for login result");
                 try {
+                    Thread.yield();
                     loginResultAvailable.acquire();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -157,49 +168,52 @@ public class DiscordBot {
                 System.out.println("Result got!");
 
                 if(loginResult){
-                    event.getChannel().sendMessage("Login successful. Send messages: username#message_text.\n" +
+                    channel.sendMessage("Login successful. Send messages: username#message_text.\n" +
                             "Send images: !image\n" +
                             "Add to friends: !friend\n" +
                             "Create group: !creategroup\n" +
                             "Add user to group: !addtogroup\n" +
                             "Change text sending to group sending: !group. Then groupname#message_text\n" +
+                            "Switch to user sending: !user\n" +
                             "Quit: !q");
                     currentState = AvailableStates.CONNECTED_TO_CHAT;
                 }else {
-                    event.getChannel().sendMessage("Incorrect data. Try again.\nPlease login[l] or sign in[s]...");
+                    channel.sendMessage("Incorrect data. Try again.\nPlease login[l] or sign in[s]...");
                     currentState = AvailableStates.SELECT_LOGIN_OR_REGISTER;
                 }
 
             }
 
             else if(currentState.equals(AvailableStates.REGISTER_USERNAME)){
-                username = event.getMessageContent();
-                event.getChannel().sendMessage("Input your Password:...");
+                username = messageContent;
+                channel.sendMessage("Input your Password:...");
                 currentState = AvailableStates.REGISTER_PASSWORD;
             }
 
             else if(currentState.equals(AvailableStates.REGISTER_PASSWORD)){
-                password = event.getMessageContent();
+                password = messageContent;
 
                 sendMessage(new ClientToServerMessage(ClientToServerMessageType.REQUEST_REGISTER,username+"#"+password,CommunicatorType.DISCORD));
 
                 try {
+                    Thread.yield();
                     loginResultAvailable.acquire();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
                 if(loginResult){
-                    event.getChannel().sendMessage("Login successful. Send messages: username#message_text.\\n\" +\n" +
+                    channel.sendMessage("Login successful. Send messages: username#message_text.\\n\" +\n" +
                             "                            \"Send images: !image\\n\" +\n" +
                             "                            \"Add to friends: !friend\\n\" +\n" +
                             "                            \"Create group: !creategroup\\n\" +\n" +
                             "                            \"Add user to group: !addtogroup\\n\" +\n" +
                             "                            \"Change text sending to group sending: !group. Then groupname#message_text\n" +
+                            "Switch to user sending: !user\n" +
                             "Quit: !q");
                     currentState = AvailableStates.CONNECTED_TO_CHAT;
                 }else {
-                    event.getChannel().sendMessage("Incorrect data. Try again.\nPlease login[l] or sign in[s]...");
+                    channel.sendMessage("Incorrect data. Try again.\nPlease login[l] or sign in[s]...");
                     currentState = AvailableStates.SELECT_LOGIN_OR_REGISTER;
                 }
             }
@@ -216,25 +230,25 @@ public class DiscordBot {
             }
 
             else if(currentState.equals(AvailableStates.ADD_TO_FRIENDS)){
-                sendMessage(new ClientToServerMessage(ClientToServerMessageType.ADD_USER_TO_FRIENDS,event.getMessageContent(),CommunicatorType.DISCORD));
+                sendMessage(new ClientToServerMessage(ClientToServerMessageType.ADD_USER_TO_FRIENDS,messageContent,CommunicatorType.DISCORD));
                 currentState = AvailableStates.CONNECTED_TO_CHAT;
             }
 
             else if(currentState.equals(AvailableStates.CREATE_GROUP)){
-                sendMessage(new ClientToServerMessage(ClientToServerMessageType.CREATE_GROUP,event.getMessageContent(),CommunicatorType.DISCORD));
+                sendMessage(new ClientToServerMessage(ClientToServerMessageType.CREATE_GROUP,messageContent,CommunicatorType.DISCORD));
 
                 currentState = AvailableStates.CONNECTED_TO_CHAT;
             }
 
             else if(currentState.equals(AvailableStates.ADD_TO_GROUP)){
-                sendMessage(new ClientToServerMessage(ClientToServerMessageType.ADD_USER_TO_GROUP,event.getMessageContent(),CommunicatorType.DISCORD));
+                sendMessage(new ClientToServerMessage(ClientToServerMessageType.ADD_USER_TO_GROUP,messageContent,CommunicatorType.DISCORD));
 
                 currentState = AvailableStates.CONNECTED_TO_CHAT;
             }
 
             else if(currentState.equals(AvailableStates.CONNECTED_TO_CHAT)){
 
-                if(event.getMessageContent().equalsIgnoreCase("!q")){
+                if(messageContent.equalsIgnoreCase("!q")){
                     try {
                         echoSocket.close();
                     } catch (IOException e) {
@@ -242,25 +256,31 @@ public class DiscordBot {
                     }
                     return;
 
-                }else if(event.getMessageContent().equalsIgnoreCase("!image")){
+                }else if(messageContent.equalsIgnoreCase("!image")){
                     currentState = AvailableStates.IMAGE_SENDING;
-                    event.getChannel().sendMessage("Input image");
-                }else if(event.getMessageContent().equalsIgnoreCase("!friend")){
+                    channel.sendMessage("Input image");
+                }else if(messageContent.equalsIgnoreCase("!friend")){
                     currentState  = AvailableStates.ADD_TO_FRIENDS;
-                    event.getChannel().sendMessage("Input friend to add name...");
-                }else if(event.getMessageContent().equalsIgnoreCase("!creategroup")){
+                    channel.sendMessage("Input friend to add name...");
+                }else if(messageContent.equalsIgnoreCase("!creategroup")){
                     currentState = AvailableStates.CREATE_GROUP;
-                    event.getChannel().sendMessage("Input group name to create...");
-                }else if(event.getMessageContent().equalsIgnoreCase("!addtogroup")){
+                    channel.sendMessage("Input group name to create...");
+                }else if(messageContent.equalsIgnoreCase("!addtogroup")){
                     currentState  = AvailableStates.ADD_TO_GROUP;
-                    event.getChannel().sendMessage("Input groupname#usertoadd...");
-                }else if(event.getMessageContent().equalsIgnoreCase("!group")){
+                    channel.sendMessage("Input groupname#usertoadd...");
+                }else if(messageContent.equalsIgnoreCase("!group")){
                     isGroupSending = true;
-                }else if(isGroupSending) {
-                    sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_GROUP,event.getMessageContent(),CommunicatorType.DISCORD));
+                    channel.sendMessage("Group sending!");
+                }else if(messageContent.equalsIgnoreCase("!user")){
+                    isGroupSending = false;
+                    channel.sendMessage("User sending!");
+                }
+
+                else if(isGroupSending) {
+                    sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_GROUP,messageContent,CommunicatorType.DISCORD));
 
                 }else{
-                    sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_USER,event.getMessageContent().toString(),CommunicatorType.DISCORD));
+                    sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_USER,messageContent.toString(),CommunicatorType.DISCORD));
 
                 }
 
@@ -271,20 +291,20 @@ public class DiscordBot {
             }
 
             else if(currentState.equals(AvailableStates.FRIEND_REQUEST_PENDING)){
-                if(event.getMessageContent().equalsIgnoreCase("Y")){
+                if(messageContent.equalsIgnoreCase("Y")){
                     sendMessage(new ClientToServerMessage(ClientToServerMessageType.CONFIRMATION_OF_FRIENDSHIP,friend,CommunicatorType.DISCORD));
-                }else if(event.getMessageContent().equalsIgnoreCase("N")){
+                }else if(messageContent.equalsIgnoreCase("N")){
 
                 }else {
-                    event.getChannel().sendMessage("Not recognised sign");
+                    channel.sendMessage("Not recognised sign");
                 }
             }
             else{
-                if (event.getMessageContent().equalsIgnoreCase("!ping")) {
-                    event.getChannel().sendMessage("Pong!");
+                if (messageContent.equalsIgnoreCase("!ping")) {
+                    channel.sendMessage("Pong!");
                 }
-                if (event.getMessageContent().equalsIgnoreCase("!elka")) {
-                    event.getChannel().sendMessage(" * * * * * elke!");
+                if (messageContent.equalsIgnoreCase("!elka")) {
+                    channel.sendMessage(" * * * * * elke!");
                 }
             }
 

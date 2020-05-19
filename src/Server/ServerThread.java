@@ -62,13 +62,13 @@ public class ServerThread extends Thread{
         }
         /* END OF LOG IN PHASE*/
         while(shouldRun){
-            try {
-                mutex.acquire();//========================
+//            try {
+//                mutex.acquire();//========================
                 processMessage( receiveMessage() );
-                mutex.release();//========================
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//                mutex.release();//========================
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
         }
         System.out.println("End of thread");
     }

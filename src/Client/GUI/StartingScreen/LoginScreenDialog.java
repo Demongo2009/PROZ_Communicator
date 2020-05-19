@@ -10,7 +10,7 @@ public class LoginScreenDialog extends JDialog
 {
     private final int WIDTH=110;
     private final int HEIGHT=25;
-    private final int BUTTON_WIDTH =75;
+    private final int BUTTON_WIDTH =100;
     private JPanel panel = new JPanel();
     private JButton login_button = new JButton("LOGIN");
     private JButton close_button = new JButton("CLOSE");
@@ -76,7 +76,7 @@ public class LoginScreenDialog extends JDialog
         passwordText.setBounds(10,50,WIDTH,HEIGHT);
         userName.setBounds(100,20,WIDTH,HEIGHT);
         userPassword.setBounds(100,50,WIDTH,HEIGHT);
-        login_button.setBounds(100,100,BUTTON_WIDTH,HEIGHT);
+        login_button.setBounds(130,100,BUTTON_WIDTH,HEIGHT);
         close_button.setBounds(10,100,BUTTON_WIDTH,HEIGHT);
         panel.setLayout(null);
         panel.add(userName);

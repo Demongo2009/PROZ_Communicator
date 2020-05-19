@@ -62,7 +62,6 @@ public class GuiNotificationListener extends Thread
                 break;
 
             case USER_ACCEPTED_YOUR_FRIEND_REQUEST:
-
                 Client.friends.add(notification.getText());
                 mainWindow.refresh();
                 break;

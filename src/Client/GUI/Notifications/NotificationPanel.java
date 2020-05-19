@@ -28,18 +28,24 @@ public class NotificationPanel extends JPanel
         declineFriendRequest.setBounds(15,210,90,20);
         acceptFriendRequest.setBounds(115,210,90,20);
 
-        acceptFriendRequest.addActionListener(new ActionListener() {
+        acceptFriendRequest.addActionListener(new ActionListener()
+        {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(friendRequestL.isSelectionEmpty())
-                {
-
-                }
+                if(friendRequestL.isSelectionEmpty()) {}
                 else
                 {
                     confirmFriendship(friendRequestL.getSelectedValue().toString());
+                    friendsRequestsList.removeElementAt(friendsRequestsList.indexOf(friendRequestL.getSelectedValue().toString()));
                     referenceToMainWindow.refresh();
                 }
+            }
+        });
+        declineFriendRequest.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                friendsRequestsList.removeElementAt(friendsRequestsList.indexOf(friendRequestL.getSelectedValue().toString()));
             }
         });
 
@@ -50,11 +56,6 @@ public class NotificationPanel extends JPanel
     }
 
 
-    public void newFriendRequest(String friend)
-    {
-        friendsRequestsList.addElement(friend);
-
-    }
     public void receiveFriendRequest(String serverMessage)
     {
         friendsRequestsList.addElement(serverMessage);

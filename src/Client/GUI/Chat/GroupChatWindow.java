@@ -91,7 +91,12 @@ public class GroupChatWindow  extends JPanel
                 TryToSend();
             }
         });
+        addToGroupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
+            }
+        });
         GridBagConstraints left = new GridBagConstraints();
         left.anchor = GridBagConstraints.LINE_START;
         left.fill = GridBagConstraints.HORIZONTAL;
@@ -115,6 +120,7 @@ public class GroupChatWindow  extends JPanel
                 }
             }
         });
+
         southPanel.add(messageBox, left);
         southPanel.add(sendMessage, right);
 

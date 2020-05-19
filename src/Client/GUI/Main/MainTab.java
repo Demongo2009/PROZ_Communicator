@@ -24,14 +24,14 @@ public class MainTab extends JPanel
     private JScrollPane GroupScroll = new JScrollPane(GroupL);
 
     private JPanel AddFriend;
+    private JPanel createGroup;
     private MainWindow referenceToMain;
     private JLabel state = new JLabel("");
     private JLabel loggedAs = new JLabel("");
     private JLabel FriendsText = new JLabel("Friends:");
     private JLabel GroupsText = new JLabel("Groups:");
     private JButton StartChatButton = new JButton("Start Chat");
-    private JButton CreateGroupButton = new JButton("Create Group");
-    private JButton AddToGroupButton = new JButton("Add to Group");
+   // private JButton AddToGroupButton = new JButton("Add to Group");
 
 
     public void refreshFriends()
@@ -46,12 +46,20 @@ public class MainTab extends JPanel
     }
     public void refreshGroups()
     {
+        for(String s: groups)
+        {
+            if(GroupList.indexOf(s)==-1)
+            {
+                GroupList.addElement(s);
+            }
+        }
 
     }
     public MainTab(MainWindow upRef, String User)
     {
         referenceToMain=upRef;
         AddFriend = new AddFriendPanel(state);
+        createGroup = new CreateGroupPanel(state,referenceToMain);
         setLayout(null);
         // Nie można zaznaczac kilku na raz, grupy sie tworzy inaczej
         FriendL.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -86,12 +94,11 @@ public class MainTab extends JPanel
         loggedAs.setBounds(370,30,130,70);
         loggedAs.setVerticalAlignment(JLabel.TOP);
 
-        AddToGroupButton.setBounds(30,315,145,30);
-        CreateGroupButton.setBounds(205,450,140,30);
-        StartChatButton.setBounds(375,450,140,30);
+        StartChatButton.setBounds(375,400,140,75);
         AddFriend.setBounds(30,370,155,140);
+        createGroup.setBounds(200,370,155,140);
 
-        state.setBounds(320,390,200,60);
+        state.setBounds(30,320,200,60);
         state.setVerticalAlignment(JLabel.TOP);
         state.setForeground(Color.RED);
 
@@ -138,40 +145,41 @@ public class MainTab extends JPanel
             }
         });
 
-        CreateGroupButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                CreateNewGroupDialog CNGD = new CreateNewGroupDialog(null,FriendList);
-                CNGD.setSize(400,400);
-                CNGD.setVisible(true);
+//        CreateGroupButton.addActionListener(new ActionListener()
+//        {
+//            @Override
+//            public void actionPerformed(ActionEvent e)
+//            {
+//                CreateNewGroupDialog CNGD = new CreateNewGroupDialog(null,FriendList);
+//                CNGD.setSize(400,400);
+//                CNGD.setVisible(true);
+//
+//            }
+//        });
 
-            }
-        });
-
-        AddToGroupButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(FriendL.isSelectionEmpty())
-                {
-                    state.setText("<html>Choose one user!</html>");
-                }
-                else
-                {
-                    AddToGroupDialog tmp =new AddToGroupDialog(GroupList,"Adding " +FriendL.getSelectedValue().toString()+" to group");
-                    tmp.setSize(210,300);
-                    tmp.setVisible(true);
-                }
-            }
-        });
+//        AddToGroupButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                if(FriendL.isSelectionEmpty())
+//                {
+//                    state.setText("<html>Choose one user!</html>");
+//                }
+//                else
+//                {
+//                    AddToGroupDialog tmp =new AddToGroupDialog(GroupList,"Adding " +FriendL.getSelectedValue().toString()+" to group");
+//                    tmp.setSize(210,300);
+//                    tmp.setVisible(true);
+//                }
+//            }
+//        });
 
 
         //WSTAWIANIE DO PANELU
-        add(AddToGroupButton);
+       // add(AddToGroupButton);
         add(FriendsText);
         add(GroupsText);
         add(GroupScroll);
-        add(CreateGroupButton);
+        add(createGroup);
         add(AddFriend);
         add(loggedAs);
         add(state);

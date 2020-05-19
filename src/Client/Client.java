@@ -194,8 +194,10 @@ public class Client {
      * Sends message to server that we are now friends with friendToAdd
      * Add friend's nickname to friends ArrayList
      * */
-    public static void confirmFriendship(String friendToAdd){
-        if(checkFriendship( friendToAdd)){
+    public static void confirmFriendship(String friendToAdd)
+    {
+        if(checkFriendship( friendToAdd))
+        {
             return;
         }
         friends.add(friendToAdd);
@@ -243,22 +245,23 @@ public class Client {
     /*
      * Sends message to server a request to create a group
      * */
-    static void createGroup(String groupName){
-        if( checkMembership(groupName)){
-            System.out.println("You are in such group already");
-            return;
+    public static void createGroup(String groupName) throws Exception
+    {
+        if( checkMembership(groupName))
+        {
+            throw new Exception("You are in such group already");
         }
-        if( groupName.contains("#") ){
-            System.out.println("Cannot use '#'");
-            return;
+        if( groupName.contains("#") )
+        {
+            throw new Exception("Cannot use '#'");
         }
-        if( groupName.contains(" ") ){
-            System.out.println("Group name must be one word");
-            return;
+        if( groupName.contains(" ") )
+        {
+            throw new Exception("Group name must be one word");
         }
-        if( groupName.length() < 3 ){
-            System.out.println("Group name must have at least 3 characters");
-            return;
+        if( groupName.length() < 3 )
+        {
+            throw new Exception("Group name must have at least 3 characters");
         }
 
         ClientToServerMessageType type = ClientToServerMessageType.CREATE_GROUP;

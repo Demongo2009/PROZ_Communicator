@@ -27,18 +27,25 @@ public class AddFriendPanel extends JPanel
         b.setBounds(50,90,95,30);
         FriendNameInput.setBounds(10,50,135,30);
 
-        b.addActionListener(new ActionListener() {
+        b.addActionListener(new ActionListener()
+        {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                if(!addUserToFriends(FriendNameInput.getText()))
+                if(FriendNameInput.getText().length()<3)
                 {
-                    MainTabLabel.setText("<html>User is already your friend!</html>");
+                    MainTabLabel.setForeground(Color.RED);
+                    MainTabLabel.setText("<html>Name too short!</html>");
                 }
                 else
                 {
-                    MainTabLabel.setForeground(Color.GREEN);
-                    MainTabLabel.setText("<html>Request sent!</html>");
+                    if (!addUserToFriends(FriendNameInput.getText())) {
+                        MainTabLabel.setForeground(Color.RED);
+                        MainTabLabel.setText("<html>User is already your friend!</html>");
+                    } else {
+                        MainTabLabel.setForeground(Color.GREEN);
+                        MainTabLabel.setText("<html>Request sent!</html>");
+                    }
                 }
 
             }

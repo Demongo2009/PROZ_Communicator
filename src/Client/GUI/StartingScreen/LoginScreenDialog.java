@@ -1,4 +1,4 @@
-package Client.GUI;
+package Client.GUI.StartingScreen;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -25,7 +25,8 @@ public class LoginScreenDialog extends JDialog
     {
         super(parent, "Login Screen", true);
         setLocationRelativeTo(null);
-        login_button.addActionListener(new ActionListener() {
+        login_button.addActionListener(new ActionListener()
+        {
             public void actionPerformed(ActionEvent e)
             {
                 login = userName.getText();

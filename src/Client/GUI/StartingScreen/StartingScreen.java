@@ -1,4 +1,4 @@
-package Client.GUI;
+package Client.GUI.StartingScreen;
 import static Client.Client.*;
 import static Client.GUI.tools.SwingConsole.*;
 import java.awt.*;
@@ -6,12 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-import Client.Client;
+import Client.GUI.Main.MainWindow;
 import Messages.clientToServer.ClientToServerMessageType;
-import javafx.util.Pair;
-import sun.applet.Main;
 
-import static Client.GUI.tools.SwingConsole.*;
 import javax.swing.*;
 
 public class StartingScreen extends JFrame
@@ -27,18 +24,7 @@ public class StartingScreen extends JFrame
 
     private void CheckLoginPassword() throws IOException
     {
-        /*
-        *
-        *
-        *
-        *
-        *
-        *
-        TUTAJ JEST TRYB DZIALANIA
-        * */
 
-        if(true)
-        {
             try
             {
                 System.out.println("CHECKIGN LOGIN");
@@ -47,40 +33,29 @@ public class StartingScreen extends JFrame
                 /*Tworzymy okno głownej aplikacji i wysyłamy referencje do niej do oblugi powiadomien
                  * sama aplikacja pokaze sie wtedy, gdy serwer zweryfikuje uzytkownika, w przeciwnym razie
                  * sproboj jeszcze raz*/
-                MainWindow MainClientApp = new MainWindow(login);
-                receiveLoginAnswer(MainClientApp);
-                //wszysyko w porzadku? to odslon okno głowne
-                OperationState.setText("Succesfully signed in :)");
-                run(MainClientApp, STARTING_SCREEN_TITLE, 600, 600);
-                //zamknij okno startowe
-                dispose();
+
+                if(receiveLoginAnswer())
+                {
+                    //wszysyko w porzadku? to odslon okno głowne
+                    OperationState.setText("Succesfully signed in :)");
+                    MainWindow MainClientApp = new MainWindow(login);
+                    run(MainClientApp, STARTING_SCREEN_TITLE, 600, 600);
+                    //zamknij okno startowe
+                    dispose();
+                }
+                else
+                {
+
+                }
             }
             catch (Exception e)
             {
                 e.printStackTrace();
             }
 
-        }
-        /*
-        *Testowanie obu wariantow
-        */
-        if(false)
-        {
-            if (login.equals("Igor") && pass.equals("dupa")) {
-                OperationState.setText("Logged in succesfully :)");
-                run(new MainWindow(login), STARTING_SCREEN_TITLE, 600, 600);
-                //run(new ChatWindow(login),500,650);
-                dispose();
-            } else {
-                OperationState.setForeground(Color.RED);
-                OperationState.setText("LOGOWANIE NIE POWIODLO SIE");
-            }
-        }
     }
     private void CheckRegister()
     {
-        if(true)
-        {
             try {
                 System.out.println("CHECKIGN REGISTER");
                 sendLoginOrRegisterRequest(login, pass, ClientToServerMessageType.REQUEST_REGISTER);
@@ -89,16 +64,16 @@ public class StartingScreen extends JFrame
                 * sama aplikacja pokaze sie wtedy, gdy serwer zweryfikuje uzytkownika, w przeciwnym razie
                 * sproboj jeszcze raz*/
                 MainWindow MainClientApp = new MainWindow(login);
-                receiveLoginAnswer(MainClientApp);
+                receiveLoginAnswer();
                 //wszysyko w porzadku? to odslon okno głowne
                 OperationState.setText("Succesfully signed up :)");
                 run(MainClientApp, STARTING_SCREEN_TITLE, 600, 600);
                 //zamknij okno startowe
                 dispose();
-            } catch (Exception e) {
+            } catch (Exception e)
+            {
                 e.printStackTrace();
             }
-        }
     }
 
     public StartingScreen( )

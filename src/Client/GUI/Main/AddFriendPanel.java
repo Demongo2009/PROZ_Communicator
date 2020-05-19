@@ -1,7 +1,8 @@
-package Client.GUI;
+package Client.GUI.Main;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -18,9 +19,9 @@ public class AddFriendPanel extends JPanel
 
 
 
-    public AddFriendPanel(JLabel upRef)
+    public AddFriendPanel(JLabel upRefText)
     {
-        MainTabLabel = upRef;
+        MainTabLabel = upRefText;
         setLayout(null);
         AddFriendText.setBounds(10,20,135,30);
         b.setBounds(50,90,95,30);
@@ -30,9 +31,14 @@ public class AddFriendPanel extends JPanel
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                if(addUserToFriends(FriendNameInput.getText())==-1)
+                if(!addUserToFriends(FriendNameInput.getText()))
                 {
                     MainTabLabel.setText("<html>User is already your friend!</html>");
+                }
+                else
+                {
+                    MainTabLabel.setForeground(Color.GREEN);
+                    MainTabLabel.setText("<html>Request sent!</html>");
                 }
 
             }

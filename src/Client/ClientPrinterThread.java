@@ -1,18 +1,10 @@
 package Client;
 
-import Client.GUI.MainWindow;
-import Messages.clientToServer.ClientToServerMessage;
-import Messages.clientToServer.ClientToServerMessageType;
 import Messages.serverToClient.ServerToClientMessage;
 import Messages.serverToClient.ServerToClientMessageType;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
 
 /*
  * class to receive ServerToClientMessage
@@ -20,10 +12,10 @@ import java.util.ArrayList;
 public class ClientPrinterThread extends Thread {
     ObjectInputStream inObject;
     boolean shouldRun;
-    private MainWindow ClientRef;
 
-    ClientPrinterThread(ObjectInputStream in,MainWindow ref){
-        ClientRef =ref;
+
+    ClientPrinterThread(ObjectInputStream in)
+    {
         this.inObject = in;
         shouldRun = true;
     }
@@ -51,9 +43,7 @@ public class ClientPrinterThread extends Thread {
             this.stopRunning();
             return;
         }
-        ClientRef.ReceiveNotification();
         Client.notificationsHandler.addNotification(message);
-        System.out.println( message.getText() );
 
     }
 

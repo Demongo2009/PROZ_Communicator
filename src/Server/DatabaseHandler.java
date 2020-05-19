@@ -6,28 +6,24 @@ import java.util.ArrayList;
 public class DatabaseHandler
 {
     //private String url = "jdbc:sqlite:/home/demongo/EITI/PROZ/PROZ_Communicator/src/MultiCom.db";
-    private String url = "jdbc:sqlite:S:/Programowanie/JAVA/PROZ_Communicatorl/srcMultiCom.db";
-/*
-users(
-login VARCHAR(20) NOT NULL,
-password VARCHAR(20) NOT NULL
-);
-
-friends(
-user1 VARCHAR(20) NOT NULL,
-user2 VARCHAR(20) NOT NULL
-);
-
-
-groups(
-group_name VARCHAR(20) NOT NULL,
-user1 VARCHAR(20) NOT NULL,
-user2 VARCHAR(20),
-user3 VARCHAR(20),
-user4 VARCHAR(20)
-)
-
- */
+    private String url = "jdbc:sqlite:src/MultiCom.db";
+    /*
+    users(
+    login VARCHAR(20) NOT NULL,
+    password VARCHAR(20) NOT NULL
+    );
+    friends(
+    user1 VARCHAR(20) NOT NULL,
+    user2 VARCHAR(20) NOT NULL
+    );
+    groups(
+    group_name VARCHAR(20) NOT NULL,
+    user1 VARCHAR(20) NOT NULL,
+    user2 VARCHAR(20),
+    user3 VARCHAR(20),
+    user4 VARCHAR(20)
+    )
+     */
 //TODO: make in resistant to sql injection
     ResultSet getLoginResultSet(Connection conn, Statement statement, String login){
         ResultSet rs = null;
@@ -44,8 +40,8 @@ user4 VARCHAR(20)
 
 
     /*
-    * Returns true if given login exists in given ResultSet
-    * */
+     * Returns true if given login exists in given ResultSet
+     * */
     boolean checkIfLoginExists(ResultSet rs, String login){
         try {
             while (rs.next()) {
@@ -59,8 +55,8 @@ user4 VARCHAR(20)
         return false;
     }
     /*
-    * Returns true if password matches login
-    * */
+     * Returns true if password matches login
+     * */
     boolean checkLogin(String login, String password){
         Statement statement = null;
         Connection conn = null;
@@ -84,8 +80,8 @@ user4 VARCHAR(20)
         return answer;
     }
     /*
-    * Return true if registration is successful
-    * */
+     * Return true if registration is successful
+     * */
     boolean registerUser(String login, String password){
         Statement statement = null;
         Connection conn = null;
@@ -100,12 +96,11 @@ user4 VARCHAR(20)
                 successful = false;
             }
 
+            if( successful ) {
+                String query = "INSERT INTO users VALUES (\"" + login + "\", \"" + password + "\")";
+                statement.executeUpdate(query);
+            }
 
-            String query = "INSERT INTO users VALUES (\"" + login + "\", \"" + password + "\")";
-
-            conn = DriverManager.getConnection(url);
-            statement = conn.createStatement();
-            statement.executeUpdate(query);
 
             rs.close();
             statement.close();
@@ -117,8 +112,8 @@ user4 VARCHAR(20)
     }
 
     /*
-    * Returns true if given users are friends
-    * */
+     * Returns true if given users are friends
+     * */
     boolean checkFriendship(String user1, String user2){
         Statement statement = null;
         Connection conn = null;
@@ -131,7 +126,6 @@ user4 VARCHAR(20)
             String query = "SELECT * FROM friends WHERE (user1 = \"" + user1 + "\" AND user2 = \"" + user2 +"\") OR (user1 = \"" + user2  +"\" AND user2 = \"" + user1 + "\")";
             rs = statement.executeQuery(query);
             if( rs.next() ){
-                System.out.println("juz sa znajomymi");
                 areTheyFriends = true;
             }
 
@@ -146,17 +140,12 @@ user4 VARCHAR(20)
     }
 
     /*
-    * Inserts users' logins to 'friends' table
-    * */
+     * Inserts users' logins to 'friends' table
+     * */
     void insertFriendship(String user1, String user2){
         Statement statement = null;
         Connection conn = null;
-        ResultSet rs = null;
         try{
-            if( checkFriendship(user1, user2)){
-                System.out.println("USERS ARE FRIENDS ALREADY");
-                return;
-            }
 
             conn = DriverManager.getConnection(url);
             statement = conn.createStatement();
@@ -166,7 +155,6 @@ user4 VARCHAR(20)
 
             statement.executeUpdate(query);
 
-            rs.close();
             statement.close();
             conn.close();
         }catch(Exception e){
@@ -176,8 +164,8 @@ user4 VARCHAR(20)
     }
 
     /*
-    * Returns user's friends' nicknames separated by '#'
-    * */
+     * Returns user's friends' nicknames separated by '#'
+     * */
     String getUserFriends(String login){
         Statement statement = null;
         Connection conn = null;
@@ -203,6 +191,7 @@ user4 VARCHAR(20)
         }
         return friends;
     }
+
 
 
     ArrayList<Group> getGroups(){
@@ -330,7 +319,8 @@ user4 VARCHAR(20)
             conn = DriverManager.getConnection(url);
             statement = conn.createStatement();
             String query = "INSERT INTO groups(group_name, user1) VALUES (\""+ group.getGroupName() +"\",\"" + group.getUser(0) + "\")";
-            statement.executeQuery(query);
+//            statement.executeQuery(query);
+            statement.executeUpdate(query);
             //rs.close();
             statement.close();
             conn.close();
@@ -351,7 +341,7 @@ user4 VARCHAR(20)
             String query = "SELECT * FROM groups WHERE group_name = \""+ group + "\"";
             rs = statement.executeQuery(query);
             if( rs.next() ){
-            //should always happen since it was already checked
+                //should always happen since it was already checked
 
                 String whichColumn = "";
                 if( rs.getString("user2") == null){
@@ -373,6 +363,12 @@ user4 VARCHAR(20)
         }catch(Exception e){
             e.printStackTrace();
         }
+
         return true;
     }
+
+
+
+
+
 }

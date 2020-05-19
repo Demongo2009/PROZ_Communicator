@@ -1,23 +1,19 @@
 package Client;
 
-import Client.GUI.MainWindow;
-import Client.GUI.StartingScreen;
+import Client.GUI.StartingScreen.StartingScreen;
 import Messages.clientToServer.ClientToServerMessage;
 import Messages.clientToServer.ClientToServerMessageType;
 import Messages.serverToClient.ServerToClientMessage;
 import Messages.serverToClient.ServerToClientMessageType;
 import Server.CommunicatorType;
 
-import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
 
 import static Client.GUI.tools.SwingConsole.run;
-
 
 public class Client {
 
@@ -34,7 +30,7 @@ public class Client {
     static ObjectInputStream inObject;
 
     static String username = null;
-    static NotificationsHandler notificationsHandler;
+    public static NotificationsHandler notificationsHandler;
     static ClientPrinterThread listener;
 
     public static ArrayList<String> friends;
@@ -46,47 +42,10 @@ public class Client {
         if can be done in the listener thread since its automatic, don't know if should, probably no because listener thread doesn't get our friends array*/
 
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         initClient();
-//        String login = "Konrad";
-//        String password = "123";
-//        try {
-//            sendLoginOrRegisterRequest(login, password, ClientToServerMessageType.REQUEST_LOGIN);
-//            if (receiveLoginAnswer()){
-//                System.out.println("Client: udało się zalogować");
-//                username = login;
-//            }
-//            else
-//            {
-//                System.out.println("Client: NIE udało się zalogować");
-//            }
-//        }
-//        catch (Exception e)
-//        {
-//            e.printStackTrace();
-//        }
-//        Scanner myObj = new Scanner(System.in);
-//        System.out.println("Enter 'a' to continue");
-//
-//        while( true )
-//        {
-//            if( myObj.nextLine().equals("a")){
-//                //addUserToGroup("Essssa", "Konrad2");
-//                createGroup("GRUPA");
-//                //confirmFriendship("Konrad");
-//                //sendTextMessageToUser("Konrad", "XDDDDDDDD");
-//                break;
-//            }
-//        }
-//        for(String s :friends){
-//            System.out.println(s);
-//        }
-//        for(String s: groups){
-//            System.out.println(s);
-//        }
-        run(new StartingScreen(),"KOMUNIKATOR",300,100);
-        logout();
+        run(new StartingScreen(),300,140);
+
     }
 
     public static void initClient(){
@@ -142,6 +101,7 @@ public class Client {
             throw new Exception("Login and password must be one word");
         }
 
+        username=login;
         String textToSend = login + "#" + password;
         ClientToServerMessage message = new ClientToServerMessage(type, textToSend, CommunicatorType.MULTI_COM );
         sendMessage( message );
@@ -151,7 +111,7 @@ public class Client {
      * Throws exception if received message is not CONFIRM nor REJECT
      * starts listener thread
      * */
-    public static boolean receiveLoginAnswer(MainWindow refToWindow) throws Exception{
+    public static boolean receiveLoginAnswer() throws Exception{
         ServerToClientMessage message = null;
         try {
             message = (ServerToClientMessage)inObject.readObject();
@@ -160,20 +120,25 @@ public class Client {
         }
 
         ServerToClientMessageType response = message.getType();
-        if( response == ServerToClientMessageType.REJECT_LOGIN ){
+        if( response == ServerToClientMessageType.REJECT_LOGIN )
+        {
             return false;
-        }else if( response == ServerToClientMessageType.CONFIRM_LOGIN ){
+        }
+        else if( response == ServerToClientMessageType.CONFIRM_LOGIN )
+        {
+
+
 
             //get friends and groups from server
             String[] friendsAndGroups = message.getText().split("@");
             String[] friendsArray = friendsAndGroups[0].split("#");
             String[] groupsArray = friendsAndGroups[1].split("#");
+
             friends.addAll(Arrays.asList(friendsArray));//inserts all strings into array list
             groups.addAll(Arrays.asList(groupsArray));
 
-            //System.out.println("NO I ELEGANCKO DZIALA :))))");
             /*Start of listener thread*/
-            listener = new ClientPrinterThread(inObject,refToWindow);
+            listener = new ClientPrinterThread(inObject/*, friends*/);
             listener.start();
             return true;
         }
@@ -188,30 +153,11 @@ public class Client {
      * Sends LOGOUT_MESSAGE
      * stops listener thread
      * */
-    public static void logout()
-    {
+    public static void logout(){
         ClientToServerMessage message = new ClientToServerMessage( ClientToServerMessageType.LOGOUT);
-
         System.out.println("Wylogowywanie...");
         username = null;
         listener.stopRunning();
-        try {
-            outObject.writeObject( message );
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public static ServerToClientMessage getNotification()
-    {
-        return notificationsHandler.getNotification();
-    }
-
-
-    public static void sendMessage(ClientToServerMessage message)
-    {
         try {
             outObject.writeObject( message );
         } catch (IOException e) {
@@ -219,23 +165,36 @@ public class Client {
         }
     }
 
-    public static int addUserToFriends(String userToAdd)
-    {
-        if( checkFriendship(userToAdd) )
-        {
-            //System.out.println("User is already your friend!!!");
-            return -1;
+
+    private static void sendMessage(ClientToServerMessage message){
+        try {
+            outObject.writeObject( message );
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+
+    public static boolean addUserToFriends(String userToAdd){
+        if( checkFriendship(userToAdd) ){
+            System.out.println("User is already your friend!!!");
+            return false;
+        }
+        if( userToAdd.equals(username))
+        {
+            System.out.println("You cannot add yourself to friends");
+            return false;
+        }
+
         ClientToServerMessageType type = ClientToServerMessageType.ADD_USER_TO_FRIENDS;
         ClientToServerMessage message = new ClientToServerMessage(type, userToAdd);
         sendMessage(message);
-        return  1;
+        return true;
     }
     /*
      * Sends message to server that we are now friends with friendToAdd
      * Add friend's nickname to friends ArrayList
      * */
-    static void confirmFriendship(String friendToAdd){
+    public static void confirmFriendship(String friendToAdd){
         if(checkFriendship( friendToAdd)){
             return;
         }
@@ -247,29 +206,25 @@ public class Client {
 
     /*
      * Checks if username is on our friends Arraylist
-     *
-     * NIEPOTRZEBNE - NIE WYSWIETLI SIE W OGOLE NA LISCIE KTOS, KTO NIE JEST PRZYJACIELEM
      * */
-    public static boolean checkFriendship(String friendUsername){
+    private static boolean checkFriendship(String friendUsername){
         return friends.contains(friendUsername);
     }
 
     /*
      * Sends to out friend a text message
      * */
-    public static void sendTextMessageToUser(String userToSend, String text)
-    {
-//        if( !checkFriendship(userToSend) )
-//        {
-//            System.out.println("User is not your friend -> you cannot write to him");
-//            return;
-//        }
+    public static void sendTextMessageToUser(String userToSend, String text){
+        if( !checkFriendship(userToSend) ){
+            System.out.println("User is not your friend -> you cannot write to him");
+            return;
+        }
 
-        if( text.contains("#") || userToSend.contains("#") )
-        {
+        if( text.contains("#") || userToSend.contains("#") ){
             System.out.println("Using '#' is forbidden! ");
             return;
         }
+
 
         String textMessage = userToSend + "#" + text;
         ClientToServerMessageType type = ClientToServerMessageType.TEXT_TO_USER;
@@ -281,7 +236,7 @@ public class Client {
     /*
      * Checks if groupName in on our groups ArrayList
      * */
-    public static boolean checkMembership(String groupName){
+    private static boolean checkMembership(String groupName){
         return groups.contains(groupName);
     }
 
@@ -316,8 +271,9 @@ public class Client {
     /*
      *
      * */
-        public static void sendTextMessageToGroup(String groupName,String text){
-        if(checkMembership(groupName)){
+    public static void sendTextMessageToGroup(String groupName, String text)
+    {
+        if( !checkMembership(groupName) ){
             System.out.println("You are not a part of this group");
             return;
         }
@@ -325,7 +281,6 @@ public class Client {
         String messageText = groupName + "#"+ username + "#" + text;
         ClientToServerMessage message = new ClientToServerMessage(type, messageText);
         sendMessage( message );
-
     }
 
     /*
@@ -337,6 +292,9 @@ public class Client {
         }
         if( !checkFriendship(user)){
             System.out.println("you cannot add this user to group because he is not your friend");
+        }
+        if( user.equals(username)){
+            System.out.println("You cannot add yourself to group");
         }
         ClientToServerMessageType type = ClientToServerMessageType.ADD_USER_TO_GROUP;
         String text = group + "#" + user;

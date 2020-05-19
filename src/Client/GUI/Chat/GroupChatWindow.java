@@ -1,6 +1,6 @@
-package Client.GUI;
-import static Client.Client.sendTextMessageToUser;
-import static Client.GUI.tools.SwingConsole.*;
+package Client.GUI.Chat;
+
+import Client.GUI.Main.MainWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,23 +11,28 @@ import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ChatWindow extends JPanel
+import static Client.Client.sendTextMessageToGroup;
+
+
+public class GroupChatWindow  extends JPanel
 {
     private JPanel mainPanel = new JPanel();
     private JPanel southPanel = new JPanel();
+    private JPanel buttonsPanel = new JPanel();
     private  JTextField  messageBox = new JTextField(30);
     JButton     sendMessage = new JButton("Send Message");
     JButton     closeButton = new JButton("Close chat");
+    JButton     addToGroupButton = new JButton("Add friend to group");
     JTextArea   chatBox = new JTextArea();
     MainWindow upRef;
     String  username="Igor";
-    String receiver;
+    String GroupName;
     Date date = new Date();
     SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-    public void receiveMessage(String messageText)
+    public void receiveMessage(String messageText,String sender)
     {
         date = new Date();
-        chatBox.append("<" + receiver +" "+ formatter.format(date)+ ">:  " + messageText
+        chatBox.append("<" + sender +" "+ formatter.format(date)+ ">:  " + messageText
                 + "\n");
     }
 
@@ -48,7 +53,7 @@ public class ChatWindow extends JPanel
             date = new Date();
             chatBox.append("<" + username +" "+ formatter.format(date)+ ">:  " + messageBox.getText()
                     + "\n");
-            sendTextMessageToUser(receiver,messageBox.getText());
+            sendTextMessageToGroup(GroupName,messageBox.getText());
             messageBox.setText("");
 
         }
@@ -57,11 +62,11 @@ public class ChatWindow extends JPanel
 
     //public ChatWindow(String login,String)
 //KOnstruktor dla grupowego czatu
-    public ChatWindow(String login,String FriendName, MainWindow upRef)
+    public GroupChatWindow(String login,String GroupName, MainWindow upRef)
 
     {
+        this.GroupName=GroupName;
         this.upRef = upRef;
-        receiver= FriendName;
         setLayout(new BorderLayout());
         username = login;
         mainPanel.setLayout(new BorderLayout());
@@ -77,7 +82,7 @@ public class ChatWindow extends JPanel
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                upRef.CloseChatWindow(receiver);
+                upRef.CloseGroupChatWindow(GroupName);
             }
         });
         sendMessage.addActionListener(new ActionListener() {
@@ -114,11 +119,14 @@ public class ChatWindow extends JPanel
         southPanel.add(sendMessage, right);
 
         mainPanel.add(BorderLayout.SOUTH, southPanel);
-        mainPanel.add(BorderLayout.NORTH, closeButton);
+
+        buttonsPanel.setLayout(new BorderLayout());
+        buttonsPanel.add(BorderLayout.CENTER,closeButton);
+        buttonsPanel.add(BorderLayout.EAST,addToGroupButton);
+        mainPanel.add(BorderLayout.NORTH, buttonsPanel);
         add(mainPanel);
         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(470, 300);
         setVisible(true);
     }
 }
-

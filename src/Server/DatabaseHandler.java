@@ -344,34 +344,42 @@ public class DatabaseHandler
             boolean successful = true;
 
             conn = DriverManager.getConnection(url);
-            statement = conn.prepareStatement("SELECT * FROM groups WHERE group_name = ?");
+            statement = conn.prepareStatement("SELECT * FROM groups WHERE group_name = ?;");
             statement.setString(1, group);
             rs = statement.executeQuery();
+
+            //String whichColumn = "";
+            String query = "";
 
             if( rs.next() ) {
                 //should always happen since it should be already checked
 
-                String whichColumn = "";
+
                 if (rs.getString("user2") == null) {
-                    whichColumn = "user2";
+                    //whichColumn = "user2";
+                    query = "UPDATE groups SET user2 = ? WHERE group_name = ?";
                 } else if (rs.getString("user3") == null) {
-                    whichColumn = "user3";
+                    //whichColumn = "user3";
+                    query = "UPDATE groups SET user3 = ? WHERE group_name = ?";
                 } else if (rs.getString("user4") == null) {
-                    whichColumn = "user4";
+                    //whichColumn = "user4";
+                    query = "UPDATE groups SET user4 = ? WHERE group_name = ?";
                 } else {
                     System.out.println("GROUP IS FULL");//should never occur since it was already checked
                     successful = false;
                 }
-                //statement.close();
-                if (successful) {
-                    statement = conn.prepareStatement("UPDATE groups SET ? = ? WHERE group_name = ?");
-
-                    statement.setString(1, whichColumn);
-                    statement.setString(2, user);
-                    statement.setString(3,group);
-                    statement.executeUpdate();
-                }
             }
+
+            if (successful) {
+                statement.close();
+                statement = conn.prepareStatement(query);
+
+                //statement.setString(1, whichColumn);
+                statement.setString(1, user);
+                statement.setString(2, group);
+                statement.executeUpdate();
+            }
+
             rs.close();
             statement.close();
             conn.close();

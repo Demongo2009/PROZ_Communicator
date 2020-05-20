@@ -11,13 +11,13 @@ F
 src/Client/Client.java,7/a/7abe22d64543205426e0ef1b36158ede3632b727
 O
 src/Server/DatabaseHandler.java,e/b/eb15a6bd31e211586e8d8f876240593127afda4a
-I
-botmessenger/build.gradle,f/7/f7b7ab4465c72e86bd854b962f648e9ea7402b9c
-H
-botmessenger/gradlew.bat,9/3/93781cc00669cbe035adc39e8b62946a9ddb6dae
 f
 6src/Messages/clientToServer/ClientToServerMessage.java,8/2/8298d13e1f537bfafe346220efa364c6cff9ab77
 P
  src/Server/CommunicatorType.java,f/2/f21d5459d34415781e7c013658ae206a278f12f8
 D
 src/Server/User.java,3/e/3e8de50985ed02949588a4a994bdebeaa70461ef
+S
+#src/Client/GUI/Main/MainWindow.java,6/7/670f1975c6177d164921228171f90181deb2a1d8
+F
+src/Server/Server.java,a/9/a9588fce1c3bc78ec27bdea72c1267a00a95124e

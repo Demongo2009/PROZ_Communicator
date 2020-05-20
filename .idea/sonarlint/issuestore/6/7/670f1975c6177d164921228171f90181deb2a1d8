@@ -1,0 +1,14 @@
+
+H
+java:S1135"2Complete the task associated to this TODO comment.(úˆ£Å
+n	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(íÚè|
+V	java:S110"<This class has 6 parents which is greater than 5 authorized.(™­•´ûÿÿÿÿ
+c
+java:S1192Z"FDefine a constant instead of duplicating this literal "Chats" 3 times.(ÓœäŠ8€¾Õ›£.
+r	java:S117$"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ú¯ëâùÿÿÿÿ8€¾Õ›£.
+G
+java:S1948"*Make "listener" transient or serializable.(† ÁŒ8€¾Õ›£.
+o	java:S100 "NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÓÑ†ûÿÿÿÿ8€¾Õ›£.
+o	java:S100$"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ú¯ëâùÿÿÿÿ8€¾Õ›£.
+j	java:S100)"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ƒ‹ğ8€¾Õ›£.
+o	java:S100-"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ø‹¡™ûÿÿÿÿ8€¾Õ›£.

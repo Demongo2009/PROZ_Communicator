@@ -5,6 +5,8 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import static Client.Client.addUserToFriends;
 import static Client.Client.createGroup;
@@ -20,23 +22,14 @@ public class CreateGroupPanel extends JPanel
 
     void submit()
     {
-        if (groupNameInput.getText().length()<3)
+        try
+        {
+            createGroup(groupNameInput.getText());
+        }
+        catch (Exception exc)
         {
             MainTabLabel.setForeground(Color.RED);
-            MainTabLabel.setText("<html>Name of group too short!</html>");
-        }
-        else
-        {
-            try
-            {
-                createGroup(groupNameInput.getText());
-            }
-            catch (Exception exc)
-            {
-                MainTabLabel.setForeground(Color.RED);
-                MainTabLabel.setText("<html>"+exc.getMessage()+"</html>");
-            }
-
+            MainTabLabel.setText("<html>"+exc.getMessage()+"</html>");
         }
         referenceToMain.refresh();
     }
@@ -56,6 +49,14 @@ public class CreateGroupPanel extends JPanel
             public void actionPerformed(ActionEvent e)
             {
                 submit();
+            }
+        });
+        groupNameInput.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                if(e.getKeyCode()==KeyEvent.VK_ENTER)
+                    submit();
             }
         });
 

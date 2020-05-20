@@ -39,12 +39,12 @@ public class ClientPrinterThread extends Thread {
         if( message == null){
             return;
         }
+
+        Client.notificationsHandler.addNotification(message);
         if( message.getType() == ServerToClientMessageType.LOGOUT){
             this.stopRunning();
             return;
         }
-        Client.notificationsHandler.addNotification(message);
-
     }
 
     public void run(){

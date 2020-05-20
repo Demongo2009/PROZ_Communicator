@@ -5,6 +5,8 @@ import Client.GUI.Main.MainWindow;
 import Client.NotificationsHandler;
 import Messages.serverToClient.ServerToClientMessage;
 
+import java.awt.*;
+
 public class GuiNotificationListener extends Thread
 {
     private boolean shouldRun=true;
@@ -35,13 +37,11 @@ public class GuiNotificationListener extends Thread
                 break;
 
             case GROUP_NAME_OCCUPIED:
-
-
+                mainWindow.setAlert(Color.RED,"Group already exists!");
                 break;
 
             case USER_IS_NOT_CONNECTED:
-
-
+                mainWindow.serverAlert(notification.getText(),"USER IS NOT CONNECTED");
                 break;
 
             case TEXT_MESSAGE_FROM_USER:
@@ -53,8 +53,9 @@ public class GuiNotificationListener extends Thread
                 break;
 
             case USER_ADDED_YOU_TO_GROUP:
-
-
+                Client.groups.add(notification.getText());
+                System.out.println("TUTAJ MA BYC NAZWA: "+notification.getText());
+                mainWindow.refresh();
                 break;
 
             case USER_WANTS_TO_BE_YOUR_FRIEND:

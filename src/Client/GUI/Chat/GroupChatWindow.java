@@ -121,6 +121,18 @@ public class GroupChatWindow  extends JPanel
             }
         });
 
+        addToGroupButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                AddToGroupDialog dlg = new AddToGroupDialog(GroupName);
+                dlg.setVisible(true);
+                dlg.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+            }
+        });
+
         southPanel.add(messageBox, left);
         southPanel.add(sendMessage, right);
 

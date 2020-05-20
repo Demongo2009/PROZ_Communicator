@@ -5,6 +5,7 @@ import Client.GUI.Notifications.GuiNotificationListener;
 import Client.GUI.Notifications.NotificationPanel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 
@@ -70,6 +71,18 @@ public class MainWindow extends JFrame
             Chats.addChat(sender,username);
         Chats.chatWriteMessage(sender,messageText);
 
+    }
+
+    public void serverAlert(String chatName,String servertAlert)
+    {
+        if(Chats.checkChat(chatName))
+            Chats.addChat(chatName,username);
+        Chats.chatWriteMessage(chatName,servertAlert);
+    }
+
+    public void setAlert(Color fg,String text)
+    {
+        panel.setState(fg,text);
     }
 
     void goToChatTab(String name)

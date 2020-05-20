@@ -11,12 +11,16 @@ import static Client.Client.confirmFriendship;
 public class NotificationPanel extends JPanel
 {
     MainWindow referenceToMainWindow;
+    /*Friends Requests*/
     private DefaultListModel friendsRequestsList = new DefaultListModel();
     private JList friendRequestL = new JList(friendsRequestsList);
     private JScrollPane friendRequestScroll = new JScrollPane(friendRequestL);
-
     private JButton acceptFriendRequest = new JButton("Accept");
     private JButton declineFriendRequest = new JButton("Decline");
+    private JLabel friendRequestsText = new JLabel("Friendship requests:");
+
+    /*Added to group Notifications*/
+    //private DefaultListModel
 
 
 
@@ -24,9 +28,10 @@ public class NotificationPanel extends JPanel
     {
         referenceToMainWindow=upRef;
         setLayout(null);
-        friendRequestScroll.setBounds(10,20,200,180);
-        declineFriendRequest.setBounds(15,210,90,20);
-        acceptFriendRequest.setBounds(115,210,90,20);
+        friendRequestsText.setBounds(10,10,200,20);
+        friendRequestScroll.setBounds(10,40,200,180);
+        declineFriendRequest.setBounds(15,230,90,20);
+        acceptFriendRequest.setBounds(115,230,90,20);
 
         acceptFriendRequest.addActionListener(new ActionListener()
         {
@@ -58,7 +63,8 @@ public class NotificationPanel extends JPanel
 
     public void receiveFriendRequest(String serverMessage)
     {
-        friendsRequestsList.addElement(serverMessage);
+        if(friendsRequestsList.indexOf(serverMessage)==-1)
+            friendsRequestsList.addElement(serverMessage);
 
     }
 

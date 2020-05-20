@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import Client.GUI.Main.MainWindow;
 import Messages.clientToServer.ClientToServerMessageType;
+import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
 
 import javax.swing.*;
 
@@ -22,36 +23,33 @@ public class StartingScreen extends JFrame
     private String pass="";
     static String username = null;
 
-    private void CheckLoginPassword() throws IOException
+    private boolean CheckLoginPassword()
     {
-
+            boolean loginSuccesful=false;
             try
             {
-                System.out.println("CHECKIGN LOGIN");
                 sendLoginOrRegisterRequest(login, pass, ClientToServerMessageType.REQUEST_LOGIN);
-                //TUTAJ MUSI BYC Receiveloginanswer do potwierdzenia ze sie udalo
-                /*Tworzymy okno głownej aplikacji i wysyłamy referencje do niej do oblugi powiadomien
-                 * sama aplikacja pokaze sie wtedy, gdy serwer zweryfikuje uzytkownika, w przeciwnym razie
-                 * sproboj jeszcze raz*/
 
                 if(receiveLoginAnswer())
                 {
-                    //wszysyko w porzadku? to odslon okno głowne
                     OperationState.setText("Succesfully signed in :)");
                     MainWindow MainClientApp = new MainWindow(login);
                     run(MainClientApp, STARTING_SCREEN_TITLE, 600, 600);
-                    //zamknij okno startowe
                     dispose();
+                    loginSuccesful=true;
                 }
                 else
                 {
-
+                    OperationState.setForeground(Color.RED);
+                    OperationState.setText("TRY AGAIN");
+                    loginSuccesful=false;
                 }
             }
             catch (Exception e)
             {
                 e.printStackTrace();
             }
+            return loginSuccesful;
 
     }
     private void CheckRegister()
@@ -81,7 +79,9 @@ public class StartingScreen extends JFrame
         initClient();
         setTitle("CHOOSE LOGIN OR REGISTER");
         panel.setLayout(new FlowLayout());
-        loginButton.addActionListener(new ActionListener() {
+
+        loginButton.addActionListener(new ActionListener()
+        {
             @Override
             public void actionPerformed(ActionEvent e)
             {
@@ -90,11 +90,7 @@ public class StartingScreen extends JFrame
                 dlg.setVisible(true);
                 login = dlg.getLogin();
                 pass = dlg.getPassword();
-                try {
-                    CheckLoginPassword();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                CheckLoginPassword();
             }
         });
         registerButton.addActionListener(new ActionListener() {

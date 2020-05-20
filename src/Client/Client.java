@@ -268,7 +268,6 @@ public class Client {
         ClientToServerMessage message = new ClientToServerMessage(type, groupName);
         sendMessage( message );
 
-
     }
 
     /*
@@ -289,15 +288,20 @@ public class Client {
     /*
      * Adds our friend to group we are into
      * */
-    static void addUserToGroup(String group, String user){
-        if( !checkMembership(group)){
-            System.out.println("You are not a member of this group");
+    public static void addUserToGroup(String group, String user) throws Exception
+    {
+        System.out.println("CHCEMY DODAC "+user+" do grupy: "+group);
+        if( !checkMembership(group))
+        {
+            throw new Exception("You are not a member of this group");
         }
-        if( !checkFriendship(user)){
-            System.out.println("you cannot add this user to group because he is not your friend");
+        if( !checkFriendship(user))
+        {
+            throw new Exception("you cannot add this user to group because he is not your friend");
         }
-        if( user.equals(username)){
-            System.out.println("You cannot add yourself to group");
+        if( user.equals(username))
+        {
+            throw new Exception("You cannot add yourself to group");
         }
         ClientToServerMessageType type = ClientToServerMessageType.ADD_USER_TO_GROUP;
         String text = group + "#" + user;

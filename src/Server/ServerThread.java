@@ -22,6 +22,7 @@ public class ServerThread extends Thread{
     ArrayList<User> connectedUsers;
     User userToHandle;
     boolean shouldRun = true;
+    boolean isLogged = false;
 
     /* to send objects and receive */
     ObjectOutputStream outObject;
@@ -51,14 +52,19 @@ public class ServerThread extends Thread{
     public void run() {
         databaseHandler = new DatabaseHandler();
         /* LOG IN PHASE*/
-        try {
-            if (sendLoginAnswer(processLoginOrRegisterRequest())) {
-                System.out.println("Serwer: użytkownik zalogowany");
-            } else {
-                System.out.println("Serwer: nie udało sie");
+        while(!isLogged)
+        {
+            try {
+                if (sendLoginAnswer(processLoginOrRegisterRequest())) {
+                    System.out.println("Serwer: użytkownik zalogowany");
+                    isLogged=true;
+
+                } else {
+                    System.out.println("Serwer: nie udało sie");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        }catch( Exception e){
-            e.printStackTrace();
         }
         /* END OF LOG IN PHASE*/
         while(shouldRun){
@@ -207,6 +213,7 @@ public class ServerThread extends Thread{
         connectedUsers.remove(userToHandle);
         userToHandle=null;
         shouldRun = false;
+        isLogged=false;
     }
 
     /*

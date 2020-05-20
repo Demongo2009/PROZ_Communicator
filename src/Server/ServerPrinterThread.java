@@ -27,8 +27,6 @@ public class ServerPrinterThread extends Thread {
         buffer = new LinkedList<>();
     }
 
-
-
     public void addIncomingMessage(String inputLine, Socket clientSocket){
         buffer.add( new Pair<String, String>(clientSocket.toString(),inputLine) );
         incomingMessageMutex.release();

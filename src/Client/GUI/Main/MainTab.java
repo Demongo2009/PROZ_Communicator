@@ -55,6 +55,12 @@ public class MainTab extends JPanel
         }
 
     }
+    public void setState(Color fg,String text)
+    {
+        state.setForeground(fg);
+        state.setText(text);
+    }
+
     public MainTab(MainWindow upRef, String User)
     {
         referenceToMain=upRef;

@@ -5,6 +5,8 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import static Client.Client.addUserToFriends;
 
@@ -17,7 +19,24 @@ public class AddFriendPanel extends JPanel
     private JLabel MainTabLabel;
     private JLabel AddFriendText = new JLabel("Enter user name:");
 
-
+    private void submit()
+    {
+        if(FriendNameInput.getText().length()<3)
+        {
+            MainTabLabel.setForeground(Color.RED);
+            MainTabLabel.setText("<html>Name too short!</html>");
+        }
+        else
+        {
+            if (!addUserToFriends(FriendNameInput.getText())) {
+                MainTabLabel.setForeground(Color.RED);
+                MainTabLabel.setText("<html>User is already your friend!</html>");
+            } else {
+                MainTabLabel.setForeground(Color.GREEN);
+                MainTabLabel.setText("<html>Request sent!</html>");
+            }
+        }
+    }
 
     public AddFriendPanel(JLabel upRefText)
     {
@@ -32,22 +51,17 @@ public class AddFriendPanel extends JPanel
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                if(FriendNameInput.getText().length()<3)
-                {
-                    MainTabLabel.setForeground(Color.RED);
-                    MainTabLabel.setText("<html>Name too short!</html>");
-                }
-                else
-                {
-                    if (!addUserToFriends(FriendNameInput.getText())) {
-                        MainTabLabel.setForeground(Color.RED);
-                        MainTabLabel.setText("<html>User is already your friend!</html>");
-                    } else {
-                        MainTabLabel.setForeground(Color.GREEN);
-                        MainTabLabel.setText("<html>Request sent!</html>");
-                    }
-                }
+                submit();
+            }
+        });
 
+        FriendNameInput.addKeyListener(new KeyAdapter()
+        {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                if(e.getKeyCode()==KeyEvent.VK_ENTER)
+                    submit();
             }
         });
 

@@ -54,7 +54,7 @@ public class GuiNotificationListener extends Thread
 
             case USER_ADDED_YOU_TO_GROUP:
                 Client.groups.add(notification.getText());
-                System.out.println("TUTAJ MA BYC NAZWA: "+notification.getText());
+                mainWindow.receiveGroupInvitation(notification.getText());
                 mainWindow.refresh();
                 break;
 

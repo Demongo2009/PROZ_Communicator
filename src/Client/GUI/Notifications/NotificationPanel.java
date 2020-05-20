@@ -20,7 +20,11 @@ public class NotificationPanel extends JPanel
     private JLabel friendRequestsText = new JLabel("Friendship requests:");
 
     /*Added to group Notifications*/
-    //private DefaultListModel
+    private DefaultListModel addedToGroupList = new DefaultListModel();
+    private JList addedToGroupL = new JList(addedToGroupList);
+    private JScrollPane addedToGroupScroll = new JScrollPane(addedToGroupL);
+    private JButton groupOkButton = new JButton("OK");
+    private JLabel groupListText = new JLabel("You've been added to those groups:");
 
 
 
@@ -28,10 +32,18 @@ public class NotificationPanel extends JPanel
     {
         referenceToMainWindow=upRef;
         setLayout(null);
+
+        friendRequestL.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        addedToGroupL.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
         friendRequestsText.setBounds(10,10,200,20);
         friendRequestScroll.setBounds(10,40,200,180);
         declineFriendRequest.setBounds(15,230,90,20);
         acceptFriendRequest.setBounds(115,230,90,20);
+
+        addedToGroupScroll.setBounds(260,40,200,180);
+        groupListText.setBounds(250,10,220,20);
+        groupOkButton.setBounds(265,230,190,20);
 
         acceptFriendRequest.addActionListener(new ActionListener()
         {
@@ -54,10 +66,28 @@ public class NotificationPanel extends JPanel
             }
         });
 
+        groupOkButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(addedToGroupL.isSelectionEmpty())
+                {
+                    //nic
+                }
+                else
+                {
+                    addedToGroupList.removeElementAt(addedToGroupL.getSelectedIndex());
+                }
+            }
+        });
 
+        add(friendRequestsText);
         add(friendRequestScroll);
         add(acceptFriendRequest);
         add(declineFriendRequest);
+
+        add(addedToGroupScroll);
+        add(groupListText);
+        add(groupOkButton);
     }
 
 
@@ -66,6 +96,11 @@ public class NotificationPanel extends JPanel
         if(friendsRequestsList.indexOf(serverMessage)==-1)
             friendsRequestsList.addElement(serverMessage);
 
+    }
+    public void receiveGroupInvitation(String serverMessage)
+    {
+        if(addedToGroupList.indexOf(serverMessage)==-1)
+            addedToGroupList.addElement(serverMessage);
     }
 
 

@@ -25,26 +25,26 @@ public class MainWindow extends JFrame
     private String username ="IGOR";
     private JTabbedPane tabs = new JTabbedPane();
     private MainTab panel;
-    private NotificationPanel Notifications;
-    private ChatsTab Chats;
+    private NotificationPanel notifications;
+    private ChatsTab chats;
     private GuiNotificationListener listener;
 
     boolean OpenChatWindow(String friendName)
     {
-        return Chats.addChat(friendName,username);
+        return chats.addChat(friendName,username);
     }
     boolean OpenGroupChatWindow(String GroupName)
     {
-        return  Chats.addGroupChat(GroupName,username);
+        return  chats.addGroupChat(GroupName,username);
     }
 
     public void CloseChatWindow(String closedTabUserName)
     {
-        Chats.closeChat(closedTabUserName);
+        chats.closeChat(closedTabUserName);
     }
     public void CloseGroupChatWindow(String closedTabName)
     {
-        Chats.closeGroupChat(closedTabName);
+        chats.closeGroupChat(closedTabName);
     }
 
 
@@ -55,9 +55,9 @@ public class MainWindow extends JFrame
         String sendingUser = userAndText[1];
         String msgContent = userAndText[2];
         /*Jezeli ta karta czatu nie jest otwarta to otworz*/
-        if(Chats.checkGroup(groupName))
-            Chats.addGroupChat(groupName,username);
-        Chats.groupWriteMessage(groupName,sendingUser,msgContent);
+        if(chats.checkGroup(groupName))
+            chats.addGroupChat(groupName,username);
+        chats.groupWriteMessage(groupName,sendingUser,msgContent);
 
     }
 
@@ -67,17 +67,17 @@ public class MainWindow extends JFrame
         String sender = userAndText[0];
         String messageText = userAndText[1];
         /*Jezeli ta karta czatu nie jest otwarta to otworz*/
-        if(Chats.checkChat(sender))
-            Chats.addChat(sender,username);
-        Chats.chatWriteMessage(sender,messageText);
+        if(chats.checkChat(sender))
+            chats.addChat(sender,username);
+        chats.chatWriteMessage(sender,messageText);
 
     }
 
     public void serverAlert(String chatName,String servertAlert)
     {
-        if(Chats.checkChat(chatName))
-            Chats.addChat(chatName,username);
-        Chats.chatWriteMessage(chatName,servertAlert);
+        if(chats.checkChat(chatName))
+            chats.addChat(chatName,username);
+        chats.chatWriteMessage(chatName,servertAlert);
     }
 
     public void setAlert(Color fg,String text)
@@ -88,19 +88,23 @@ public class MainWindow extends JFrame
     void goToChatTab(String name)
     {
         tabs.setSelectedIndex(tabs.indexOfTab("Chats"));
-        Chats.goToChatTab(name);
+        chats.goToChatTab(name);
 
     }
 
     void goToGroupTab(String name)
     {
         tabs.setSelectedIndex(tabs.indexOfTab("Chats"));
-        Chats.goToGroupTab(name);
+        chats.goToGroupTab(name);
     }
 
     public void receiveFriendRequest(String serverMessage)
     {
-        Notifications.receiveFriendRequest(serverMessage);
+        notifications.receiveFriendRequest(serverMessage);
+    }
+    public void receiveGroupInvitation(String serverMessage)
+    {
+        notifications.receiveGroupInvitation(serverMessage);
     }
 
     public void refresh()
@@ -123,12 +127,12 @@ public class MainWindow extends JFrame
             }
         });
         MainWindow tmpRef =this;
-        Chats = new ChatsTab(tmpRef);
-        Notifications = new NotificationPanel(tmpRef);
+        chats = new ChatsTab(tmpRef);
+        notifications = new NotificationPanel(tmpRef);
         panel =  new MainTab(this,user);
         tabs.addTab("MAIN PANEL",panel);
-        tabs.addTab("Notifications",Notifications);
-        tabs.add("Chats",Chats);
+        tabs.addTab("Notifications", notifications);
+        tabs.add("Chats", chats);
         username = user;
         add(tabs);
         listener = new GuiNotificationListener(this);

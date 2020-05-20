@@ -54,21 +54,16 @@ public class StartingScreen extends JFrame
     }
     private void CheckRegister()
     {
-            try {
-                System.out.println("CHECKIGN REGISTER");
+            try
+            {
                 sendLoginOrRegisterRequest(login, pass, ClientToServerMessageType.REQUEST_REGISTER);
-                //TUTAJ MUSI BYC Receiveloginanswer do potwierdzenia ze sie udalo
-                /*Tworzymy okno głownej aplikacji i wysyłamy referencje do niej do oblugi powiadomien
-                * sama aplikacja pokaze sie wtedy, gdy serwer zweryfikuje uzytkownika, w przeciwnym razie
-                * sproboj jeszcze raz*/
                 MainWindow MainClientApp = new MainWindow(login);
                 receiveLoginAnswer();
-                //wszysyko w porzadku? to odslon okno głowne
-                OperationState.setText("Succesfully signed up :)");
+                OperationState.setText("Succesfully signed up");
                 run(MainClientApp, STARTING_SCREEN_TITLE, 600, 600);
-                //zamknij okno startowe
                 dispose();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 e.printStackTrace();
             }
@@ -76,7 +71,6 @@ public class StartingScreen extends JFrame
 
     public StartingScreen( )
     {
-        //initClient();
         setTitle("CHOOSE LOGIN OR REGISTER");
         panel.setLayout(new FlowLayout());
 
@@ -111,12 +105,6 @@ public class StartingScreen extends JFrame
         add(panel);
         loginButton.requestFocus();
         getRootPane().setDefaultButton(loginButton);
-    }
-
-    public static void main(String[] args) throws IOException
-    {
-        //run(new StartingScreen(),"KOMUNIKATOR",300,100);
-        run(new MainWindow("Igor"),"XDDDDD",600,600);
     }
 
 }

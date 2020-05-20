@@ -1,10 +1,14 @@
 
 import Messages.serverToClient.ServerToClientMessage;
+import Messages.serverToClient.ServerToClientMessageType;
 import org.javacord.api.entity.channel.TextChannel;
+import org.javacord.api.entity.message.MessageBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.Semaphore;
 
 public class ClientPrinterThread extends Thread {
@@ -57,17 +61,42 @@ public class ClientPrinterThread extends Thread {
             String inputFromServer;
             ServerToClientMessage message = null;
 
-            mutex.acquire();
+//            mutex.acquire();
             while((message = receiveMessage()) != null){
                 inputFromServer = message.getText();
                 if(inputFromServer.equals("") || inputFromServer.equals("\n")){
                     continue;
                 }
 
-                textChannel.sendMessage(inputFromServer);
+                ServerToClientMessageType messageType= message.getType();
+                if(messageType.equals(ServerToClientMessageType.IMAGE)){
+                    new MessageBuilder().addAttachment(new URL(inputFromServer)).send(textChannel);
+
+                }else if(messageType.equals(ServerToClientMessageType.CONFIRM_LOGIN)) {
+                    System.out.println("tak");
+                    DiscordBot.setLoginResultAvailable(true);
+
+                }else if(messageType.equals(ServerToClientMessageType.REJECT_LOGIN)) {
+                    System.out.println("nie");
+                    DiscordBot.setLoginResultAvailable(false);
+
+
+                }else if(messageType.equals(ServerToClientMessageType.USER_WANTS_TO_BE_YOUR_FRIEND)) {
+                    System.out.println("friend attempt");
+                    textChannel.sendMessage("User \""+inputFromServer+"\" wants to be your friend. [Y] accept [N] refuse");
+                    DiscordBot.friendRequest(inputFromServer);
+
+                }else if(messageType.equals(ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST)){
+                    textChannel.sendMessage("\""+inputFromServer + "\" accepted your friend request");
+                }
+                else {
+                    textChannel.sendMessage(inputFromServer);
+                }
             }
 
-        } catch (InterruptedException e) {
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }

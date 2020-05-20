@@ -21,7 +21,7 @@ public class AddToGroupDialog extends JDialog
     public AddToGroupDialog(String groupName)
     {
         setLayout(null);
-
+        setLocationRelativeTo(null);
         for(String s: Client.friends)
         {
             friendsList.addElement(s);

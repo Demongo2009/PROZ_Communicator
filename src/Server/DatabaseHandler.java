@@ -362,11 +362,13 @@ public class DatabaseHandler
                     System.out.println("GROUP IS FULL");//should never occur since it was already checked
                     successful = false;
                 }
-                statement.close();
+                //statement.close();
                 if (successful) {
-                    statement = conn.prepareStatement("UPDATE groups SET ? = ?");
+                    statement = conn.prepareStatement("UPDATE groups SET ? = ? WHERE group_name = ?");
+
                     statement.setString(1, whichColumn);
                     statement.setString(2, user);
+                    statement.setString(3,group);
                     statement.executeUpdate();
                 }
             }

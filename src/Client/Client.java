@@ -17,29 +17,28 @@ import static Client.GUI.tools.SwingConsole.run;
 
 public class Client {
 
-    static String hostName = "localhost";
-    static int serverPort = 4444;
+    private static String hostName = "localhost";
+    private static int serverPort = 4444;
 
-    static Socket echoSocket;
-    static PrintWriter out;
-    static BufferedReader in;
-    static BufferedReader stdIn;
+    private static Socket echoSocket;
+    private static PrintWriter out;
+    private static BufferedReader in;
+    private static BufferedReader stdIn;
 
     /* to send and receive objects */
-    static ObjectOutputStream outObject;
-    static ObjectInputStream inObject;
+    private static ObjectOutputStream outObject;
+    private static ObjectInputStream inObject;
 
-    static String username = null;
-    public static NotificationsHandler notificationsHandler;
-    static ClientPrinterThread listener;
+    private static String username = null;
+    private static ClientPrinterThread listener;
 
+
+    //TODO make setters and getters
     public static ArrayList<String> friends;
     public static ArrayList<String> groups;
 
-    // static GUI_notificiation_listener (notificaionHandler)
-    //TODO: checking if we dont want to add ourselfs to friends, if we already arent friends etc
-    /*TODO: if I get USER_ACCEPTED_YOUR_FRIEND_REQUEST message, then add friend to my local friends
-        if can be done in the listener thread since its automatic, don't know if should, probably no because listener thread doesn't get our friends array*/
+
+    public static NotificationsHandler notificationsHandler;
 
 
     public static void main(String[] args) {
@@ -54,7 +53,7 @@ public class Client {
             // shutdown hook added for closing the connection if client exits
             Runtime.getRuntime().addShutdownHook(new ClientShutdownHook(echoSocket));
 
-
+/*
             out =
                     new PrintWriter(echoSocket.getOutputStream(), true);
             in =
@@ -63,7 +62,7 @@ public class Client {
             stdIn =
                     new BufferedReader(
                             new InputStreamReader(System.in));
-
+*/
 
 
 
@@ -149,21 +148,7 @@ public class Client {
 
     }
 
-    /*
-     * Sends LOGOUT_MESSAGE
-     * stops listener thread
-     * */
-    public static void logout(){
-        ClientToServerMessage message = new ClientToServerMessage( ClientToServerMessageType.LOGOUT);
-        System.out.println("Wylogowywanie...");
-        username = null;
-        listener.stopRunning();
-        try {
-            outObject.writeObject( message );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 
 
     private static void sendMessage(ClientToServerMessage message){
@@ -290,7 +275,7 @@ public class Client {
      * */
     public static void addUserToGroup(String group, String user) throws Exception
     {
-        System.out.println("CHCEMY DODAC "+user+" do grupy: "+group);
+        //System.out.println("CHCEMY DODAC "+user+" do grupy: "+group);
         if( !checkMembership(group))
         {
             throw new Exception("You are not a member of this group");
@@ -307,6 +292,25 @@ public class Client {
         String text = group + "#" + user;
         ClientToServerMessage message = new ClientToServerMessage(type, text);
         sendMessage(message);
+    }
+
+
+    /*
+     * Sends LOGOUT_MESSAGE
+     * stops listener thread
+     * */
+    public static void logout(){
+        ClientToServerMessage message = new ClientToServerMessage( ClientToServerMessageType.LOGOUT);
+        System.out.println("Wylogowywanie...");
+        username = null;
+        //listener.stopRunning();
+
+        try {
+            outObject.writeObject( message );
+            //echoSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

@@ -6,7 +6,7 @@ import Messages.clientToServer.ClientToServerMessageType;
 //import Server.Protocol;
 import Messages.serverToClient.ServerToClientMessage;
 import Messages.serverToClient.ServerToClientMessageType;
-import Server.ServerPrinterThread;
+//import Server.ServerPrinterThread;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -15,22 +15,22 @@ import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 public class ServerThread extends Thread{
-    static Semaphore mutex;
-    ServerSocket serverSocket;
-    Socket clientSocket;
+    private static Semaphore mutex;
+    private ServerSocket serverSocket;
+    private Socket clientSocket;
 
-    ArrayList<User> connectedUsers;
-    User userToHandle;
-    boolean shouldRun = true;
-    boolean isLogged = false;
+    private ArrayList<User> connectedUsers;
+    private User userToHandle;
+    private boolean shouldRun = true;
+    private boolean isLogged = false;
 
     /* to send objects and receive */
-    ObjectOutputStream outObject;
-    ObjectInputStream inObject;
+    private ObjectOutputStream outObject;
+    private ObjectInputStream inObject;
 
-    static DatabaseHandler databaseHandler;
+    private static DatabaseHandler databaseHandler;
 
-    ArrayList<Group> groups;
+    private ArrayList<Group> groups;
 
 
     ServerThread(ServerSocket serverSocket, Socket clientSocket, ArrayList<User> connectedUsers, ArrayList<Group> groups){
@@ -52,9 +52,11 @@ public class ServerThread extends Thread{
     public void run() {
         databaseHandler = new DatabaseHandler();
         /* LOG IN PHASE*/
+        System.out.println("wchodze tutaj");
         while(!isLogged)
         {
             try {
+
                 if (sendLoginAnswer(processLoginOrRegisterRequest())) {
                     System.out.println("Serwer: użytkownik zalogowany");
                     isLogged=true;
@@ -94,7 +96,6 @@ public class ServerThread extends Thread{
         }
 
         String[] loginAndPass = message.getString().split("#");
-        //=========================================================================
         CommunicatorType communicatorType = message.getCommunicatorType();
 
         if( message.getType() == ClientToServerMessageType.REQUEST_LOGIN){
@@ -107,15 +108,12 @@ public class ServerThread extends Thread{
         }else{ //cannot be other that REQUEST_REGISTER since it was already checked
             answer = databaseHandler.registerUser(loginAndPass[0], loginAndPass[1]);
         }
+
         if( answer ){
             //==========================================================
             User user = new User(loginAndPass[0], clientSocket, communicatorType, outObject);
             connectedUsers.add(user);
             userToHandle = user;
-
-            /*for(User us: connectedUsers){
-                System.out.println( us.getLogin());
-            }*/
         }
 
         return answer;
@@ -378,6 +376,7 @@ public class ServerThread extends Thread{
         }
         if( !databaseHandler.checkIfUserExists( groupAndUser[1])){
             System.out.println("User does not exists");
+            return;
         }
         for(int i=0; i<group.getSize(); ++i){
             if( group.getUser(i).equals(groupAndUser[1])){
@@ -386,9 +385,12 @@ public class ServerThread extends Thread{
             }
         }
 
-        //TODO: send to user that he is added to group
         databaseHandler.addUserToGroup(groupAndUser[0], groupAndUser[1]);
         group.addUser(groupAndUser[1]);
+        User user = getUserFromConnectedUsers(groupAndUser[1]);
+        ServerToClientMessageType type = ServerToClientMessageType.USER_ADDED_YOU_TO_GROUP;
+        ServerToClientMessage message = new ServerToClientMessage(type, groupAndUser[0]);
+        sendMessage( message, user);
 
     }
 
@@ -402,10 +404,6 @@ public class ServerThread extends Thread{
         }
         ClientToServerMessageType type = message.getType();
         String text = message.getText();
-
-        //=============
-        //System.out.println(text);
-        ////===========
 
         try {
             switch (type) {

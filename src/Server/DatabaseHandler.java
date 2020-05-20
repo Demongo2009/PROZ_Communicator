@@ -5,39 +5,26 @@ import java.util.ArrayList;
 
 public class DatabaseHandler
 {
-    //private String url = "jdbc:sqlite:/home/demongo/EITI/PROZ/PROZ_Communicator/src/MultiCom.db";
     private String url = "jdbc:sqlite:src/MultiCom.db";
     /*
     users(
     login VARCHAR(20) NOT NULL,
     password VARCHAR(20) NOT NULL
     );
+
     friends(
     user1 VARCHAR(20) NOT NULL,
     user2 VARCHAR(20) NOT NULL
     );
+
     groups(
     group_name VARCHAR(20) NOT NULL,
     user1 VARCHAR(20) NOT NULL,
     user2 VARCHAR(20),
     user3 VARCHAR(20),
     user4 VARCHAR(20)
-    )
+    );
      */
-//TODO: make in resistant to sql injection
-    ResultSet getLoginResultSet(Connection conn, Statement statement, String login){
-        ResultSet rs = null;
-        try {
-            String query = "SELECT * FROM users WHERE login = \"" + login + "\"";
-            rs = statement.executeQuery(query);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return rs;
-    }
-
-
 
     /*
      * Returns true if given login exists in given ResultSet
@@ -58,14 +45,16 @@ public class DatabaseHandler
      * Returns true if password matches login
      * */
     boolean checkLogin(String login, String password){
-        Statement statement = null;
+        PreparedStatement statement = null;
         Connection conn = null;
         ResultSet rs = null;
         boolean answer = false;
         try {
             conn = DriverManager.getConnection(url);
-            statement = conn.createStatement();
-            rs = getLoginResultSet(conn, statement, login);
+
+            statement = conn.prepareStatement("SELECT * FROM users WHERE login = ?");
+            statement.setString(1, login);
+            rs = statement.executeQuery();
 
             if( rs.next() ){/*ok since there is one or zero records*/
                 answer = rs.getString("password").equals(password);
@@ -83,22 +72,28 @@ public class DatabaseHandler
      * Return true if registration is successful
      * */
     boolean registerUser(String login, String password){
-        Statement statement = null;
+        PreparedStatement statement = null;
         Connection conn = null;
         ResultSet rs = null;
 
         boolean successful = true;
         try{
             conn = DriverManager.getConnection(url);
-            statement = conn.createStatement();
-            rs = getLoginResultSet(conn, statement, login);
+            statement = conn.prepareStatement("SELECT * FROM users WHERE login = ?");
+            statement.setString(1, login);
+            rs = statement.executeQuery();
+            statement.close();
+
+
             if( checkIfLoginExists(rs, login)){ /* if such login already exists*/
                 successful = false;
             }
 
             if( successful ) {
-                String query = "INSERT INTO users VALUES (\"" + login + "\", \"" + password + "\")";
-                statement.executeUpdate(query);
+                statement = conn.prepareStatement("INSERT INTO users VALUES( ?, ?)");
+                statement.setString(1,login);
+                statement.setString(2, password);
+                statement.executeUpdate();
             }
 
 
@@ -115,16 +110,19 @@ public class DatabaseHandler
      * Returns true if given users are friends
      * */
     boolean checkFriendship(String user1, String user2){
-        Statement statement = null;
+        PreparedStatement statement = null;
         Connection conn = null;
         ResultSet rs = null;
         boolean areTheyFriends = false;
 
         try{
             conn = DriverManager.getConnection(url);
-            statement = conn.createStatement();
-            String query = "SELECT * FROM friends WHERE (user1 = \"" + user1 + "\" AND user2 = \"" + user2 +"\") OR (user1 = \"" + user2  +"\" AND user2 = \"" + user1 + "\")";
-            rs = statement.executeQuery(query);
+            statement = conn.prepareStatement("SELECT * FROM friends WHERE (user1 = ? AND user2 = ? ) OR (user1 = ? AND user2 = ? )");
+            statement.setString(1, user1);
+            statement.setString(2, user2);
+            statement.setString(3, user2);
+            statement.setString(4, user1);
+            rs = statement.executeQuery();
             if( rs.next() ){
                 areTheyFriends = true;
             }
@@ -143,17 +141,17 @@ public class DatabaseHandler
      * Inserts users' logins to 'friends' table
      * */
     void insertFriendship(String user1, String user2){
-        Statement statement = null;
+        PreparedStatement statement = null;
         Connection conn = null;
         try{
 
             conn = DriverManager.getConnection(url);
-            statement = conn.createStatement();
 
+            statement = conn.prepareStatement("INSERT INTO friends VALUES (?, ?)");
+            statement.setString(1, user1);
+            statement.setString(2, user2);
 
-            String query = "INSERT INTO friends VALUES (\"" + user1 + "\", \"" + user2 + "\")";
-
-            statement.executeUpdate(query);
+            statement.executeUpdate();
 
             statement.close();
             conn.close();
@@ -167,15 +165,17 @@ public class DatabaseHandler
      * Returns user's friends' nicknames separated by '#'
      * */
     String getUserFriends(String login){
-        Statement statement = null;
+        PreparedStatement statement = null;
         Connection conn = null;
         ResultSet rs = null;
         String friends = "";
         try{
             conn = DriverManager.getConnection(url);
-            statement = conn.createStatement();
-            String query = "SELECT * FROM friends WHERE (user1 = \"" + login + "\") OR (user2 = \"" + login +"\")";
-            rs = statement.executeQuery(query);
+            statement = conn.prepareStatement("SELECT * FROM friends WHERE (user1 = ?) OR (user2 = ?)");
+            statement.setString(1, login);
+            statement.setString(2, login);
+
+            rs = statement.executeQuery();
             while( rs.next() ){
                 if( rs.getString("user1").equals(login) ){
                     friends += rs.getString("user2") + "#";
@@ -204,7 +204,7 @@ public class DatabaseHandler
         try{
             conn = DriverManager.getConnection(url);
             statement = conn.createStatement();
-            String query = "SELECT * FROM groups ";
+            String query = "SELECT * FROM groups "; //no need to change it for prepared statement
             rs = statement.executeQuery(query);
             while( rs.next()){
                 Group newGroup = new Group( rs.getString("group_name"));
@@ -235,7 +235,7 @@ public class DatabaseHandler
 
     /*dont know if necessary since server holds an array list for groups*/
     String getUserGroups(String user){
-        Statement statement = null;
+        PreparedStatement statement = null;
         Connection conn = null;
         ResultSet rs = null;
 
@@ -243,9 +243,13 @@ public class DatabaseHandler
 
         try{
             conn = DriverManager.getConnection(url);
-            statement = conn.createStatement();
-            String query = "SELECT group_name FROM groups WHERE user1 = \"" + user +  "\" OR user2 = \"" + user + "\" OR user3 = \"" + user  + "\" OR user4 = \"" + user + "\"";
-            rs = statement.executeQuery(query);
+            statement = conn.prepareStatement("SELECT group_name FROM groups WHERE user1 = ? OR user2 = ? OR user3 = ? OR user4 = ?");
+            statement.setString(1, user);
+            statement.setString(2, user);
+            statement.setString(3, user);
+            statement.setString(4, user);
+
+            rs = statement.executeQuery();
             while( rs.next()){
                 groups += rs.getString("group_name") + "#";
             }
@@ -260,7 +264,7 @@ public class DatabaseHandler
     }
 
     boolean checkIfGroupExists(String groupName){
-        Statement statement = null;
+        PreparedStatement statement = null;
         Connection conn = null;
         ResultSet rs = null;
 
@@ -269,9 +273,10 @@ public class DatabaseHandler
 
         try{
             conn = DriverManager.getConnection(url);
-            statement = conn.createStatement();
-            String query = "SELECT * FROM groups WHERE group_name =\""+groupName+"\"";
-            rs = statement.executeQuery(query);
+            statement = conn.prepareStatement("SELECT * FROM groups WHERE group_name = ?");
+            statement.setString(1, groupName);
+
+            rs = statement.executeQuery();
             if( rs.next() ){
                 exists = true;
             }
@@ -287,7 +292,7 @@ public class DatabaseHandler
     }
 
     boolean checkIfUserExists(String login){
-        Statement statement = null;
+        PreparedStatement statement = null;
         Connection conn = null;
         ResultSet rs = null;
 
@@ -295,9 +300,9 @@ public class DatabaseHandler
 
         try {
             conn = DriverManager.getConnection(url);
-            statement = conn.createStatement();
-            String query = "SELECT * FROM users WHERE login = \"" + login +"\"";
-            rs = statement.executeQuery(query);
+            statement = conn.prepareStatement("SELECT * FROM users WHERE login = ?");
+            statement.setString(1, login);
+            rs = statement.executeQuery();
             if( rs.next()){
                 exists = true;
             }
@@ -310,53 +315,61 @@ public class DatabaseHandler
         return exists;
     }
 
-    //TODO test it
     void createGroup(Group group){
-        Statement statement = null;
+        PreparedStatement statement = null;
         Connection conn = null;
         ResultSet rs = null;
         try{
             conn = DriverManager.getConnection(url);
-            statement = conn.createStatement();
-            String query = "INSERT INTO groups(group_name, user1) VALUES (\""+ group.getGroupName() +"\",\"" + group.getUser(0) + "\")";
-//            statement.executeQuery(query);
-            statement.executeUpdate(query);
-            //rs.close();
+            statement = conn.prepareStatement("INSERT INTO groups(group_name, user1) VALUES (?, + ?)");
+            statement.setString(1, group.getGroupName());
+            statement.setString(2, group.getUser(0));
+            statement.executeUpdate();
+
+
             statement.close();
             conn.close();
         }catch(Exception e){
             e.printStackTrace();
         }
     }
-    //TODO:
 
     boolean addUserToGroup(String group, String user){
-        Statement statement = null;
+        PreparedStatement statement = null;
         Connection conn = null;
         ResultSet rs = null;
-        try{
-            conn = DriverManager.getConnection(url);
-            statement = conn.createStatement();
 
-            String query = "SELECT * FROM groups WHERE group_name = \""+ group + "\"";
-            rs = statement.executeQuery(query);
-            if( rs.next() ){
-                //should always happen since it was already checked
+
+        try{
+            boolean successful = true;
+
+            conn = DriverManager.getConnection(url);
+            statement = conn.prepareStatement("SELECT * FROM groups WHERE group_name = ?");
+            statement.setString(1, group);
+            rs = statement.executeQuery();
+
+            if( rs.next() ) {
+                //should always happen since it should be already checked
 
                 String whichColumn = "";
-                if( rs.getString("user2") == null){
+                if (rs.getString("user2") == null) {
                     whichColumn = "user2";
-                }else if( rs.getString("user3") == null){
+                } else if (rs.getString("user3") == null) {
                     whichColumn = "user3";
-                }else if( rs.getString("user4") == null){
+                } else if (rs.getString("user4") == null) {
                     whichColumn = "user4";
-                }else{
+                } else {
                     System.out.println("GROUP IS FULL");//should never occur since it was already checked
+                    successful = false;
                 }
-                query = "UPDATE groups SET " + whichColumn + " = \"" + user + "\"";
-                statement.executeUpdate(query);
+                statement.close();
+                if (successful) {
+                    statement = conn.prepareStatement("UPDATE groups SET ? = ?");
+                    statement.setString(1, whichColumn);
+                    statement.setString(2, user);
+                    statement.executeUpdate();
+                }
             }
-
             rs.close();
             statement.close();
             conn.close();
@@ -366,9 +379,5 @@ public class DatabaseHandler
 
         return true;
     }
-
-
-
-
 
 }

@@ -43,6 +43,7 @@ public class ClientPrinterThread extends Thread {
         Client.notificationsHandler.addNotification(message);
         if( message.getType() == ServerToClientMessageType.LOGOUT){
             this.stopRunning();
+            //Client.echoSocket
             return;
         }
     }

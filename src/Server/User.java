@@ -13,7 +13,6 @@ public class User{
     private Socket userSocket;
     private CommunicatorType communicatorType;
     private ObjectOutputStream outObject;
-    //
 
 
     public User(String login, Socket socket, CommunicatorType communicatorType, ObjectOutputStream outObject){

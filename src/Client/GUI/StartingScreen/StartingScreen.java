@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import Client.GUI.Main.MainWindow;
 import Messages.clientToServer.ClientToServerMessageType;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
+//import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
 
 import javax.swing.*;
 
@@ -76,7 +76,7 @@ public class StartingScreen extends JFrame
 
     public StartingScreen( )
     {
-        initClient();
+        //initClient();
         setTitle("CHOOSE LOGIN OR REGISTER");
         panel.setLayout(new FlowLayout());
 

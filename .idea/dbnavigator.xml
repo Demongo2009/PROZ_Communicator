@@ -25,7 +25,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="41a203ad-a215-4808-8b62-2b8ddd69c268">
-        <schema name="main" object-types="view, table, column" />
+        <schema name="main" object-types="view, column, table" />
       </connection>
     </loaded-nodes>
   </component>
@@ -44,7 +44,9 @@ insert into friends values ("Konrad5", "Konrad");
 
 insert into groups(group_name, user1) values("Essssa", "Konrad");
 
+DELETE FROM users;
 DELETE FROM friends;
+DELETE FROM groups;
 commit;]]></console>
     </connection>
   </component>

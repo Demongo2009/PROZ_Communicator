@@ -71,7 +71,7 @@ public class DiscordBot {
 
     public static void main(String[] args) {
         // Insert your bot's token here
-        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.XsP0bg.hTnOSJ9pjele63phslaH09bBteA";
+        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.XsV3HA.tqKzPI1y75gH3zfFpAsMQ2oXolQ";
 
         DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
 
@@ -277,7 +277,9 @@ public class DiscordBot {
                 }
 
                 else if(isGroupSending) {
-                    sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_GROUP,messageContent,CommunicatorType.DISCORD));
+                    String []tmp = messageContent.split("#");
+
+                    sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_GROUP,tmp[0]+"#"+username+"#"+tmp[1],CommunicatorType.DISCORD));
 
                 }else{
                     sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_USER,messageContent.toString(),CommunicatorType.DISCORD));
@@ -298,6 +300,7 @@ public class DiscordBot {
                 }else {
                     channel.sendMessage("Not recognised sign");
                 }
+                currentState = AvailableStates.CONNECTED_TO_CHAT;
             }
             else{
                 if (messageContent.equalsIgnoreCase("!ping")) {

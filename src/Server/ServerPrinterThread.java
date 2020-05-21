@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.Semaphore;
-
+/*
 public class ServerPrinterThread extends Thread {
 
 //    String incomingMessage;
@@ -26,8 +26,6 @@ public class ServerPrinterThread extends Thread {
         mutex = new Semaphore(1);
         buffer = new LinkedList<>();
     }
-
-
 
     public void addIncomingMessage(String inputLine, Socket clientSocket){
         buffer.add( new Pair<String, String>(clientSocket.toString(),inputLine) );
@@ -56,3 +54,4 @@ public class ServerPrinterThread extends Thread {
         }
     }
 }
+*/

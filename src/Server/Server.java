@@ -11,11 +11,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Server {
-    static int serverPort = 4444;
-    static ServerSocket serverSocket;
-    static DatabaseHandler databaseHandler;
-    static ArrayList<User> connectedUsers;
-    static ArrayList<Group> groups;
+    private static int serverPort = 9999;
+    private static ServerSocket serverSocket;
+    private static DatabaseHandler databaseHandler;
+    private static ArrayList<User> connectedUsers;
+    private static ArrayList<Group> groups;
 
     public static void main(String[] args) {
         initServer();

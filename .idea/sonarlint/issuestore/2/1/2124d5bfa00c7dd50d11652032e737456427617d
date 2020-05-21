@@ -1,57 +1,55 @@
 
-Q
-java:S26964"6Make the enclosing method "static" or remove this set.(ƒ¦˜úÿÿÿÿ
->
-java:S1148="#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
-F
-java:S1148²"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8İìßÄ¡.
-\
-java:S2142E"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€
-I
-java:S1135û"2Complete the task associated to this TODO comment.(ø»³‘
-[	java:S106ã"9Replace this use of System.out or System.err by a logger.(Ò¸£ùúÿÿÿÿ8çŒ×ï .
-Z	java:S1068"9Replace this use of System.out or System.err by a logger.(¸Äœìøÿÿÿÿ8ù¦¨Á¡.
-V	java:S106õ"9Replace this use of System.out or System.err by a logger.(“ÁæÜ8éÑäÄ¡.
-X	java:S125”"<This block of commented-out lines of code should be removed.(ĞÇ8óÊ¡¢.
-{
-java:S1488§"_Immediately return this expression instead of assigning it to the temporary variable "message".(Í–øøÿÿÿÿ
-V	java:S106ı"9Replace this use of System.out or System.err by a logger.(Æ²“²8¡ÑãÇ¡.
->
-java:S1148F"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+T	java:S106‡"9Replace this use of System.out or System.err by a logger.(Ç¼ãáùÿÿÿÿ
 o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¾©ò¹
->
-java:S1148."#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
-=
-java:S3010(""Remove this assignment of "mutex".(ªµüÿÿÿÿ
-T	java:S106†"9Replace this use of System.out or System.err by a logger.(Ç¼ãáùÿÿÿÿ
-V	java:S125n"<This block of commented-out lines of code should be removed.(ú”€ªûÿÿÿÿ
-Z	java:S112W"FDefine and throw a dedicated exception instead of using a generic one.(‰Æáe
-?
-java:S1148’"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
-V	java:S106ù"9Replace this use of System.out or System.err by a logger.(¡Ğú¬8©ëúÄ¡.
-`	java:S112R"FDefine and throw a dedicated exception instead of using a generic one.(›ìåÂıÿÿÿÿ
-[	java:S106Ò"9Replace this use of System.out or System.err by a logger.(£š†ûÿÿÿÿ8”½¡È¡.
-P
-java:S1135Ç"2Complete the task associated to this TODO comment.(ÓñàÍ8øüÇã¡.
-U
-java:S1135‚"2Complete the task associated to this TODO comment.(øˆâ°ıÿÿÿÿ8³“Å¡.
+V	java:S125"<This block of commented-out lines of code should be removed.(”Ìá¦ÿÿÿÿÿ
+S	java:S106Q"9Replace this use of System.out or System.err by a logger.(¯’Şàúÿÿÿÿ
 ?
 java:S1148µ"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+Z	java:S112_"FDefine and throw a dedicated exception instead of using a generic one.(‰Æáe
+`	java:S112Z"FDefine and throw a dedicated exception instead of using a generic one.(›ìåÂıÿÿÿÿ
+>
+java:S1148N"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+>
+java:S1148D"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+?
+java:S1148’"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+=
+java:S3010)""Remove this assignment of "mutex".(ªµüÿÿÿÿ
+>
+java:S1148/"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
 T
-java:S1197à"8Move the array designator from the variable to the type.(³Ñ€Áøÿÿÿÿ
-V	java:S125"<This block of commented-out lines of code should be removed.(”Ìá¦ÿÿÿÿÿ
-:
-java:S1643¨"Use a StringBuilder instead.(¡ù¡ƒ8Ğé½È¡.
-Z	java:S106:"9Replace this use of System.out or System.err by a logger.(™ú¶üÿÿÿÿ8ù¦¨Á¡.
-v	java:S135Ö"YReduce the total number of break and continue statements in this loop to use at most one.(¿ƒ™‡8­¨©»¢.
-W	java:S125ú"<This block of commented-out lines of code should be removed.(ŞŞ¨øÿÿÿÿ
-h	java:S112¯"FDefine and throw a dedicated exception instead of using a generic one.(·µÄóıÿÿÿÿ8İìßÄ¡.
+java:S1197á"8Move the array designator from the variable to the type.(³Ñ€Áøÿÿÿÿ
+[	java:S106€"9Replace this use of System.out or System.err by a logger.(í„‹Œÿÿÿÿÿ8¦Şªğ .
+[	java:S106ä"9Replace this use of System.out or System.err by a logger.(Ò¸£ùúÿÿÿÿ8çŒ×ï .
+a	java:S112°"FDefine and throw a dedicated exception instead of using a generic one.(·µÄóıÿÿÿÿ
+W	java:S125û"<This block of commented-out lines of code should be removed.(ŞŞ¨øÿÿÿÿ
+P
+java:S11614":Add the "@Override" annotation above this method signature(“–ış
+?
+java:S1148³"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
 ?
 java:S1148Å"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+I
+java:S1135ü"2Complete the task associated to this TODO comment.(ø»³‘
+{
+java:S1488§"_Immediately return this expression instead of assigning it to the temporary variable "message".(Í–øøÿÿÿÿ
+Q
+java:S26965"6Make the enclosing method "static" or remove this set.(ƒ¦˜úÿÿÿÿ
+\
+java:S2142M"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€
+:
+java:S1643©"Use a StringBuilder instead.(¡ù¡ƒ8«¥ãš£.
+v	java:S135×"YReduce the total number of break and continue statements in this loop to use at most one.(¿ƒ™‡8«¥ãš£.
+T	java:S1067"9Replace this use of System.out or System.err by a logger.(ÛôÅ 8«¥ãš£.
+Z	java:S106="9Replace this use of System.out or System.err by a logger.(¸Äœìøÿÿÿÿ8«¥ãš£.
+Z	java:S106A"9Replace this use of System.out or System.err by a logger.(™ú¶üÿÿÿÿ8«¥ãš£.
 P
-java:S11613":Add the "@Override" annotation above this method signature(“–ış
-S	java:S106I"9Replace this use of System.out or System.err by a logger.(¯’Şàúÿÿÿÿ
-o
-java:S1128	"TRemove this unnecessary import: same package classes are always implicitly imported.(Êõª˜ûÿÿÿÿ
-[	java:S106ÿ"9Replace this use of System.out or System.err by a logger.(í„‹Œÿÿÿÿÿ8¦Şªğ .
-V	java:S106ñ"9Replace this use of System.out or System.err by a logger.(Äû¦”8Ê³âÄ¡.
+java:S1135È"2Complete the task associated to this TODO comment.(ÓñàÍ8«¥ãš£.
+[	java:S106Ó"9Replace this use of System.out or System.err by a logger.(£š†ûÿÿÿÿ8«¥ãš£.
+V	java:S106ò"9Replace this use of System.out or System.err by a logger.(Äû¦”8«¥ãš£.
+V	java:S106ö"9Replace this use of System.out or System.err by a logger.(“ÁæÜ8«¥ãš£.
+V	java:S106ú"9Replace this use of System.out or System.err by a logger.(¡Ğú¬8«¥ãš£.
+V	java:S106ÿ"9Replace this use of System.out or System.err by a logger.(Æ²“²8«¥ãš£.
+R
+java:S1068"0Remove this unused "serverSocket" private field.(“—Ó¿ıÿÿÿÿ8«¥ãš£.
+X	java:S125	"<This block of commented-out lines of code should be removed.(±¯Ô8«¥ãš£.

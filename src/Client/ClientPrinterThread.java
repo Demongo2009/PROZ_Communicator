@@ -1,30 +1,21 @@
 package Client;
 
-import Client.GUI.ChatWindow;
-import Client.GUI.MainWindow;
-import Messages.clientToServer.ClientToServerMessage;
-import Messages.clientToServer.ClientToServerMessageType;
 import Messages.serverToClient.ServerToClientMessage;
 import Messages.serverToClient.ServerToClientMessageType;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
 
 /*
-* class to receive ServerToClientMessage
-* */
+ * class to receive ServerToClientMessage
+ * */
 public class ClientPrinterThread extends Thread {
     ObjectInputStream inObject;
     boolean shouldRun;
-    private MainWindow ClientRef;
 
-    ClientPrinterThread(ObjectInputStream in,MainWindow ref){
-        ClientRef =ref;
+
+    ClientPrinterThread(ObjectInputStream in)
+    {
         this.inObject = in;
         shouldRun = true;
     }
@@ -44,28 +35,17 @@ public class ClientPrinterThread extends Thread {
         return message;
     }
 
-    public static void imageMessage(String url){
-        ChatWindow.addImage(url);
-    }
-
-
     private void processMessage(ServerToClientMessage message){
-        //TODO: we need to handle these messages
-
-        //todo add user when we get USER_ACCEPTED_YOUR_FRIEND_REQUEST,
-        //todo add group when we get USER_ADDED_YOU_TO_GROUP,
-        //todo and more probably...
         if( message == null){
             return;
         }
+
+        Client.notificationsHandler.addNotification(message);
         if( message.getType() == ServerToClientMessageType.LOGOUT){
             this.stopRunning();
+            //Client.echoSocket
             return;
         }
-        ClientRef.ReceiveNotification();
-        Client.notificationsHandler.addNotification(message);
-        System.out.println( message.getText() );
-
     }
 
     public void run(){

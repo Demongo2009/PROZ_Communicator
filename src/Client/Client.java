@@ -18,7 +18,7 @@ import static Client.GUI.tools.SwingConsole.run;
 public class Client {
 
     private static String hostName = "localhost";
-    private static int serverPort = 9999;
+    private static int serverPort = 45000;
 
     private static Socket echoSocket;
     private static PrintWriter out;
@@ -52,19 +52,6 @@ public class Client {
             echoSocket = new Socket(hostName, serverPort);
             // shutdown hook added for closing the connection if client exits
             Runtime.getRuntime().addShutdownHook(new ClientShutdownHook(echoSocket));
-
-/*
-            out =
-                    new PrintWriter(echoSocket.getOutputStream(), true);
-            in =
-                    new BufferedReader(
-                            new InputStreamReader(echoSocket.getInputStream()));
-            stdIn =
-                    new BufferedReader(
-                            new InputStreamReader(System.in));
-*/
-
-
 
             outObject = new ObjectOutputStream( echoSocket.getOutputStream()) ;
             inObject = new ObjectInputStream( echoSocket.getInputStream() );
@@ -303,11 +290,9 @@ public class Client {
         ClientToServerMessage message = new ClientToServerMessage( ClientToServerMessageType.LOGOUT);
         System.out.println("Wylogowywanie...");
         username = null;
-        //listener.stopRunning();
 
         try {
             outObject.writeObject( message );
-            //echoSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

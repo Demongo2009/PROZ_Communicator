@@ -1,0 +1,93 @@
+
+d
+java:S1192n"NDefine a constant instead of duplicating this literal "hub.challenge" 4 times.(®¯Œò
+g	java:S117‚"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ø®½Á
+l	java:S117ƒ"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(çàÙÔıÿÿÿÿ
+g	java:S117„"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.( İ”â
+l	java:S117…"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÁÇãÊıÿÿÿÿ
+l	java:S117†"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ßšÙ¶ûÿÿÿÿ
+l	java:S117–"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‹‘ĞÂşÿÿÿÿ
+g	java:S117—"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(›¡¶½
+l	java:S117˜"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ò²©œşÿÿÿÿ
+g	java:S117™"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ßÚØ
+g	java:S117š"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Á¸Îé
+>
+java:S1148@"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+>
+java:S1148d"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+>
+java:S1148f"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+?
+java:S1148í"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+?
+java:S1148‘"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+?
+java:S1148Â"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+E
+java:S5411p"*Use the primitive boolean expression here.(€ñøÀøÿÿÿÿ
+A
+java:S5411‚"*Use the primitive boolean expression here.(Ø®½Á
+F
+java:S5411ƒ"*Use the primitive boolean expression here.(çàÙÔıÿÿÿÿ
+A
+java:S5411„"*Use the primitive boolean expression here.( İ”â
+F
+java:S5411…"*Use the primitive boolean expression here.(ÁÇãÊıÿÿÿÿ
+F
+java:S5411†"*Use the primitive boolean expression here.(ßšÙ¶ûÿÿÿÿ
+A
+java:S5411‡"*Use the primitive boolean expression here.(µÖ•â
+A
+java:S5411ˆ"*Use the primitive boolean expression here.(õˆàƒ
+0
+java:S1220""Move this file to a named package.
+S
+java:S1128"8Remove this unused import 'javafx.application.Platform'.(§“óùÿÿÿÿ
+F
+java:S1128"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ
+g
+java:S1128
+"QRemove this unused import 'com.mashape.unirest.http.exceptions.UnirestException'.(‡Ú…ˆ
+[
+java:S1124E"EReorder the modifiers to comply with the Java Language Specification.(³®¯
+n
+java:S3776L"SRefactor this method to reduce its Cognitive Complexity from 108 to the 15 allowed.(´úÿÿÿÿ
+Z
+java:S2147e"DCombine this catch with the one at line 99, which has the same body.(ï­£Ä
+p
+java:S2293ˆ"YReplace the type specification in this constructor call with the diamond operator ("<>").(õˆàƒ
+]
+java:S2142ì"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€
+]
+java:S2142"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€
+D	java:S108ë")Either remove or fill this block of code.(¹êçãùÿÿÿÿ
+R
+java:S1751"6Remove this "return" statement or make it conditional.(ó±şÿÿÿÿ
+E
+java:S1481‡".Remove this unused "timestamp" local variable.(µÖ•â
+N
+java:S1481—"7Remove this unused "button_message_tpl" local variable.(›¡¶½
+Q
+java:S1481˜"5Remove this unused "list_message_tpl" local variable.(ò²©œşÿÿÿÿ
+O
+java:S1481™"8Remove this unused "generic_message_tpl" local variable.(ßÚØ
+O
+java:S1481š"8Remove this unused "receipt_message_tpl" local variable.(Á¸Îé
+V	java:S125z"<This block of commented-out lines of code should be removed.(¹Øëœşÿÿÿÿ
+W	java:S125 "<This block of commented-out lines of code should be removed.(¹Øëœşÿÿÿÿ
+W	java:S125¢"<This block of commented-out lines of code should be removed.(¦­Îşÿÿÿÿ
+R	java:S125¤"<This block of commented-out lines of code should be removed.(ÑŠìí
+W	java:S125§"<This block of commented-out lines of code should be removed.(Ààúÿÿÿÿ
+W	java:S125©"<This block of commented-out lines of code should be removed.(éØ»Úûÿÿÿÿ
+Q	java:S125¬"<This block of commented-out lines of code should be removed.(ôë+
+W	java:S125´"<This block of commented-out lines of code should be removed.(ÀÌü‘ıÿÿÿÿ
+W	java:S125¸"<This block of commented-out lines of code should be removed.(éØ»Úûÿÿÿÿ
+R	java:S125¼"<This block of commented-out lines of code should be removed.(£Ó¼É
+W	java:S125¾"<This block of commented-out lines of code should be removed.(ïÖËíşÿÿÿÿ
+W	java:S125Ã"<This block of commented-out lines of code should be removed.(µÈû‡ıÿÿÿÿ
+W	java:S125Ë"<This block of commented-out lines of code should be removed.(¶’Ÿúşÿÿÿÿ
+W	java:S125Î"<This block of commented-out lines of code should be removed.(˜à·£ıÿÿÿÿ
+W	java:S125Ô"<This block of commented-out lines of code should be removed.(¬è‹»úÿÿÿÿ
+R	java:S125ß"<This block of commented-out lines of code should be removed.(ÿ­Ø 
+R	java:S125è"<This block of commented-out lines of code should be removed.(™üÙ€
+W	java:S125ï"<This block of commented-out lines of code should be removed.(Ï«ê×şÿÿÿÿ

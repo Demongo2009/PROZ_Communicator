@@ -109,6 +109,11 @@ public class Multicom extends TelegramLongPollingBot {
 
 
     private void handleIncomingMessage(Message message) throws TelegramApiException {
+
+//        if ( message.getAuthorSignature().equalsIgnoreCase("Multicombot")){
+//            return;
+//        }
+
         SendMessage echoMessage = new SendMessage();
         echoMessage.setChatId(message.getChatId());
 
@@ -142,7 +147,7 @@ public class Multicom extends TelegramLongPollingBot {
                             if (inputFromServer.equals("") || inputFromServer.equals("\n")) {
                                 continue;
                             }
-
+/*
                             if(messageFromServer.getType().equals(ServerToClientMessageType.IMAGE)){
                                 SendPhoto photoMessage = new SendPhoto().setPhoto(inputFromServer);
                                 execute(photoMessage);
@@ -152,7 +157,7 @@ public class Multicom extends TelegramLongPollingBot {
                                 execute(echoMessage);
                             }
 
-
+*/
 
                             ServerToClientMessageType messageType= messageFromServer.getType();
                             if(messageType.equals(ServerToClientMessageType.IMAGE)){
@@ -177,6 +182,10 @@ public class Multicom extends TelegramLongPollingBot {
                             }else if(messageType.equals(ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST)){
 
                                 echoMessage.setText("\""+inputFromServer + "\" accepted your friend request");
+                                execute(echoMessage);
+                            }
+                            else if(messageType.equals(ServerToClientMessageType.USER_ADDED_YOU_TO_GROUP)){
+                                echoMessage.setText("You've been added to group: \""+inputFromServer + "\"");
                                 execute(echoMessage);
                             }
                             else {
@@ -354,7 +363,8 @@ public class Multicom extends TelegramLongPollingBot {
                 echoMessage.setText("User sending!");
             }
             else if(isGroupSending) {
-                sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_GROUP,text,CommunicatorType.MESSENGER));
+                String []tmp = text.split("#");
+                sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_GROUP,tmp[0]+"#"+username+"#"+tmp[1],CommunicatorType.MESSENGER));
 
             }else{
                 sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_USER,text,CommunicatorType.MESSENGER));
@@ -373,9 +383,12 @@ public class Multicom extends TelegramLongPollingBot {
             }else {
                 echoMessage.setText("Not recognised sign");
             }
+            currentState = AvailableStates.CONNECTED_TO_CHAT;
         }
 
-        execute(echoMessage);
+        if( echoMessage.getText() != null && !echoMessage.getText().equals("") ) {
+            execute(echoMessage);
+        }
 
 
 

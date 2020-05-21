@@ -1,0 +1,50 @@
+
+]
+java:S2142§"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€
+P
+java:S1161R":Add the "@Override" annotation above this method signature(“–ış
+`
+java:S11249"EReorder the modifiers to comply with the Java Language Specification.(±Âö©ùÿÿÿÿ
+?	java:S108¬")Either remove or fill this block of code.(šø
+R	java:S125¢"<This block of commented-out lines of code should be removed.(™üÙ€
+>
+java:S1148l"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+>
+java:S1148j"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+R	java:S125¤"<This block of commented-out lines of code should be removed.(ùí†Œ
+[
+java:S2147k"ECombine this catch with the one at line 105, which has the same body.(ï­£Ä
+U
+java:S1155à">Use isEmpty() to check whether the collection is empty or not.(Åå¥ß
+?
+java:S1148Ì"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+]
+java:S2142Ë"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€
+h
+java:S3776H"RRefactor this method to reduce its Cognitive Complexity from 72 to the 15 allowed.(Çµí‘
+?
+java:S1148¨"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+W	java:S125ª"<This block of commented-out lines of code should be removed.(Ï«ê×şÿÿÿÿ
+e
+java:S1128"JRemove this unused import 'Messages.serverToClient.ServerToClientMessage'.(ÀÂ‘şıÿÿÿÿ
+W	java:S125”"<This block of commented-out lines of code should be removed.(Ùœ“Üıÿÿÿÿ
+?
+java:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+m
+java:S1858Ÿ"Q"messageContent" is already a string, there's no need to call "toString()" on it.(–ûŒÑıÿÿÿÿ
+R	java:S125"<This block of commented-out lines of code should be removed.(¯ ¥
+>
+java:S1148="#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+T	java:S106Â"9Replace this use of System.out or System.err by a logger.(ÿ«ùØúÿÿÿÿ
+[
+java:S11242"EReorder the modifiers to comply with the Java Language Specification.(ëƒŞ
+T	java:S106™"9Replace this use of System.out or System.err by a logger.(­ ‘ˆüÿÿÿÿ
+R	java:S125‘"<This block of commented-out lines of code should be removed.(şÑ¼ï
+0
+java:S1220""Move this file to a named package.
+[
+java:S1124A"EReorder the modifiers to comply with the Java Language Specification.(³®¯
+P
+java:S1128
+":Remove this unused import 'java.awt.event.ActionListener'.(Ìä¹
+]	java:S125f"<This block of commented-out lines of code should be removed.(æŒØ°úÿÿÿÿ8‹°Ñ´£.

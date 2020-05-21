@@ -1,0 +1,22 @@
+
+>
+java:S1148-"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+>
+java:S1148/"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+>
+java:S1148g"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+0
+java:S1220""Move this file to a named package.
+8
+java:S3010""Remove this assignment of "mutex".(ÖÒ±
+Z
+java:S2147."DCombine this catch with the one at line 44, which has the same body.(ıàÑÎ
+P
+java:S1161;":Add the "@Override" annotation above this method signature(“–ış
+N	java:S106U"9Replace this use of System.out or System.err by a logger.(úéò’
+<
+java:S1068"&Remove this unused "in" private field.(»ğ¶ü
+V	java:S125@"<This block of commented-out lines of code should be removed.(â¨êŒüÿÿÿÿ
+P	java:S125L"<This block of commented-out lines of code should be removed.(ó£İf
+V	java:S125P"<This block of commented-out lines of code should be removed.(Ò·ê‹şÿÿÿÿ
+Q	java:S125d"<This block of commented-out lines of code should be removed.(öØ®¿

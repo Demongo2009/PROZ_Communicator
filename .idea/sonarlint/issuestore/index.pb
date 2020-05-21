@@ -21,3 +21,13 @@ S
 #src/Client/GUI/Main/MainWindow.java,6/7/670f1975c6177d164921228171f90181deb2a1d8
 F
 src/Server/Server.java,a/9/a9588fce1c3bc78ec27bdea72c1267a00a95124e
+a
+1botdiscord/src/main/java/ClientPrinterThread.java,2/9/29b87e20bf9ef3d2ced169842b64ffa133792ec8
+^
+.botmessengerV2/src/main/java/MessengerBot.java,b/1/b1ada0e8130da2ce4ab0d20780deafa905a4f42c
+X
+(botdiscord/src/main/java/DiscordBot.java,5/b/5b1e2a6f13c415d4ddb9f2e53499deb436028ac3
+Z
+*bottelegram/src/main/java/TelegramBot.java,5/d/5d0e53bb6fc2e3abb755137a0fe252e556a47413
+W
+'bottelegram/src/main/java/Multicom.java,5/2/5257ea84aa3518ad6ea23e7e2bab9e9cd4c92249

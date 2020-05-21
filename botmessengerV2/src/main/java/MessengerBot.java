@@ -77,7 +77,7 @@ public class MessengerBot {
     {
         currentState = AvailableStates.INIT;
         String hostName = "localhost";
-        int portNumber = 4444;
+        int portNumber = 45000;
         try {
             echoSocket = new Socket(hostName, portNumber);
             // shutdown hook added for closing the connection if client exits
@@ -343,7 +343,8 @@ public class MessengerBot {
                         senderWrapper.sendToMessenger("User sending!");
                     }
                     else if(isGroupSending) {
-                        sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_GROUP,message_text,CommunicatorType.MESSENGER));
+                        String []tmp = message_text.split("#");
+                        sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_GROUP,tmp[0]+"#"+username+"#"+tmp[1],CommunicatorType.MESSENGER));
 
                     }else{
                         sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_USER,message_text,CommunicatorType.MESSENGER));
@@ -364,6 +365,7 @@ public class MessengerBot {
                     }else {
                         senderWrapper.sendToMessenger("Not recognised sign");
                     }
+                    currentState = AvailableStates.CONNECTED_TO_CHAT;
                 }
 
 

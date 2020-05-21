@@ -1,78 +1,75 @@
 
-`	java:S112^"FDefine and throw a dedicated exception instead of using a generic one.(ÿÌ†üÿÿÿÿ
-u
-java:S1104%"SMake friends a static final constant or non-public and provide accessors if needed.(Ãİ˜„ıÿÿÿÿ8­¥ãš£.
 ?
-java:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
-F
-java:S1068")Remove this unused "stdIn" private field.(£±ÛÖ8­¥ãš£.
-\
-java:S1444)":Make this "public static notificationsHandler" field final(Ÿõõúÿÿÿÿ8¬¥ãš£.
+java:S1148‘"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+[
+java:S2259l"EA "NullPointerException" could be thrown; "message" is nullable here.(ÉúÄİ
 
 java:S1319&"qThe type of the "groups" object should be an interface such as "List" rather than the implementation "ArrayList".(“¯Ãæ8¬¥ãš£.
-O	java:S106Ó"9Replace this use of System.out or System.err by a logger.(’¨ö‰
-g	java:S112Y"FDefine and throw a dedicated exception instead of using a generic one.(ù²–õûÿÿÿÿ8¬¥ãš£.
-t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(•İÈ‚ıÿÿÿÿ
-h	java:S112ñ"FDefine and throw a dedicated exception instead of using a generic one.(ÿÌ†üÿÿÿÿ8¬¥ãš£.
-{
-java:S1450"YRemove the "echoSocket" field and declare it as a local variable in the relevant methods.(­¹å¦üÿÿÿÿ8­¥ãš£.
-a	java:S112d"FDefine and throw a dedicated exception instead of using a generic one.(Æ¤…D8¬¥ãš£.
-T
-java:S1135$"2Complete the task associated to this TODO comment.(¢§Ÿ¢üÿÿÿÿ8­¥ãš£.
-H
-java:S1068"&Remove this unused "in" private field.(ÌÀ¡¢ÿÿÿÿÿ8­¥ãš£.
-h	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(œ±Àüÿÿÿÿ8­¥ãš£.
-I
-java:S1068"'Remove this unused "out" private field.(¯ç¿ÿÿÿÿÿ8­¥ãš£.
-o
-java:S1104&"RMake groups a static final constant or non-public and provide accessors if needed.(“¯Ãæ8­¥ãš£.
->
-java:S1148v"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
-I
-java:S1135½"2Complete the task associated to this TODO comment.(ŸÂğó
-T	java:S106¤"9Replace this use of System.out or System.err by a logger.(—ëŒııÿÿÿÿ
-^	java:S125²"<This block of commented-out lines of code should be removed.(çÎüØúÿÿÿÿ8­¥ãš£.
-`	java:S112a"FDefine and throw a dedicated exception instead of using a generic one.(´ÉÅÂûÿÿÿÿ
-T	java:S106Î"9Replace this use of System.out or System.err by a logger.(ûáõúÿÿÿÿ
-X	java:S125¶"<This block of commented-out lines of code should be removed.(öá¬F8­¥ãš£.
->
-java:S1148P"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
-D
-java:S2386H""Make member "friends" "protected".(¿ò‘Çøÿÿÿÿ8­¥ãš£.
->
-java:S2386I"!Make member "groups" "protected".(ÛÅ–±8­¥ãš£.
-‚
-java:S1104)"`Make notificationsHandler a static final constant or non-public and provide accessors if needed.(Ÿõõúÿÿÿÿ8­¥ãš£.
-c	java:S112é"FDefine and throw a dedicated exception instead of using a generic one.(ıÅÛÆ8­¥ãš£.
-?
-java:S1148¸"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
-V	java:S106©"9Replace this use of System.out or System.err by a logger.(üûáº8­¥ãš£.
-b	java:S112ù"FDefine and throw a dedicated exception instead of using a generic one.(ÜÖÖ98­¥ãš£.
-h	java:S112”"FDefine and throw a dedicated exception instead of using a generic one.(§£êøÿÿÿÿ8­¥ãš£.
-h	java:S112õ"FDefine and throw a dedicated exception instead of using a generic one.(ËöÊöúÿÿÿÿ8­¥ãš£.
-[	java:S106ˆ"9Replace this use of System.out or System.err by a logger.(Ú’ãŞıÿÿÿÿ8­¥ãš£.
-y
-java:S1450!"WRemove the "listener" field and declare it as a local variable in the relevant methods.(ûš¿Òÿÿÿÿÿ8­¥ãš£.
-X	java:S125:"<This block of commented-out lines of code should be removed.(êÌºÏ8­¥ãš£.
-[
-java:S2259y"EA "NullPointerException" could be thrown; "message" is nullable here.(ÉúÄİ
-h	java:S112™"FDefine and throw a dedicated exception instead of using a generic one.(Šàğúÿÿÿÿ8­¥ãš£.
-c	java:S112í"FDefine and throw a dedicated exception instead of using a generic one.(€Úé8¬¥ãš£.
-`	java:S112["FDefine and throw a dedicated exception instead of using a generic one.(—¢¤Îşÿÿÿÿ
-”
-java:S1319%"rThe type of the "friends" object should be an interface such as "List" rather than the implementation "ArrayList".(Ãİ˜„ıÿÿÿÿ8¬¥ãš£.
-Z
-java:S2147Q"DCombine this catch with the one at line 79, which has the same body.(ï­£Ä
+h	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(œ±Àüÿÿÿÿ8­¥ãš£.
+h	java:S112‡"FDefine and throw a dedicated exception instead of using a generic one.(§£êøÿÿÿÿ8­¥ãš£.
 I
 java:S1444&",Make this "public static groups" field final(“¯Ãæ8¬¥ãš£.
+`	java:S112N"FDefine and throw a dedicated exception instead of using a generic one.(—¢¤Îşÿÿÿÿ
+‚
+java:S1104)"`Make notificationsHandler a static final constant or non-public and provide accessors if needed.(Ÿõõúÿÿÿÿ8­¥ãš£.
+”
+java:S1319%"rThe type of the "friends" object should be an interface such as "List" rather than the implementation "ArrayList".(Ãİ˜„ıÿÿÿÿ8¬¥ãš£.
+h	java:S112è"FDefine and throw a dedicated exception instead of using a generic one.(ËöÊöúÿÿÿÿ8­¥ãš£.
+`	java:S112Q"FDefine and throw a dedicated exception instead of using a generic one.(ÿÌ†üÿÿÿÿ
+h	java:S112Œ"FDefine and throw a dedicated exception instead of using a generic one.(Šàğúÿÿÿÿ8­¥ãš£.
+?
+java:S1148©"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+^	java:S125‰"<This block of commented-out lines of code should be removed.(–ƒ‹¦ùÿÿÿÿ8­¥ãš£.
+>
+java:S1148C"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+a	java:S112…"FDefine and throw a dedicated exception instead of using a generic one.(ãúîøÿÿÿÿ
+>
+java:S2386<"!Make member "groups" "protected".(ÛÅ–±8­¥ãš£.
+O	java:S106Æ"9Replace this use of System.out or System.err by a logger.(’¨ö‰
+g	java:S112d"FDefine and throw a dedicated exception instead of using a generic one.(¸¸Úîıÿÿÿÿ8¬¥ãš£.
+V	java:S106œ"9Replace this use of System.out or System.err by a logger.(üûáº8­¥ãš£.
+y
+java:S1450!"WRemove the "listener" field and declare it as a local variable in the relevant methods.(ûš¿Òÿÿÿÿÿ8­¥ãš£.
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(•İÈ‚ıÿÿÿÿ
+
+java:S1186¯"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(şì›¼úÿÿÿÿ
+D
+java:S2386;""Make member "friends" "protected".(¿ò‘Çøÿÿÿÿ8­¥ãš£.
+>
+java:S1148E"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+o
+java:S1104&"RMake groups a static final constant or non-public and provide accessors if needed.(“¯Ãæ8­¥ãš£.
+[	java:S106£"9Replace this use of System.out or System.err by a logger.(±ªŒ™øÿÿÿÿ8­¥ãš£.
+h	java:S112ä"FDefine and throw a dedicated exception instead of using a generic one.(ÿÌ†üÿÿÿÿ8¬¥ãš£.
+[	java:S106û"9Replace this use of System.out or System.err by a logger.(Ú’ãŞıÿÿÿÿ8­¥ãš£.
+c	java:S112à"FDefine and throw a dedicated exception instead of using a generic one.(€Úé8¬¥ãš£.
+I
+java:S1135®"2Complete the task associated to this TODO comment.(ŸÂğó
+I
+java:S1068"'Remove this unused "out" private field.(¯ç¿ÿÿÿÿÿ8­¥ãš£.
+b	java:S112ì"FDefine and throw a dedicated exception instead of using a generic one.(ÜÖÖ98­¥ãš£.
+c	java:S112Ü"FDefine and throw a dedicated exception instead of using a generic one.(ıÅÛÆ8­¥ãš£.
 O
 java:S1444%"-Make this "public static friends" field final(Ãİ˜„ıÿÿÿÿ8¬¥ãš£.
-a	java:S112’"FDefine and throw a dedicated exception instead of using a generic one.(ãúîøÿÿÿÿ
-
-java:S1186¾"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(şì›¼úÿÿÿÿ
-c	java:S112¡"FDefine and throw a dedicated exception instead of using a generic one.(ªñ­8­¥ãš£.
-^	java:S125–"<This block of commented-out lines of code should be removed.(–ƒ‹¦ùÿÿÿÿ8­¥ãš£.
-g	java:S112q"FDefine and throw a dedicated exception instead of using a generic one.(¸¸Úîıÿÿÿÿ8¬¥ãš£.
-[	java:S106°"9Replace this use of System.out or System.err by a logger.(±ªŒ™øÿÿÿÿ8­¥ãš£.
+T	java:S106—"9Replace this use of System.out or System.err by a logger.(—ëŒııÿÿÿÿ
+u
+java:S1104%"SMake friends a static final constant or non-public and provide accessors if needed.(Ãİ˜„ıÿÿÿÿ8­¥ãš£.
+a	java:S112W"FDefine and throw a dedicated exception instead of using a generic one.(Æ¤…D8¬¥ãš£.
+\
+java:S1444)":Make this "public static notificationsHandler" field final(Ÿõõúÿÿÿÿ8¬¥ãš£.
+c	java:S112”"FDefine and throw a dedicated exception instead of using a generic one.(ªñ­8­¥ãš£.
+T
+java:S1135$"2Complete the task associated to this TODO comment.(¢§Ÿ¢üÿÿÿÿ8­¥ãš£.
+Z
+java:S2147D"DCombine this catch with the one at line 66, which has the same body.(ï­£Ä
 >
-java:S1148R"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+java:S1148i"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+H
+java:S1068"&Remove this unused "in" private field.(ÌÀ¡¢ÿÿÿÿÿ8­¥ãš£.
+g	java:S112L"FDefine and throw a dedicated exception instead of using a generic one.(ù²–õûÿÿÿÿ8¬¥ãš£.
+{
+java:S1450"YRemove the "echoSocket" field and declare it as a local variable in the relevant methods.(­¹å¦üÿÿÿÿ8­¥ãš£.
+F
+java:S1068")Remove this unused "stdIn" private field.(£±ÛÖ8­¥ãš£.
+`	java:S112T"FDefine and throw a dedicated exception instead of using a generic one.(´ÉÅÂûÿÿÿÿ
+T	java:S106Á"9Replace this use of System.out or System.err by a logger.(ûáõúÿÿÿÿ

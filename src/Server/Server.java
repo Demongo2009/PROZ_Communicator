@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Server {
-    private static int serverPort = 9999;
+    private static int serverPort = 45000;
     private static ServerSocket serverSocket;
     private static DatabaseHandler databaseHandler;
     private static ArrayList<User> connectedUsers;

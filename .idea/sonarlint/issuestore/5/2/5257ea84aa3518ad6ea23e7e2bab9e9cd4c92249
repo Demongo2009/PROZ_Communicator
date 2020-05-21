@@ -1,0 +1,98 @@
+
+O	java:S106±"9Replace this use of System.out or System.err by a logger.(úéò’
+Q	java:S125ê"<This block of commented-out lines of code should be removed.(âÄŠ
+T	java:S106¨"9Replace this use of System.out or System.err by a logger.(‰¬Ê¬ÿÿÿÿÿ
+W	java:S125İ"<This block of commented-out lines of code should be removed.(¬è‹»úÿÿÿÿ
+>
+java:S1148j"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+=
+java:S1068"'Remove this unused "out" private field.(¨¥ÑÓ
+T	java:S106¸"9Replace this use of System.out or System.err by a logger.(ë¯ÆËşÿÿÿÿ
+M
+java:S2696ä"6Make the enclosing method "static" or remove this set.(ÇœÛ„
+M
+java:S2696Û"6Make the enclosing method "static" or remove this set.(Æ¨£
+<
+java:S1068"&Remove this unused "in" private field.(»ğ¶ü
+M
+java:S2696Ú"6Make the enclosing method "static" or remove this set.(ªã®®
+U
+java:S1128":Remove this unused import 'java.net.UnknownHostException'.(Ú·¬˜úÿÿÿÿ
+W	java:S125Õ"<This block of commented-out lines of code should be removed.(˜à·£ıÿÿÿÿ
+R
+java:S2696¼"6Make the enclosing method "static" or remove this set.(ˆ° şÿÿÿÿ
+W	java:S125‘"<This block of commented-out lines of code should be removed.(éØ»Úûÿÿÿÿ
+O	java:S106ó"9Replace this use of System.out or System.err by a logger.(—öÜ
+R
+java:S2696ª"6Make the enclosing method "static" or remove this set.(ˆ° şÿÿÿÿ
+?
+java:S1148Ö"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+D
+java:S1128")Remove this unused import 'java.net.URL'.(ñìÁ„üÿÿÿÿ
+j
+java:S1128"TRemove this unused import 'org.telegram.telegrambots.meta.api.methods.BotApiMethod'.(İ€„û
+>
+java:S1148>"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+R
+java:S2696Š"6Make the enclosing method "static" or remove this set.(ÒÂÃ®ıÿÿÿÿ
+0
+java:S1220""Move this file to a named package.
+M
+java:S2696Ş"6Make the enclosing method "static" or remove this set.(Ÿïœ½
+>
+java:S1148W"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+Z
+java:S2147X"DCombine this catch with the one at line 86, which has the same body.(ıàÑÎ
+]
+java:S2142"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€
+?
+java:S1148ø"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+D	java:S108ı")Either remove or fill this block of code.(’æëëûÿÿÿÿ
+R	java:S125"<This block of commented-out lines of code should be removed.(ğã€
+B
+java:S1128",Remove this unused import 'java.net.Socket'.(­‡àú
+>
+java:S1148Y"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+T	java:S106é"9Replace this use of System.out or System.err by a logger.(­ ‘ˆüÿÿÿÿ
+M
+java:S2696á"6Make the enclosing method "static" or remove this set.(ÆÂ€ü
+R
+java:S2696Ç"6Make the enclosing method "static" or remove this set.(ˆ° şÿÿÿÿ
+?
+java:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+?
+java:S1148È"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+R
+java:S2696Á"6Make the enclosing method "static" or remove this set.(ˆ° şÿÿÿÿ
+W	java:S125†"<This block of commented-out lines of code should be removed.(òû¿ùÿÿÿÿ
+R
+java:S2696­"6Make the enclosing method "static" or remove this set.(ÒÂÃ®ıÿÿÿÿ
+W	java:S125„"<This block of commented-out lines of code should be removed.(ïÖËíşÿÿÿÿ
+T	java:S106ú"9Replace this use of System.out or System.err by a logger.(¶Îøüÿÿÿÿ
+R
+java:S2696Ï"6Make the enclosing method "static" or remove this set.(ÒÂÃ®ıÿÿÿÿ
+R
+java:S2696‚"6Make the enclosing method "static" or remove this set.(ˆ° şÿÿÿÿ
+T	java:S106¬"9Replace this use of System.out or System.err by a logger.(ÌŠ‡ìşÿÿÿÿ
+m
+java:S3776o"RRefactor this method to reduce its Cognitive Complexity from 69 to the 15 allowed.(û×üşÿÿÿÿ
+R
+java:S2696Í"6Make the enclosing method "static" or remove this set.(ˆ° şÿÿÿÿ
+d
+java:S1128"NRemove this unused import 'org.telegram.telegrambots.bots.TelegramWebhookBot'.(¦šËœ
+]
+java:S2142÷"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€
+N	java:S106~"9Replace this use of System.out or System.err by a logger.(”“î€
+[
+java:S1124C"EReorder the modifiers to comply with the Java Language Specification.(³®¯
+M
+java:S2696ì"6Make the enclosing method "static" or remove this set.(ŸµÏ•
+R
+java:S2696’"6Make the enclosing method "static" or remove this set.(½»¶úÿÿÿÿ
+R
+java:S2696‡"6Make the enclosing method "static" or remove this set.(ˆ° şÿÿÿÿ
+^	java:S125—"<This block of commented-out lines of code should be removed.(º€Á¿úÿÿÿÿ8¼«µ£.
+Q	java:S125›"<This block of commented-out lines of code should be removed.(¤ß¬;
+L
+java:S2696á"6Make the enclosing method "static" or remove this set.(îÉ¦s
+]	java:S125q"<This block of commented-out lines of code should be removed.(šïÌ·ıÿÿÿÿ8É‘µ£.

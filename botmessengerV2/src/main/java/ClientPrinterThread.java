@@ -120,6 +120,9 @@ public class ClientPrinterThread extends Thread {
                 }else if(messageType.equals(ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST)){
                     message_tpl.setMessageText("\""+inputFromServer + "\" accepted your friend request");
                 }
+                else if(messageType.equals(ServerToClientMessageType.USER_ADDED_YOU_TO_GROUP)){
+                    message_tpl.setMessageText("You've been added to group: \""+inputFromServer + "\"");
+                }
                 else {
                     message_tpl.setMessageText(inputFromServer);
                 }

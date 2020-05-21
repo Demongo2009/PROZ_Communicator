@@ -31,7 +31,7 @@ public class MainTab extends JPanel
     private JLabel FriendsText = new JLabel("Friends:");
     private JLabel GroupsText = new JLabel("Groups:");
     private JButton StartChatButton = new JButton("Start Chat");
-   // private JButton AddToGroupButton = new JButton("Add to Group");
+
 
 
     public void refreshFriends()
@@ -93,9 +93,6 @@ public class MainTab extends JPanel
         GroupsText.setBounds(200,10,150,20);
         FriendScroll.setBounds(30,30,150,270);
        GroupScroll.setBounds(200,30,150,270);
-//        FriendScroll.setBounds(30,30,150,20*(1+friends.size())<270?20*friends.size():270);
-//        GroupScroll.setBounds(200,30,150,20*(1+friends.size())<270?20*friends.size():270);
-
 
         loggedAs.setBounds(370,30,130,70);
         loggedAs.setVerticalAlignment(JLabel.TOP);
@@ -144,44 +141,12 @@ public class MainTab extends JPanel
                 {
                     state.setText("");
                     referenceToMain.OpenChatWindow(FriendL.getSelectedValue().toString());
-                    //state.setText("<html>Chat Window already opened!</html>");
                     upRef.goToChatTab(FriendL.getSelectedValue().toString());
 
                 }
             }
         });
 
-//        CreateGroupButton.addActionListener(new ActionListener()
-//        {
-//            @Override
-//            public void actionPerformed(ActionEvent e)
-//            {
-//                CreateNewGroupDialog CNGD = new CreateNewGroupDialog(null,FriendList);
-//                CNGD.setSize(400,400);
-//                CNGD.setVisible(true);
-//
-//            }
-//        });
-
-//        AddToGroupButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                if(FriendL.isSelectionEmpty())
-//                {
-//                    state.setText("<html>Choose one user!</html>");
-//                }
-//                else
-//                {
-//                    AddToGroupDialog tmp =new AddToGroupDialog(GroupList,"Adding " +FriendL.getSelectedValue().toString()+" to group");
-//                    tmp.setSize(210,300);
-//                    tmp.setVisible(true);
-//                }
-//            }
-//        });
-
-
-        //WSTAWIANIE DO PANELU
-       // add(AddToGroupButton);
         add(FriendsText);
         add(GroupsText);
         add(GroupScroll);

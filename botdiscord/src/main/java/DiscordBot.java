@@ -71,7 +71,7 @@ public class DiscordBot {
 
     public static void main(String[] args) {
         // Insert your bot's token here
-        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.XsV3HA.tqKzPI1y75gH3zfFpAsMQ2oXolQ";
+        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.Xsaysw.ZrEUlqUfm8Gmq_vb5HpnvFRXe3s";
 
         DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
 
@@ -81,7 +81,7 @@ public class DiscordBot {
         Thread thread = new Thread(){
             public void run(){
                 String hostName = "localhost";
-                int portNumber = 4444;
+                int portNumber = 9999;
                 try {
                     echoSocket = new Socket(hostName, portNumber);
 

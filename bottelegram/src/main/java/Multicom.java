@@ -129,6 +129,7 @@ public class Multicom extends TelegramLongPollingBot {
 //            senderWrapper.sendToMessenger("Initiated chat!\nPlease login[l] or sign in[s]...");
 
             echoMessage.setText("Initiated chat!\nPlease login[l] or sign in[s]...");
+            execute(echoMessage);
 
             Thread thread = new Thread(){
                 @Override
@@ -143,18 +144,19 @@ public class Multicom extends TelegramLongPollingBot {
                                 continue;
                             }
 
-                            if(messageFromServer.getType().equals(ServerToClientMessageType.IMAGE)){
-                                SendPhoto photoMessage = new SendPhoto().setPhoto(inputFromServer);
-                                execute(photoMessage);
-                            }else{
-
-                                echoMessage.setText(inputFromServer);
-                                execute(echoMessage);
-                            }
+//                            if(messageFromServer.getType().equals(ServerToClientMessageType.IMAGE)){
+//                                SendPhoto photoMessage = new SendPhoto().setPhoto(inputFromServer);
+//                                execute(photoMessage);
+//                            }else{
+//
+//                                echoMessage.setText(inputFromServer);
+//                                execute(echoMessage);
+//                            }
 
 
 
                             ServerToClientMessageType messageType= messageFromServer.getType();
+                            System.out.println("tutaj telegramu mesfromserv: "+messageFromServer.getText());
                             if(messageType.equals(ServerToClientMessageType.IMAGE)){
                                 SendPhoto photoMessage = new SendPhoto().setPhoto(inputFromServer);
                                 execute(photoMessage);
@@ -204,7 +206,7 @@ public class Multicom extends TelegramLongPollingBot {
 //                        event.getChannel().sendMessage("You selected login. Input your Username:...");
 //                senderWrapper.sendToMessenger("You selected login. Input your Username:...");
                 echoMessage.setText("You selected login. Input your Username:...");
-
+                execute(echoMessage);
 
                 currentState = AvailableStates.LOGIN_USERNAME;
 
@@ -212,6 +214,7 @@ public class Multicom extends TelegramLongPollingBot {
 //                        event.getChannel().sendMessage("You selected sign in. Input your Username:...");
 //                senderWrapper.sendToMessenger("You selected sign in. Input your Username:...");
                 echoMessage.setText("You selected sign in. Input your Username:...");
+                execute(echoMessage);
 
                 currentState = AvailableStates.REGISTER_USERNAME;
             }
@@ -224,6 +227,7 @@ public class Multicom extends TelegramLongPollingBot {
             System.out.println(username);
 //            senderWrapper.sendToMessenger("Input your Password:...");
             echoMessage.setText("Input your Password:...");
+            execute(echoMessage);
             currentState = AvailableStates.LOGIN_PASSWORD;
         }
 
@@ -249,11 +253,13 @@ public class Multicom extends TelegramLongPollingBot {
                         "Change text sending to group sending: !group. Then groupname#message_text\n" +
                         "Switch to user sending: !user\n" +
                         "Quit: !q");
-
+                execute(echoMessage);
 
                 currentState = AvailableStates.CONNECTED_TO_CHAT;
             }else {
                 echoMessage.setText("Incorrect data. Try again.\nPlease login[l] or sign in[s]...");
+                execute(echoMessage);
+
                 currentState = AvailableStates.SELECT_LOGIN_OR_REGISTER;
             }
 
@@ -262,6 +268,7 @@ public class Multicom extends TelegramLongPollingBot {
         else if(currentState.equals(AvailableStates.REGISTER_USERNAME)){
             username = text;
             echoMessage.setText("Input your Password:...");
+            execute(echoMessage);
             currentState = AvailableStates.REGISTER_PASSWORD;
         }
 
@@ -286,9 +293,11 @@ public class Multicom extends TelegramLongPollingBot {
                         "                            \"Change text sending to group sending: !group. Then groupname#message_text\n" +
                         "Switch to user sending: !user\n" +
                         "Quit: !q");
+                execute(echoMessage);
                 currentState = AvailableStates.CONNECTED_TO_CHAT;
             }else {
                 echoMessage.setText("Incorrect data. Try again.\nPlease login[l] or sign in[s]...");
+                execute(echoMessage);
                 currentState = AvailableStates.SELECT_LOGIN_OR_REGISTER;
             }
         }
@@ -337,24 +346,32 @@ public class Multicom extends TelegramLongPollingBot {
             }else if(text.equalsIgnoreCase("!image")){
                 currentState = AvailableStates.IMAGE_SENDING;
                 echoMessage.setText("Input image");
+                execute(echoMessage);
             }else if(text.equalsIgnoreCase("!friend")){
                 currentState  = AvailableStates.ADD_TO_FRIENDS;
                 echoMessage.setText("Input friend to add name...");
+                execute(echoMessage);
             }else if(text.equalsIgnoreCase("!creategroup")){
                 currentState = AvailableStates.CREATE_GROUP;
                 echoMessage.setText("Input group name to create...");
+                execute(echoMessage);
             }else if(text.equalsIgnoreCase("!addtogroup")){
                 currentState  = AvailableStates.ADD_TO_GROUP;
                 echoMessage.setText("Input groupname#usertoadd...");
+                execute(echoMessage);
             }else if(text.equalsIgnoreCase("!group")){
                 isGroupSending = true;
                 echoMessage.setText("Group sending!");
+                execute(echoMessage);
             }else if(text.equalsIgnoreCase("!user")){
                 isGroupSending = false;
                 echoMessage.setText("User sending!");
+                execute(echoMessage);
             }
             else if(isGroupSending) {
-                sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_GROUP,text,CommunicatorType.MESSENGER));
+                String []tmpArray = text.split("#");
+
+                sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_GROUP,tmpArray[0]+"#"+username+"#"+tmpArray[1],CommunicatorType.MESSENGER));
 
             }else{
                 sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_USER,text,CommunicatorType.MESSENGER));
@@ -372,10 +389,11 @@ public class Multicom extends TelegramLongPollingBot {
 
             }else {
                 echoMessage.setText("Not recognised sign");
+                execute(echoMessage);
             }
         }
 
-        execute(echoMessage);
+
 
 
 

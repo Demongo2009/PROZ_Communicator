@@ -47,7 +47,8 @@ public class StartingScreen extends JFrame
             }
             catch (Exception e)
             {
-                e.printStackTrace();
+                OperationState.setText("<html>"+e.getMessage()+"</html>");
+                //e.printStackTrace();
             }
             return loginSuccesful;
 
@@ -65,14 +66,15 @@ public class StartingScreen extends JFrame
             }
             catch (Exception e)
             {
-                e.printStackTrace();
+                OperationState.setText("<html>"+e.getMessage()+"</html>");
+                //e.printStackTrace();
             }
     }
 
     public StartingScreen( )
     {
         setTitle("CHOOSE LOGIN OR REGISTER");
-        panel.setLayout(new FlowLayout());
+        panel.setLayout(null);
 
         loginButton.addActionListener(new ActionListener()
         {
@@ -99,6 +101,15 @@ public class StartingScreen extends JFrame
                 CheckRegister();
             }
         });
+
+
+        loginButton.setBounds(30,10,100,40);
+        registerButton.setBounds(160,10,100,40);
+        OperationState.setBounds(30,60,240,60);
+        OperationState.setForeground(Color.RED);
+        OperationState.setVerticalAlignment(JLabel.TOP);
+
+
         panel.add(loginButton);
         panel.add(registerButton);
         panel.add(OperationState);

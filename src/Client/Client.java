@@ -18,7 +18,7 @@ import static Client.GUI.tools.SwingConsole.run;
 public class Client {
 
     private static String hostName = "localhost";
-    private static int serverPort = 4444;
+    private static int serverPort = 9999;
 
     private static Socket echoSocket;
     private static PrintWriter out;

@@ -11,13 +11,6 @@ import java.io.IOException;
 
 import static Client.Client.*;
 
-/*TODO: ZROBIC WSZYSTKIE PRZYPADKI POWIADOMIEN I ICH OBSLUZENIA
-* Zrobic zakladke dla kazdego rodzaju powiadomien
-* zrobic panel NotificationPanel i on bedzie wyswietlal w formie listy wszystkie powiadomienia
-*
-*
-
-* */
 
 
 public class MainWindow extends JFrame

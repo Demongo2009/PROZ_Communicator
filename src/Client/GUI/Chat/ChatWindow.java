@@ -21,7 +21,7 @@ public class ChatWindow extends JPanel
     JButton     closeButton = new JButton("Close chat");
     JTextArea   chatBox = new JTextArea();
     MainWindow upRef;
-    String  username="Igor";
+    String  username="";
     String receiver;
     Date date = new Date();
     SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
@@ -57,8 +57,6 @@ public class ChatWindow extends JPanel
         messageBox.requestFocusInWindow();
     }
 
-    //public ChatWindow(String login,String)
-//KOnstruktor dla grupowego czatu
     public ChatWindow(String login,String friendName, MainWindow upRef)
 
     {

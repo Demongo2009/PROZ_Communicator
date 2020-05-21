@@ -30,6 +30,7 @@ public class GuiNotificationListener extends Thread
     {
 
         ServerToClientMessage notification = notificationsHandler.getNotification();
+
         switch (notification.getType())
         {
             case LOGOUT:

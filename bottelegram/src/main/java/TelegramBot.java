@@ -22,7 +22,7 @@ public class TelegramBot {
 
 
         String hostName = "localhost";
-        int portNumber = 4444;
+        int portNumber = 9999;
         try {
             echoSocket = new Socket(hostName, portNumber);
             Runtime.getRuntime().addShutdownHook(new ClientShutdownHook(echoSocket));

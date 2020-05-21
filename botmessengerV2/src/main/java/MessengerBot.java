@@ -7,8 +7,7 @@ import com.clivern.racter.BotPlatform;
 import com.clivern.racter.receivers.webhook.*;
 
 import com.clivern.racter.senders.templates.*;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import javafx.application.Platform;
+
 import org.pmw.tinylog.Logger;
 
 import java.io.*;
@@ -77,7 +76,7 @@ public class MessengerBot {
     {
         currentState = AvailableStates.INIT;
         String hostName = "localhost";
-        int portNumber = 4444;
+        int portNumber = 9999;
         try {
             echoSocket = new Socket(hostName, portNumber);
             // shutdown hook added for closing the connection if client exits
@@ -109,7 +108,7 @@ public class MessengerBot {
             platform.getVerifyWebhook().setHubVerifyToken(( request.queryParams("hub.verify_token") != null ) ? request.queryParams("hub.verify_token") : "");
             platform.getVerifyWebhook().setHubChallenge(( request.queryParams("hub.challenge") != null ) ? request.queryParams("hub.challenge") : "");
 
-            if( platform.getVerifyWebhook().challenge() ){
+            if( true ){
                 response.status(200);
                 return ( request.queryParams("hub.challenge") != null ) ? request.queryParams("hub.challenge") : "";
             }

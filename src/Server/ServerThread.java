@@ -79,6 +79,13 @@ public class ServerThread extends Thread{
             }
         }
         System.out.println("End of thread");
+        try {
+            inObject.close();
+            outObject.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /*  throws exception if message is not REQUEST_LOGIN nor REQUEST_REGISTER
@@ -95,8 +102,8 @@ public class ServerThread extends Thread{
             throw new Exception();
         }
 
-        String[] loginAndPass = message.getString().split("#");
-        CommunicatorType communicatorType = message.getCommunicatorType();
+        String[] loginAndPass = message.getText().split("#");
+        //CommunicatorType communicatorType = message.getCommunicatorType();
 
         if( message.getType() == ClientToServerMessageType.REQUEST_LOGIN){
             for(User us: connectedUsers){
@@ -111,7 +118,7 @@ public class ServerThread extends Thread{
 
         if( answer ){
             //==========================================================
-            User user = new User(loginAndPass[0], clientSocket, communicatorType, outObject);
+            User user = new User(loginAndPass[0], clientSocket, outObject);
             connectedUsers.add(user);
             userToHandle = user;
         }
@@ -131,8 +138,9 @@ public class ServerThread extends Thread{
         String text = "";
         if( answer ){
             type = ServerToClientMessageType.CONFIRM_LOGIN;
+            text +="#";
             text += databaseHandler.getUserFriends( userToHandle.getLogin() ); //send to user his friends
-            text += "#@#"; //in order to not split empty array
+            text += "@#"; //in order to not split empty array
             text += getUserGroups(userToHandle.getLogin());
         }else{
             type = ServerToClientMessageType.REJECT_LOGIN;
@@ -197,6 +205,9 @@ public class ServerThread extends Thread{
             e.printStackTrace();
         }
 
+        System.out.println("w recive message");
+        System.out.println(message.getText());
+
         return message;
     }
 
@@ -224,6 +235,9 @@ public class ServerThread extends Thread{
         }
         String userAndText[] = textMessage.split("#");
 
+        System.out.println(textMessage);
+        System.out.println("JESTESMY NA PEWNO TUTAJ"+userToHandle.getLogin());
+        System.out.println(userAndText[0]);
         if( !databaseHandler.checkFriendship(userToHandle.getLogin(), userAndText[0]) ){
             System.out.println("USERS ARE NOT FRIENDS - something went wrong, client should check it");
             return;

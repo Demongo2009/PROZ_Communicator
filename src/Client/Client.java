@@ -1,5 +1,6 @@
 package Client;
 
+
 import Client.GUI.StartingScreen.StartingScreen;
 import Messages.clientToServer.ClientToServerMessage;
 import Messages.clientToServer.ClientToServerMessageType;
@@ -18,7 +19,7 @@ import static Client.GUI.tools.SwingConsole.run;
 public class Client {
 
     private static String hostName = "localhost";
-    private static int serverPort = 9999;
+    private static int serverPort = 45000;
 
     private static Socket echoSocket;
     private static PrintWriter out;

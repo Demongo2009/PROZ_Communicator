@@ -48,8 +48,8 @@ public class DiscordBot {
     static AvailableStates currentState = AvailableStates.INIT;
 
     static public void setLoginResultAvailable(boolean result){
-        loginResultAvailable.release();
         loginResult = result;
+        loginResultAvailable.release();
     }
 
 
@@ -71,7 +71,7 @@ public class DiscordBot {
 
     public static void main(String[] args) {
         // Insert your bot's token here
-        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.XsV3HA.tqKzPI1y75gH3zfFpAsMQ2oXolQ";
+        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.XsZWlQ.xqlMNifO8o0-8BY2pONil4b0c6s";
 
         DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
 
@@ -81,7 +81,7 @@ public class DiscordBot {
         Thread thread = new Thread(){
             public void run(){
                 String hostName = "localhost";
-                int portNumber = 4444;
+                int portNumber = 45000;
                 try {
                     echoSocket = new Socket(hostName, portNumber);
 
@@ -99,6 +99,7 @@ public class DiscordBot {
                     inObject = new ObjectInputStream( echoSocket.getInputStream() );
 
                     clientPrinterThread = new ClientPrinterThread(in,inObject);
+                    clientPrinterThread.setPriority(10);
                     clientPrinterThread.start();
 
                 }catch (UnknownHostException e) {
@@ -158,14 +159,15 @@ public class DiscordBot {
                 password = messageContent;
 
                 sendMessage(new ClientToServerMessage(ClientToServerMessageType.REQUEST_LOGIN,username+"#"+password,CommunicatorType.DISCORD));
-                System.out.println("Waiting for login result");
+//                System.out.println("Waiting for login result");
                 try {
+//                    Thread.sleep(10000);
                     Thread.yield();
                     loginResultAvailable.acquire();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                System.out.println("Result got!");
+//                System.out.println("Result got!");
 
                 if(loginResult){
                     channel.sendMessage("Login successful. Send messages: username#message_text.\n" +
@@ -278,6 +280,7 @@ public class DiscordBot {
 
                 else if(isGroupSending) {
                     String []tmp = messageContent.split("#");
+                    System.out.println(messageContent);
 
                     sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_GROUP,tmp[0]+"#"+username+"#"+tmp[1],CommunicatorType.DISCORD));
 

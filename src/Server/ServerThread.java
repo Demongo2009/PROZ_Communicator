@@ -222,6 +222,7 @@ public class ServerThread extends Thread{
         if( textMessage == null ){
             return; // should never occur
         }
+        System.out.println(textMessage);
         String userAndText[] = textMessage.split("#");
 
         if( !databaseHandler.checkFriendship(userToHandle.getLogin(), userAndText[0]) ){

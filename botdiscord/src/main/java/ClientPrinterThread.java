@@ -73,11 +73,11 @@ public class ClientPrinterThread extends Thread {
                     new MessageBuilder().addAttachment(new URL(inputFromServer)).send(textChannel);
 
                 }else if(messageType.equals(ServerToClientMessageType.CONFIRM_LOGIN)) {
-                    System.out.println("tak");
+//                    System.out.println("tak");
                     DiscordBot.setLoginResultAvailable(true);
 
                 }else if(messageType.equals(ServerToClientMessageType.REJECT_LOGIN)) {
-                    System.out.println("nie");
+//                    System.out.println("nie");
                     DiscordBot.setLoginResultAvailable(false);
 
 
@@ -88,6 +88,9 @@ public class ClientPrinterThread extends Thread {
 
                 }else if(messageType.equals(ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST)){
                     textChannel.sendMessage("\""+inputFromServer + "\" accepted your friend request");
+                }
+                else if(messageType.equals(ServerToClientMessageType.USER_ADDED_YOU_TO_GROUP)){
+                    textChannel.sendMessage("You've been added to group: \""+inputFromServer + "\"");
                 }
                 else {
                     textChannel.sendMessage(inputFromServer);

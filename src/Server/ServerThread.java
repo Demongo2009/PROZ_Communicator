@@ -52,7 +52,6 @@ public class ServerThread extends Thread{
     public void run() {
         databaseHandler = new DatabaseHandler();
         /* LOG IN PHASE*/
-        System.out.println("wchodze tutaj");
         while(!isLogged)
         {
             try {
@@ -206,7 +205,7 @@ public class ServerThread extends Thread{
         }
 
         System.out.println("w recive message");
-        System.out.println(message.getText());
+        //System.out.println(message.getText());
 
         return message;
     }
@@ -235,8 +234,6 @@ public class ServerThread extends Thread{
         }
         String userAndText[] = textMessage.split("#");
 
-        System.out.println(textMessage);
-        System.out.println("JESTESMY NA PEWNO TUTAJ"+userToHandle.getLogin());
         System.out.println(userAndText[0]);
         if( !databaseHandler.checkFriendship(userToHandle.getLogin(), userAndText[0]) ){
             System.out.println("USERS ARE NOT FRIENDS - something went wrong, client should check it");

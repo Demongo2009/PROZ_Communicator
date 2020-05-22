@@ -74,7 +74,27 @@ public class ClientPrinterThread extends Thread {
                     new MessageBuilder().addAttachment(new URL(inputFromServer)).send(textChannel);
 
                 }else if(messageType.equals(ServerToClientMessageType.CONFIRM_LOGIN)) {
-                    System.out.println("tak");
+
+                    String[] friendsAndGroups = inputFromServer.split("@");
+                    String[] friends = friendsAndGroups[0].split("#");
+                    String[] groups = friendsAndGroups[1].split("#");
+
+                    String friendsText = friends[0];
+                    friends[0] = null;
+                    for (String f: friends){
+                        if(f!=null)
+                            friendsText += ", "+f;
+                    }
+
+                    String groupsText = groups[0];
+                    groups[0] = null;
+                    for (String g: groups){
+                        if(g!=null)
+                            groupsText += ", "+g;
+                    }
+
+                    textChannel.sendMessage("Your friends are: "+friendsText+".\nYour groups are: "+groupsText+".");
+
                     DiscordBot.setLoginResultAvailable(true);
 
                 }else if(messageType.equals(ServerToClientMessageType.REJECT_LOGIN)) {

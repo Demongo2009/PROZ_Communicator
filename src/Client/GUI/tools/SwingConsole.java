@@ -13,7 +13,7 @@ public class SwingConsole
                 f.setTitle(f.getClass().getSimpleName());
                 f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 f.setSize(width,height);
-                f.setLocationRelativeTo(null);
+                f.setLocationByPlatform(true);
                 f.setVisible(true);
             }
         });
@@ -28,7 +28,7 @@ public class SwingConsole
                 f.setTitle(title);
                 f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 f.setSize(width,height);
-                f.setLocationRelativeTo(null);
+                f.setLocationByPlatform(true);
                 f.setVisible(true);
             }
         });

@@ -162,7 +162,28 @@ public class Multicom extends TelegramLongPollingBot {
                                 execute(photoMessage);
 
                             }else if(messageType.equals(ServerToClientMessageType.CONFIRM_LOGIN)) {
-                                System.out.println("tak");
+
+                                String[] friendsAndGroups = inputFromServer.split("@");
+                                String[] friends = friendsAndGroups[0].split("#");
+                                String[] groups = friendsAndGroups[1].split("#");
+
+                                String friendsText = friends[0];
+                                friends[0] = null;
+                                for (String f: friends){
+                                    if(f!=null)
+                                        friendsText += ", "+f;
+                                }
+
+                                String groupsText = groups[0];
+                                groups[0] = null;
+                                for (String g: groups){
+                                    if(g!=null)
+                                        groupsText += ", "+g;
+                                }
+
+                                echoMessage.setText("Your friends are: "+friendsText+".\nYour groups are: "+groupsText+".");
+                                execute(echoMessage);
+
                                 setLoginResultAvailable(true);
 
                             }else if(messageType.equals(ServerToClientMessageType.REJECT_LOGIN)) {
@@ -286,8 +307,8 @@ public class Multicom extends TelegramLongPollingBot {
 
             if(loginResult){
                 echoMessage.setText("Login successful. Send messages: username#message_text.\\n\" +\n" +
-                        "                            \"Send images: !image\\n\" +\n" +
-                        "                            \"Add to friends: !friend\\n\" +\n" +
+                        "Send images: !image\\n\" +\n" +
+                        " Add to friends: !friend\\n\" +\n" +
                         "                            \"Create group: !creategroup\\n\" +\n" +
                         "                            \"Add user to group: !addtogroup\\n\" +\n" +
                         "                            \"Change text sending to group sending: !group. Then groupname#message_text\n" +

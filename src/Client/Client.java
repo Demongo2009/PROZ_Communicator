@@ -212,7 +212,6 @@ public class Client {
             return;
         }
 
-
         String textMessage = userToSend + "#" + text;
         ClientToServerMessageType type = ClientToServerMessageType.TEXT_TO_USER;
         ClientToServerMessage message = new ClientToServerMessage(type, textMessage);
@@ -275,7 +274,7 @@ public class Client {
      * */
     public static void addUserToGroup(String group, String user) throws Exception
     {
-        //System.out.println("CHCEMY DODAC "+user+" do grupy: "+group);
+
         if( !checkMembership(group))
         {
             throw new Exception("You are not a member of this group");

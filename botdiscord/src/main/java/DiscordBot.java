@@ -71,7 +71,7 @@ public class DiscordBot {
 
     public static void main(String[] args) {
         // Insert your bot's token here
-        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.Xsaysw.ZrEUlqUfm8Gmq_vb5HpnvFRXe3s";
+        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.XsgYNQ.07iWnkAvX4uniKmQ336SLpQwN8k";
 
         DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
 
@@ -109,8 +109,6 @@ public class DiscordBot {
             }
         };
         thread.start();
-
-
 
 
         api.addMessageCreateListener(event -> {
@@ -204,11 +202,11 @@ public class DiscordBot {
 
                 if(loginResult){
                     channel.sendMessage("Login successful. Send messages: username#message_text.\\n\" +\n" +
-                            "                            \"Send images: !image\\n\" +\n" +
-                            "                            \"Add to friends: !friend\\n\" +\n" +
-                            "                            \"Create group: !creategroup\\n\" +\n" +
-                            "                            \"Add user to group: !addtogroup\\n\" +\n" +
-                            "                            \"Change text sending to group sending: !group. Then groupname#message_text\n" +
+                            " Send images: !image\\n +\n" +
+                            "Add to friends: !friend\\n +\n" +
+                            "Create group: !creategroup\\n +\n" +
+                            "Add user to group: !addtogroup\\n +\n" +
+                            "Change text sending to group sending: !group. Then groupname#message_text\n" +
                             "Switch to user sending: !user\n" +
                             "Quit: !q");
                     currentState = AvailableStates.CONNECTED_TO_CHAT;
@@ -285,9 +283,6 @@ public class DiscordBot {
                     sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_USER,messageContent.toString(),CommunicatorType.DISCORD));
 
                 }
-
-
-
 
 
             }

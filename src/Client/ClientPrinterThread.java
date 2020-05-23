@@ -56,4 +56,7 @@ public class ClientPrinterThread extends Thread {
     void stopRunning(){
         shouldRun = false;
     }
+
+    public void initializeMessage(String message_text, String userId) {
+    }
 }

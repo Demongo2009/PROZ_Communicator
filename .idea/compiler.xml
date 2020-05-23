@@ -7,16 +7,16 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="botdiscord (1)" />
+        <module name="bottelegram" />
+        <module name="botdiscord" />
+        <module name="botmessengerV2" />
         <module name="bottelegram (1)" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="botdiscord" target="1.8" />
       <module name="botdiscord (2)" target="1.8" />
       <module name="bothangouts" target="1.5" />
       <module name="botmessenger" target="11" />
-      <module name="botmessengerV2" target="1.11" />
-      <module name="bottelegram" target="1.8" />
       <module name="bottelegram (2)" target="1.8" />
     </bytecodeTargetLevel>
   </component>

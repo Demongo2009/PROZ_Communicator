@@ -1,50 +1,48 @@
 
-`	java:S112S"FDefine and throw a dedicated exception instead of using a generic one.(›ìåÂýÿÿÿÿ
-P
-java:S11610":Add the "@Override" annotation above this method signature(“–ýþ
-S	java:S106J"9Replace this use of System.out or System.err by a logger.(¯’Þàúÿÿÿÿ
-v
-java:S39235"[Remove this conditional structure or edit its code blocks so that they're not all the same.(Œ·º¦ýÿÿÿÿ
-o
-java:S1128	"TRemove this unnecessary import: same package classes are always implicitly imported.(Êõª˜ûÿÿÿÿ
-R	java:S125„"<This block of commented-out lines of code should be removed.(·ó´¡
-o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¾©ò¹
-{
-java:S1488¡"_Immediately return this expression instead of assigning it to the temporary variable "message".(Í–øøÿÿÿÿ
-[	java:S106ö"9Replace this use of System.out or System.err by a logger.(í„‹Œÿÿÿÿÿ8¦Þªð .
-I
-java:S1135ò"2Complete the task associated to this TODO comment.(ø»³‘
 ?
-java:S1148²"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
-V	java:S125o"<This block of commented-out lines of code should be removed.(ú”€ªûÿÿÿÿ
-?
-java:S1148¿"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
->
-java:S1148+"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
-?
-java:S1148¯"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
-a	java:S112¯"FDefine and throw a dedicated exception instead of using a generic one.(·µÄóýÿÿÿÿ
-T
-java:S1197×"8Move the array designator from the variable to the type.(³Ñ€Áøÿÿÿÿ
-W	java:S125ñ"<This block of commented-out lines of code should be removed.(ÞÞ¨øÿÿÿÿ
-[	java:S106Ú"9Replace this use of System.out or System.err by a logger.(Ò¸£ùúÿÿÿÿ8çŒ×ï .
-?
-java:S1148Œ"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
-Z	java:S112X"FDefine and throw a dedicated exception instead of using a generic one.(‰Æáe
-T	java:S106ý"9Replace this use of System.out or System.err by a logger.(Ç¼ãáùÿÿÿÿ
-V	java:S125"<This block of commented-out lines of code should be removed.(”Ìá¦ÿÿÿÿÿ
->
-java:S1148>"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
-V	java:S1259"<This block of commented-out lines of code should be removed.(ê›‡Öýÿÿÿÿ
-O
-java:S1135Ê"2Complete the task associated to this TODO comment.(‡Ì™|8€°íï .
+java:S1148±"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+Q
+java:S2696/"6Make the enclosing method "static" or remove this set.(ƒ¦˜úÿÿÿÿ
 >
 java:S1148G"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
-=
-java:S3010%""Remove this assignment of "mutex".(žªµüÿÿÿÿ
+>
+java:S1148O"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+>
+java:S1148)"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+?
+java:S1148Â"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+X	java:S1256"<This block of commented-out lines of code should be removed.(˜†„•8ÛÔòŠ¤.
+^	java:S125Ï"<This block of commented-out lines of code should be removed.(ýƒ”¯ûÿÿÿÿ8ç˜™‰¤.
+?
+java:S1148“"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+i
+java:S2259‰"K"NullPointerException" will be thrown when invoking method "sendMessage()".(Îº«é8ŠØœ‰¤.
+`	java:S112["FDefine and throw a dedicated exception instead of using a generic one.(ÐðÒŒúÿÿÿÿ
+Z	java:S112`"FDefine and throw a dedicated exception instead of using a generic one.(‰Æáe
+F
+java:S1148´"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8È×ý†¤.
+Y	java:S125ÿ"<This block of commented-out lines of code should be removed.(ðš±è8á÷—‰¤.
+v	java:S135Ó"YReduce the total number of break and continue statements in this loop to use at most one.(¿ƒ™‡8È×ý†¤.
+:
+java:S1643¤"Use a StringBuilder instead.(¡ù¡ƒ8È×ý†¤.
+T
+java:S1197ß"8Move the array designator from the variable to the type.(³Ñ€Áøÿÿÿÿ
 \
 java:S2142F"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€
-s	java:S1354"YReduce the total number of break and continue statements in this loop to use at most one.(˜ïˆžÿÿÿÿÿ
-Q
-java:S26961"6Make the enclosing method "static" or remove this set.(ƒ¦˜úÿÿÿÿ
-Q	java:S1256"<This block of commented-out lines of code should be removed.(˜†„•
+Y	java:S125‚"<This block of commented-out lines of code should be removed.(ÚÕ„©8øëš‰¤.
+[	java:S106ã"9Replace this use of System.out or System.err by a logger.(Ò¸£ùúÿÿÿÿ8çŒ×ï .
+Y	java:S125ò"<This block of commented-out lines of code should be removed.(×øÆ˜8ªã—‰¤.
+Y	java:S125ú"<This block of commented-out lines of code should be removed.(áðá×8ªã—‰¤.
+a	java:S112±"FDefine and throw a dedicated exception instead of using a generic one.(·µÄóýÿÿÿÿ
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¾©ò¹
+>
+java:S1148="#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+V	java:S106á"9Replace this use of System.out or System.err by a logger.(¼÷ãì8È×ý†¤.
+]	java:S125:"<This block of commented-out lines of code should be removed.(ê›‡Öýÿÿÿÿ8ÛÔòŠ¤.
+P
+java:S1161.":Add the "@Override" annotation above this method signature(“–ýþ
+^	java:S125û"<This block of commented-out lines of code should be removed.(Š†ˆæøÿÿÿÿ8šýš‰¤.
+Y	java:S125ö"<This block of commented-out lines of code should be removed.(÷²šÝ8ªã—‰¤.
+=
+java:S3010#""Remove this assignment of "mutex".(žªµüÿÿÿÿ
+X	java:S125J"<This block of commented-out lines of code should be removed.(«æµ³8æ»óŠ¤.

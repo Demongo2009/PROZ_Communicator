@@ -33,6 +33,7 @@ public class Multicom extends TelegramLongPollingBot {
     boolean isGroupSending = false;
     static String friend;
 
+    // States of bot
     enum AvailableStates{
         INIT,
         CONNECTED_TO_CHAT,
@@ -50,11 +51,13 @@ public class Multicom extends TelegramLongPollingBot {
 
     static AvailableStates currentState = AvailableStates.INIT;
 
+    // Asynchronous result
     void setLoginResultAvailable(boolean result){
-        loginResultAvailable.release();
         loginResult = result;
+        loginResultAvailable.release();
     }
 
+    // Send message to server
     void sendMessageToServer(ClientToServerMessage message){
         try {
             outObject.writeObject(message);
@@ -64,6 +67,7 @@ public class Multicom extends TelegramLongPollingBot {
 
     }
 
+    // Asynchronous friend request
     static public void friendRequest(String friendName){
         currentState = AvailableStates.FRIEND_REQUEST_PENDING;
         friend = friendName;
@@ -76,7 +80,7 @@ public class Multicom extends TelegramLongPollingBot {
         this.inObject = inObject;
     }
 
-
+    // Recieve message from server
     private ServerToClientMessage receiveMessage(){
         ServerToClientMessage message = null;
 
@@ -93,6 +97,7 @@ public class Multicom extends TelegramLongPollingBot {
     }
 
 
+    // Telegram Api event for
     @Override
     public void onUpdateReceived(Update update) {
         try {
@@ -108,6 +113,7 @@ public class Multicom extends TelegramLongPollingBot {
     }
 
 
+    // Handling incoming message
     private void handleIncomingMessage(Message message) throws TelegramApiException {
         SendMessage echoMessage = new SendMessage();
         echoMessage.setChatId(message.getChatId());
@@ -118,19 +124,18 @@ public class Multicom extends TelegramLongPollingBot {
 
              text = message.getText();
         }
-        System.out.println(text);
 
 
 
 
+        // Bot state machine
         if (currentState.equals(AvailableStates.INIT) && text.equalsIgnoreCase("!chat")) {
-//                    event.getChannel().sendMessage("Initiated chat!\nPlease login[l] or sign in[s]...");
 
-//            senderWrapper.sendToMessenger("Initiated chat!\nPlease login[l] or sign in[s]...");
 
             echoMessage.setText("Initiated chat!\nPlease login[l] or sign in[s]...");
             execute(echoMessage);
 
+            // Thread for asynchronous messages
             Thread thread = new Thread(){
                 @Override
                 public void run() {
@@ -138,31 +143,28 @@ public class Multicom extends TelegramLongPollingBot {
                     try {
                         String inputFromServer;
                         ServerToClientMessage messageFromServer = null;
+
+                        // Waiting for message form server
                         while ((messageFromServer = receiveMessage()) != null) {
                             inputFromServer = messageFromServer.getText();
                             if (inputFromServer.equals("") || inputFromServer.equals("\n")) {
                                 continue;
                             }
 
-//                            if(messageFromServer.getType().equals(ServerToClientMessageType.IMAGE)){
-//                                SendPhoto photoMessage = new SendPhoto().setPhoto(inputFromServer);
-//                                execute(photoMessage);
-//                            }else{
-//
-//                                echoMessage.setText(inputFromServer);
-//                                execute(echoMessage);
-//                            }
-
-
-
                             ServerToClientMessageType messageType= messageFromServer.getType();
-                            System.out.println("tutaj telegramu mesfromserv: "+messageFromServer.getText());
+
+
+                            // Choosing which message should be send and special actions taken
+                            // Image
                             if(messageType.equals(ServerToClientMessageType.IMAGE)){
                                 SendPhoto photoMessage = new SendPhoto().setPhoto(inputFromServer);
                                 execute(photoMessage);
 
-                            }else if(messageType.equals(ServerToClientMessageType.CONFIRM_LOGIN)) {
+                            }
+                            // Confirm login
+                            else if(messageType.equals(ServerToClientMessageType.CONFIRM_LOGIN)) {
 
+                                // Sending user friends and groups
                                 String[] friendsAndGroups = inputFromServer.split("@");
                                 String[] friends = friendsAndGroups[0].split("#");
                                 String[] groups = friendsAndGroups[1].split("#");
@@ -188,22 +190,29 @@ public class Multicom extends TelegramLongPollingBot {
 
                                 setLoginResultAvailable(true);
 
-                            }else if(messageType.equals(ServerToClientMessageType.REJECT_LOGIN)) {
-                                System.out.println("nie");
+                            }
+                            // Reject login
+                            else if(messageType.equals(ServerToClientMessageType.REJECT_LOGIN)) {
+
                                 setLoginResultAvailable(false);
 
 
-                            }else if(messageType.equals(ServerToClientMessageType.USER_WANTS_TO_BE_YOUR_FRIEND)) {
-                                System.out.println("friend attempt");
+                            }
+                            // Someone send friend request
+                            else if(messageType.equals(ServerToClientMessageType.USER_WANTS_TO_BE_YOUR_FRIEND)) {
+
                                 echoMessage.setText("User \""+inputFromServer+"\" wants to be your friend. [Y] accept [N] refuse");
                                 execute(echoMessage);
                                 friendRequest(inputFromServer);
 
-                            }else if(messageType.equals(ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST)){
+                            }
+                            // Friend request accepted
+                            else if(messageType.equals(ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST)){
 
                                 echoMessage.setText("\""+inputFromServer + "\" accepted your friend request");
                                 execute(echoMessage);
                             }
+                            // Normal message
                             else {
                                 echoMessage.setText(inputFromServer);
                                 execute(echoMessage);
@@ -222,20 +231,18 @@ public class Multicom extends TelegramLongPollingBot {
 
             currentState = AvailableStates.SELECT_LOGIN_OR_REGISTER;
         }
-
+        // Select login or register
         else if(currentState.equals(AvailableStates.SELECT_LOGIN_OR_REGISTER)){
 
             if(text.equalsIgnoreCase("l")){
-//                        event.getChannel().sendMessage("You selected login. Input your Username:...");
-//                senderWrapper.sendToMessenger("You selected login. Input your Username:...");
+
                 echoMessage.setText("You selected login. Input your Username:...");
                 execute(echoMessage);
 
                 currentState = AvailableStates.LOGIN_USERNAME;
 
             }else if(text.equalsIgnoreCase("s")){
-//                        event.getChannel().sendMessage("You selected sign in. Input your Username:...");
-//                senderWrapper.sendToMessenger("You selected sign in. Input your Username:...");
+
                 echoMessage.setText("You selected sign in. Input your Username:...");
                 execute(echoMessage);
 
@@ -244,28 +251,28 @@ public class Multicom extends TelegramLongPollingBot {
 
 
         }
-
+        // Login username
         else if(currentState.equals(AvailableStates.LOGIN_USERNAME)){
             username = text;
-            System.out.println(username);
-//            senderWrapper.sendToMessenger("Input your Password:...");
+
             echoMessage.setText("Input your Password:...");
             execute(echoMessage);
             currentState = AvailableStates.LOGIN_PASSWORD;
         }
-
+        // Login password
         else if(currentState.equals(AvailableStates.LOGIN_PASSWORD)){
             password = text;
 
             sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.REQUEST_LOGIN,username+"#"+password));
-            System.out.println("Waiting for login result");
+
+            // Asynchronous result
             try {
                 Thread.yield();
                 loginResultAvailable.acquire();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("Result got!");
+
 
             if(loginResult){
                 echoMessage.setText("Login successful. Send messages: username#message_text.\n" +
@@ -287,19 +294,20 @@ public class Multicom extends TelegramLongPollingBot {
             }
 
         }
-
+        // Register username
         else if(currentState.equals(AvailableStates.REGISTER_USERNAME)){
             username = text;
             echoMessage.setText("Input your Password:...");
             execute(echoMessage);
             currentState = AvailableStates.REGISTER_PASSWORD;
         }
-
+        // Register password
         else if(currentState.equals(AvailableStates.REGISTER_PASSWORD)){
             password = text;
 
             sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.REQUEST_REGISTER,username+"#"+password));
 
+            // Asynchronous result
             try {
                 Thread.yield();
                 loginResultAvailable.acquire();
@@ -308,12 +316,12 @@ public class Multicom extends TelegramLongPollingBot {
             }
 
             if(loginResult){
-                echoMessage.setText("Login successful. Send messages: username#message_text.\\n\" +\n" +
-                        "Send images: !image\\n\" +\n" +
-                        " Add to friends: !friend\\n\" +\n" +
-                        "                            \"Create group: !creategroup\\n\" +\n" +
-                        "                            \"Add user to group: !addtogroup\\n\" +\n" +
-                        "                            \"Change text sending to group sending: !group. Then groupname#message_text\n" +
+                echoMessage.setText("Login successful. Send messages: username#message_text. \n" +
+                        "Send images: !image.\n" +
+                        "Add to friends: !friend\n" +
+                        "Create group: !creategroup\n" +
+                        "Add user to group: !addtogroup\n" +
+                        "Change text sending to group sending: !group. Then groupname#message_text\n" +
                         "Switch to user sending: !user\n" +
                         "Quit: !q");
                 execute(echoMessage);
@@ -325,39 +333,10 @@ public class Multicom extends TelegramLongPollingBot {
             }
         }
 
-        else if(currentState.equals(AvailableStates.IMAGE_SENDING)){
-            if(message.hasPhoto()){
-                GetFile getFileRequest = new GetFile();
 
-                getFileRequest.setFileId(message.getPhoto().get(0).getFileId());
-                File file = execute(getFileRequest);
-                String fileURL = file.getFileUrl("827656409:AAEgFLohXzB9sdkWUIaKz4IaYnAF16dZOrU");
-                System.out.println(fileURL);
-                sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.IMAGE,fileURL));
-
-            }
-            currentState = AvailableStates.CONNECTED_TO_CHAT;
-        }
-
-        else if(currentState.equals(AvailableStates.ADD_TO_FRIENDS)){
-            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.ADD_USER_TO_FRIENDS,text));
-            currentState = AvailableStates.CONNECTED_TO_CHAT;
-        }
-
-        else if(currentState.equals(AvailableStates.CREATE_GROUP)){
-            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.CREATE_GROUP,text));
-
-            currentState = AvailableStates.CONNECTED_TO_CHAT;
-        }
-
-        else if(currentState.equals(AvailableStates.ADD_TO_GROUP)){
-            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.ADD_USER_TO_GROUP,text));
-
-            currentState = AvailableStates.CONNECTED_TO_CHAT;
-        }
-
+        // Connected to chat, now choose options
         else if(currentState.equals(AvailableStates.CONNECTED_TO_CHAT)){
-
+            // Quit
             if(text.equals("!q")){
                 try {
                     TelegramBot.echoSocket.close();
@@ -366,31 +345,44 @@ public class Multicom extends TelegramLongPollingBot {
                 }
                 return;
 
-            }else if(text.equalsIgnoreCase("!image")){
+            }
+            // Image
+            else if(text.equalsIgnoreCase("!image")){
                 currentState = AvailableStates.IMAGE_SENDING;
                 echoMessage.setText("Input image");
                 execute(echoMessage);
-            }else if(text.equalsIgnoreCase("!friend")){
+            }
+            // Friend add
+            else if(text.equalsIgnoreCase("!friend")){
                 currentState  = AvailableStates.ADD_TO_FRIENDS;
                 echoMessage.setText("Input friend to add name...");
                 execute(echoMessage);
-            }else if(text.equalsIgnoreCase("!creategroup")){
+            }
+            // Create group
+            else if(text.equalsIgnoreCase("!creategroup")){
                 currentState = AvailableStates.CREATE_GROUP;
                 echoMessage.setText("Input group name to create...");
                 execute(echoMessage);
-            }else if(text.equalsIgnoreCase("!addtogroup")){
+            }
+            // Add to group
+            else if(text.equalsIgnoreCase("!addtogroup")){
                 currentState  = AvailableStates.ADD_TO_GROUP;
                 echoMessage.setText("Input groupname#usertoadd...");
                 execute(echoMessage);
-            }else if(text.equalsIgnoreCase("!group")){
+            }
+            // Group sending
+            else if(text.equalsIgnoreCase("!group")){
                 isGroupSending = true;
                 echoMessage.setText("Group sending!");
                 execute(echoMessage);
-            }else if(text.equalsIgnoreCase("!user")){
+            }
+            // User sending
+            else if(text.equalsIgnoreCase("!user")){
                 isGroupSending = false;
                 echoMessage.setText("User sending!");
                 execute(echoMessage);
             }
+            // Message sending
             else if(isGroupSending) {
                 String []tmpArray = text.split("#");
 
@@ -405,6 +397,38 @@ public class Multicom extends TelegramLongPollingBot {
 
         }
 
+        // Image sending
+        else if(currentState.equals(AvailableStates.IMAGE_SENDING)){
+            if(message.hasPhoto()){
+                GetFile getFileRequest = new GetFile();
+
+                getFileRequest.setFileId(message.getPhoto().get(0).getFileId());
+                File file = execute(getFileRequest);
+                String fileURL = file.getFileUrl("827656409:AAEgFLohXzB9sdkWUIaKz4IaYnAF16dZOrU");
+                System.out.println(fileURL);
+                sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.IMAGE,fileURL));
+
+            }
+            currentState = AvailableStates.CONNECTED_TO_CHAT;
+        }
+        // Add to friends
+        else if(currentState.equals(AvailableStates.ADD_TO_FRIENDS)){
+            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.ADD_USER_TO_FRIENDS,text));
+            currentState = AvailableStates.CONNECTED_TO_CHAT;
+        }
+        // Create group
+        else if(currentState.equals(AvailableStates.CREATE_GROUP)){
+            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.CREATE_GROUP,text));
+
+            currentState = AvailableStates.CONNECTED_TO_CHAT;
+        }
+        // Add to group
+        else if(currentState.equals(AvailableStates.ADD_TO_GROUP)){
+            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.ADD_USER_TO_GROUP,text));
+
+            currentState = AvailableStates.CONNECTED_TO_CHAT;
+        }
+        // Friend request pending
         else if(currentState.equals(AvailableStates.FRIEND_REQUEST_PENDING)){
             if(text.equalsIgnoreCase("Y")){
                 sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.CONFIRMATION_OF_FRIENDSHIP,friend));
@@ -417,17 +441,9 @@ public class Multicom extends TelegramLongPollingBot {
             currentState = AvailableStates.CONNECTED_TO_CHAT;
         }
 
-
-
-
-
-
     }
 
-//    @Override
-//    public void onUpdatesReceived(List<Update> updates) {
-//
-//    }
+
 
     public String getBotUsername() {
         return "MultiComEitiBot";
@@ -437,7 +453,5 @@ public class Multicom extends TelegramLongPollingBot {
         return "827656409:AAEgFLohXzB9sdkWUIaKz4IaYnAF16dZOrU";
     }
 
-//    public String getBotPath() {
-//        return "updates";
-//    }
+
 }

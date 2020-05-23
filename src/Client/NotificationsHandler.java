@@ -1,8 +1,6 @@
 package Client;
 
 import Messages.serverToClient.ServerToClientMessage;
-import Messages.serverToClient.ServerToClientMessageType;
-import com.sun.nio.sctp.NotificationHandler;
 
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
@@ -10,8 +8,8 @@ import java.util.concurrent.Semaphore;
 public class NotificationsHandler
 {
     private Semaphore mutex = new Semaphore(0);
-    ArrayList<ServerToClientMessage> notifications = new ArrayList<ServerToClientMessage>();
-    public NotificationsHandler(){};
+    private ArrayList<ServerToClientMessage> notifications = new ArrayList<ServerToClientMessage>();
+    //public NotificationsHandler(){};
 
     void addNotification(ServerToClientMessage message)
     {

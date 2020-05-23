@@ -1,14 +1,10 @@
 package Server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+
 
 public class Server {
     private static int serverPort = 9999;
@@ -38,12 +34,11 @@ public class Server {
         try{
             while(true){
                 Socket clientSocket= serverSocket.accept();
-                ServerThread thread = new ServerThread(serverSocket, clientSocket, connectedUsers, groups);
+                ServerThread thread = new ServerThread(clientSocket, connectedUsers, groups);
                 thread.start();
             }
         }catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }

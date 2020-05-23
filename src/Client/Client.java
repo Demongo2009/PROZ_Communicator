@@ -21,9 +21,6 @@ public class Client {
     private static int serverPort = 9999;
 
     private static Socket echoSocket;
-    private static PrintWriter out;
-    private static BufferedReader in;
-    private static BufferedReader stdIn;
 
     /* to send and receive objects */
     private static ObjectOutputStream outObject;
@@ -32,8 +29,6 @@ public class Client {
     private static String username = null;
     private static ClientPrinterThread listener;
 
-
-    //TODO make setters and getters
     public static ArrayList<String> friends;
     public static ArrayList<String> groups;
 
@@ -53,19 +48,6 @@ public class Client {
             // shutdown hook added for closing the connection if client exits
             Runtime.getRuntime().addShutdownHook(new ClientShutdownHook(echoSocket));
 
-/*
-            out =
-                    new PrintWriter(echoSocket.getOutputStream(), true);
-            in =
-                    new BufferedReader(
-                            new InputStreamReader(echoSocket.getInputStream()));
-            stdIn =
-                    new BufferedReader(
-                            new InputStreamReader(System.in));
-*/
-
-
-
             outObject = new ObjectOutputStream( echoSocket.getOutputStream()) ;
             inObject = new ObjectInputStream( echoSocket.getInputStream() );
 
@@ -82,7 +64,7 @@ public class Client {
             e.printStackTrace();
         }
     }
-    /*
+    /**
      * Sends to server LOGIN_REQUEST or REGISTER_REQUEST(decided by argument) with login and password.
      * Throws Exception if type is none of above OR login or password contain '#' OR they are shorter than 4 characters
      * */
@@ -106,7 +88,7 @@ public class Client {
         sendMessage( message );
     }
 
-    /*
+    /**
      * Throws exception if received message is not CONFIRM nor REJECT
      * starts listener thread
      * */
@@ -125,9 +107,6 @@ public class Client {
         }
         else if( response == ServerToClientMessageType.CONFIRM_LOGIN )
         {
-
-
-
             //get friends and groups from server
             String[] friendsAndGroups = message.getText().split("@");
             String[] friendsArray = friendsAndGroups[0].split("#");
@@ -159,14 +138,18 @@ public class Client {
         }
     }
 
+    /**
+     * checks if we are not adding ourself to friends and if we are not adding user that is out friend already
+     * if both are no, then we send the request and return true
+     * */
     public static boolean addUserToFriends(String userToAdd){
         if( checkFriendship(userToAdd) ){
-            System.out.println("User is already your friend!!!");
+            //System.out.println("User is already your friend!!!");
             return false;
         }
         if( userToAdd.equals(username))
         {
-            System.out.println("You cannot add yourself to friends");
+            //System.out.println("You cannot add yourself to friends");
             return false;
         }
 
@@ -175,7 +158,7 @@ public class Client {
         sendMessage(message);
         return true;
     }
-    /*
+    /**
      * Sends message to server that we are now friends with friendToAdd
      * Add friend's nickname to friends ArrayList
      * */
@@ -191,24 +174,24 @@ public class Client {
         sendMessage(message);
     }
 
-    /*
+    /**
      * Checks if username is on our friends Arraylist
      * */
     private static boolean checkFriendship(String friendUsername){
         return friends.contains(friendUsername);
     }
 
-    /*
+    /**
      * Sends to out friend a text message
      * */
     public static void sendTextMessageToUser(String userToSend, String text){
         if( !checkFriendship(userToSend) ){
-            System.out.println("User is not your friend -> you cannot write to him");
+            //System.out.println("User is not your friend -> you cannot write to him");
             return;
         }
 
         if( text.contains("#") || userToSend.contains("#") ){
-            System.out.println("Using '#' is forbidden! ");
+            //System.out.println("Using '#' is forbidden! ");
             return;
         }
 
@@ -219,14 +202,14 @@ public class Client {
 
     }
 
-    /*
+    /**
      * Checks if groupName in on our groups ArrayList
      * */
     private static boolean checkMembership(String groupName){
         return groups.contains(groupName);
     }
 
-    /*
+    /**
      * Sends message to server a request to create a group
      * */
     public static void createGroup(String groupName) throws Exception
@@ -254,13 +237,15 @@ public class Client {
 
     }
 
-    /*
-     *
+    /**
+     * checks if we are the member of the given group
+     * if yes, we send it
+     * if no, we do nothing
      * */
     public static void sendTextMessageToGroup(String groupName, String text)
     {
         if( !checkMembership(groupName) ){
-            System.out.println("You are not a part of this group");
+            //System.out.println("You are not a part of this group");
             return;
         }
         ClientToServerMessageType type = ClientToServerMessageType.TEXT_TO_GROUP;
@@ -269,7 +254,7 @@ public class Client {
         sendMessage( message );
     }
 
-    /*
+    /**
      * Adds our friend to group we are into
      * */
     public static void addUserToGroup(String group, String user) throws Exception
@@ -294,7 +279,7 @@ public class Client {
     }
 
 
-    /*
+    /**
      * Sends LOGOUT_MESSAGE
      * stops listener thread
      * */
@@ -302,22 +287,13 @@ public class Client {
         ClientToServerMessage message = new ClientToServerMessage( ClientToServerMessageType.LOGOUT);
         System.out.println("Wylogowywanie...");
         username = null;
-        //listener.stopRunning();
 
         try {
             outObject.writeObject( message );
-            //echoSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-
-    //TODO: add exit function similar to logout
-    static void exit(){
-
-    }
-
 
 
 }

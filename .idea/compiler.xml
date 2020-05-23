@@ -14,8 +14,6 @@
     <bytecodeTargetLevel>
       <module name="bothangouts" target="1.5" />
       <module name="botmessenger" target="11" />
-      <module name="botmessenger.main" target="11" />
-      <module name="botmessenger.test" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

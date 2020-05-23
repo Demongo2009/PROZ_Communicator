@@ -1,49 +1,62 @@
 
-
-java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(„™ğìúÿÿÿÿ
-?
-java:S1148’"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
-T	java:S106Î"9Replace this use of System.out or System.err by a logger.(±ªŒ™øÿÿÿÿ
 I
-java:S1135"2Complete the task associated to this TODO comment.(ŸÂğó
-S	java:S106Z"9Replace this use of System.out or System.err by a logger.(Ş€ˆşÿÿÿÿ
-a	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(ÿÌ†üÿÿÿÿ
-\	java:S112™"FDefine and throw a dedicated exception instead of using a generic one.(É¾ë
-\	java:S112­"FDefine and throw a dedicated exception instead of using a generic one.(õÂ¼¥
-a	java:S112›"FDefine and throw a dedicated exception instead of using a generic one.(—¢¤Îşÿÿÿÿ
-?
-java:S1148Ô"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
-S	java:S106c"9Replace this use of System.out or System.err by a logger.(æšÿÿÿÿÿ
-?
-java:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
-T	java:S106ÿ"9Replace this use of System.out or System.err by a logger.(ûáõúÿÿÿÿ
-t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(•İÈ‚ıÿÿÿÿ
-M
-java:S1135L"2Complete the task associated to this TODO comment.(Ö¢’…ûÿÿÿÿ
-O	java:S106„"9Replace this use of System.out or System.err by a logger.(’¨ö‰
-]	java:S125g"<This block of commented-out lines of code should be removed.(œÇíˆüÿÿÿÿ8€‚øŸ.
-a	java:S112¡"FDefine and throw a dedicated exception instead of using a generic one.(´ÉÅÂûÿÿÿÿ
-V	java:S125"<This block of commented-out lines of code should be removed.(ÑÇæùÿÿÿÿ
-\
-java:S2259µ"EA "NullPointerException" could be thrown; "message" is nullable here.(ÉúÄİ
-a	java:S112Ã"FDefine and throw a dedicated exception instead of using a generic one.(ãúîøÿÿÿÿ
-a
-java:S1124Ú"EReorder the modifiers to comply with the Java Language Specification.(±Âö©ùÿÿÿÿ
-T	java:S106ä"9Replace this use of System.out or System.err by a logger.(—ëŒııÿÿÿÿ
-l	java:S117ô"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¥èØŞûÿÿÿÿ
-H
-java:S1135K"2Complete the task associated to this TODO comment.(¯­î¤
-\
-java:S2147‘"ECombine this catch with the one at line 143, which has the same body.(ï­£Ä
-?
-java:S1148²"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
-Z	java:S106n"9Replace this use of System.out or System.err by a logger.(Å­Ëİúÿÿÿÿ8ò‚´÷Ÿ.
+java:S1444!",Make this "public static groups" field final(“¯Ãæ8§íø†¤.
+h	java:S112ß"FDefine and throw a dedicated exception instead of using a generic one.(ÿÌ†üÿÿÿÿ8§íø†¤.
+g	java:S112_"FDefine and throw a dedicated exception instead of using a generic one.(¸¸Úîıÿÿÿÿ8§íø†¤.
 >
-java:S1148`"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+java:S1148@"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+`	java:S112I"FDefine and throw a dedicated exception instead of using a generic one.(—¢¤Îşÿÿÿÿ
 ?
-java:S1148Ş"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
-N	java:S106]"9Replace this use of System.out or System.err by a logger.(£­ó´
-
-java:S1186‘"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(şì›¼úÿÿÿÿ
-I
-java:S1135Ù"2Complete the task associated to this TODO comment.(ÓñàÍ
+java:S1148‰"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+^	java:S125Â"<This block of commented-out lines of code should be removed.(ò¶éğÿÿÿÿÿ8©¸±Š¤.
+c	java:S112‘"FDefine and throw a dedicated exception instead of using a generic one.(ªñ­8§íø†¤.
+Z
+java:S2147?"DCombine this catch with the one at line 61, which has the same body.(ï­£Ä
+`	java:S112L"FDefine and throw a dedicated exception instead of using a generic one.(ÿÌ†üÿÿÿÿ
+c	java:S112Û"FDefine and throw a dedicated exception instead of using a generic one.(€Úé8§íø†¤.
+Y	java:S125ø"<This block of commented-out lines of code should be removed.(Ú‰«Á8Ûš£Š¤.
+c	java:S112×"FDefine and throw a dedicated exception instead of using a generic one.(ıÅÛÆ8§íø†¤.
+{
+java:S1450"YRemove the "echoSocket" field and declare it as a local variable in the relevant methods.(­¹å¦üÿÿÿÿ8§íø†¤.
+>
+java:S23867"!Make member "groups" "protected".(ÛÅ–±8§íø†¤.
+h	java:S112„"FDefine and throw a dedicated exception instead of using a generic one.(§£êøÿÿÿÿ8§íø†¤.
+`	java:S112O"FDefine and throw a dedicated exception instead of using a generic one.(´ÉÅÂûÿÿÿÿ
+
+java:S1319!"qThe type of the "groups" object should be an interface such as "List" rather than the implementation "ArrayList".(“¯Ãæ8§íø†¤.
+h	java:S112‰"FDefine and throw a dedicated exception instead of using a generic one.(Šàğúÿÿÿÿ8§íø†¤.
+^	java:S125“"<This block of commented-out lines of code should be removed.(º×…«ûÿÿÿÿ8ı¦©Š¤.
+”
+java:S1319 "rThe type of the "friends" object should be an interface such as "List" rather than the implementation "ArrayList".(Ãİ˜„ıÿÿÿÿ8§íø†¤.
+>
+java:S1148d"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+‚
+java:S1104$"`Make notificationsHandler a static final constant or non-public and provide accessors if needed.(Ÿõõúÿÿÿÿ8§íø†¤.
+y
+java:S1450"WRemove the "listener" field and declare it as a local variable in the relevant methods.(ûš¿Òÿÿÿÿÿ8§íø†¤.
+X	java:S125˜"<This block of commented-out lines of code should be removed.(êƒë<8ı¦©Š¤.
+>
+java:S1148>"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+`	java:S112}"FDefine and throw a dedicated exception instead of using a generic one.(ãúîøÿÿÿÿ
+O
+java:S1444 "-Make this "public static friends" field final(Ãİ˜„ıÿÿÿÿ8§íø†¤.
+\
+java:S1444$":Make this "public static notificationsHandler" field final(Ÿõõúÿÿÿÿ8§íø†¤.
+h	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(œ±Àüÿÿÿÿ8§íø†¤.
+[	java:S106 "9Replace this use of System.out or System.err by a logger.(±ªŒ™øÿÿÿÿ8§íø†¤.
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(•İÈ‚ıÿÿÿÿ
+[
+java:S2259g"EA "NullPointerException" could be thrown; "message" is nullable here.(ÉúÄİ
+g	java:S112G"FDefine and throw a dedicated exception instead of using a generic one.(ù²–õûÿÿÿÿ8§íø†¤.
+o
+java:S1104!"RMake groups a static final constant or non-public and provide accessors if needed.(“¯Ãæ8§íø†¤.
+u
+java:S1104 "SMake friends a static final constant or non-public and provide accessors if needed.(Ãİ˜„ıÿÿÿÿ8§íø†¤.
+?
+java:S1148¦"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+D
+java:S23866""Make member "friends" "protected".(¿ò‘Çøÿÿÿÿ8§íø†¤.
+^	java:S125½"<This block of commented-out lines of code should be removed.(Ñôªãùÿÿÿÿ8©¸±Š¤.
+a	java:S112R"FDefine and throw a dedicated exception instead of using a generic one.(Æ¤…D8§íø†¤.
+b	java:S112ç"FDefine and throw a dedicated exception instead of using a generic one.(ÜÖÖ98§íø†¤.
+h	java:S112ã"FDefine and throw a dedicated exception instead of using a generic one.(ËöÊöúÿÿÿÿ8§íø†¤.

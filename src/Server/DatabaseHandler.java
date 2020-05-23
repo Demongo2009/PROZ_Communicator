@@ -24,7 +24,7 @@ public class DatabaseHandler
     );
      */
 
-    /*
+    /**
      * Returns true if given login exists in given ResultSet
      * */
     boolean checkIfLoginExists(ResultSet rs, String login){
@@ -39,7 +39,7 @@ public class DatabaseHandler
         }
         return false;
     }
-    /*
+    /**
      * Returns true if password matches login
      * */
     boolean checkLogin(String login, String password){
@@ -66,7 +66,7 @@ public class DatabaseHandler
         }
         return answer;
     }
-    /*
+    /**
      * Return true if registration is successful
      * */
     boolean registerUser(String login, String password){
@@ -80,13 +80,14 @@ public class DatabaseHandler
             statement = conn.prepareStatement("SELECT * FROM users WHERE login = ?");
             statement.setString(1, login);
             rs = statement.executeQuery();
-            statement.close();
+
 
 
             if( checkIfLoginExists(rs, login)){ /* if such login already exists*/
                 successful = false;
             }
 
+            statement.close();
             if( successful ) {
                 statement = conn.prepareStatement("INSERT INTO users VALUES( ?, ?)");
                 statement.setString(1,login);
@@ -104,7 +105,7 @@ public class DatabaseHandler
         return successful;
     }
 
-    /*
+    /**
      * Returns true if given users are friends
      * */
     boolean checkFriendship(String user1, String user2){
@@ -135,7 +136,7 @@ public class DatabaseHandler
         return areTheyFriends;
     }
 
-    /*
+    /**
      * Inserts users' logins to 'friends' table
      * */
     void insertFriendship(String user1, String user2){
@@ -159,7 +160,7 @@ public class DatabaseHandler
 
     }
 
-    /*
+    /**
      * Returns user's friends' nicknames separated by '#'
      * */
     String getUserFriends(String login){
@@ -336,34 +337,29 @@ public class DatabaseHandler
         PreparedStatement statement = null;
         Connection conn = null;
         ResultSet rs = null;
-
+        boolean successful = true;
 
         try{
-            boolean successful = true;
+
 
             conn = DriverManager.getConnection(url);
             statement = conn.prepareStatement("SELECT * FROM groups WHERE group_name = ?;");
             statement.setString(1, group);
             rs = statement.executeQuery();
 
-            //String whichColumn = "";
             String query = "";
 
             if( rs.next() ) {
                 //should always happen since it should be already checked
 
-
                 if (rs.getString("user2") == null) {
-                    //whichColumn = "user2";
                     query = "UPDATE groups SET user2 = ? WHERE group_name = ?";
                 } else if (rs.getString("user3") == null) {
-                    //whichColumn = "user3";
                     query = "UPDATE groups SET user3 = ? WHERE group_name = ?";
                 } else if (rs.getString("user4") == null) {
-                    //whichColumn = "user4";
                     query = "UPDATE groups SET user4 = ? WHERE group_name = ?";
                 } else {
-                    System.out.println("GROUP IS FULL");//should never occur since it was already checked
+                    //System.out.println("GROUP IS FULL");//should never occur since it was already checked
                     successful = false;
                 }
             }
@@ -372,7 +368,6 @@ public class DatabaseHandler
                 statement.close();
                 statement = conn.prepareStatement(query);
 
-                //statement.setString(1, whichColumn);
                 statement.setString(1, user);
                 statement.setString(2, group);
                 statement.executeUpdate();
@@ -385,7 +380,39 @@ public class DatabaseHandler
             e.printStackTrace();
         }
 
-        return true;
+        return successful;
+    }
+
+
+
+    //for unit tests
+    void setUrl(String newUrl){
+        url = newUrl;
+    }
+
+    //for unit tests
+    void clearDataBase(){
+        PreparedStatement statement = null;
+        Connection conn = null;
+        ResultSet rs = null;
+        try{
+            conn = DriverManager.getConnection(url);
+            statement = conn.prepareStatement("DELETE FROM users");
+            statement.executeUpdate();
+            statement.close();
+
+            statement = conn.prepareStatement("DELETE FROM friends");
+            statement.executeUpdate();
+
+            statement.close();
+            statement = conn.prepareStatement("DELETE FROM groups");
+            statement.executeUpdate();
+
+            statement.close();
+            conn.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
 }

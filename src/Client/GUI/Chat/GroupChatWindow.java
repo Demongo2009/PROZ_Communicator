@@ -80,24 +80,26 @@ public class GroupChatWindow extends JPanel
 
     public void receiveMessage(String messageText,String sender)
     {
+
         if (containsImage(messageText))
         {
-
             String []notURL=messageText.split(URLRegex);
 
             String rest="";
             if(notURL.length!=0)
             {
-                if (notURL.length>0)
+                if (notURL.length>0) {
                     rest += notURL[0];
-                if (notURL.length != 1)
+                }
+                if (notURL.length > 1) {
                     rest += notURL[1];
+                }
             }
 
-            addLeftChatPicture(sender,URLToImage,rest);
+            addLeftChatPicture(sender,URLToImage,"<b>"+sender+ "</b>:" + rest);
         }
         else
-            addLeftChat(messageText,sender,false);
+            addLeftChat("<b>"+sender+ "</b>:" + messageText,sender,false);
     }
 
     boolean containsImage(String messageText)

@@ -16,33 +16,27 @@ import java.util.concurrent.Semaphore;
 public class ClientPrinterThread extends Thread {
 
     ObjectInputStream inObject;
+    static Semaphore mutex;
+    String text;
+    String userId;
+
+
 
     ClientPrinterThread(ObjectInputStream inObject){
-
         this.inObject = inObject;
-
         mutex = new Semaphore(0);
-
     }
-
     public void initializeMessage( String text, String userId){
         this.text = text;
         this.userId = userId;
     }
-    String text;
-    String userId;
 
-    public void initializePlatform(){
-
-    }
-
-
-    static Semaphore mutex;
 
     public void releaseMutex(){
         mutex.release();
     }
 
+    // Receive message from server
     private ServerToClientMessage receiveMessage(){
         ServerToClientMessage message = null;
 
@@ -65,41 +59,52 @@ public class ClientPrinterThread extends Thread {
             String inputFromServer;
             mutex.acquire();
             ServerToClientMessage message = null;
+
+            // Waiting for asynchronous message
             while((message = receiveMessage()) != null){
                 inputFromServer = message.getText();
                 if(inputFromServer == "" || inputFromServer == "\n"){
                     continue;
                 }
-//                System.out.println("Server.Server: "+ inputFromServer);
+
 
 
 
                 ServerToClientMessageType messageType= message.getType();
+                // Switching for different message type
+                // Image
                 if(messageType.equals(ServerToClientMessageType.IMAGE)){
-//                    message_tpl.setAttachment("image",inputFromServer,true);
+
                     MessengerBot.sendRegularMessage(inputFromServer);
 
-                }else if(messageType.equals(ServerToClientMessageType.CONFIRM_LOGIN)) {
-                    System.out.println("tak");
+                }
+                // Confirm login
+                else if(messageType.equals(ServerToClientMessageType.CONFIRM_LOGIN)) {
+
                     MessengerBot.setLoginResultAvailable(true);
 
-                }else if(messageType.equals(ServerToClientMessageType.REJECT_LOGIN)) {
-                    System.out.println("nie");
+                }
+                // Reject login
+                else if(messageType.equals(ServerToClientMessageType.REJECT_LOGIN)) {
+
                     MessengerBot.setLoginResultAvailable(false);
 
 
-                }else if(messageType.equals(ServerToClientMessageType.USER_WANTS_TO_BE_YOUR_FRIEND)) {
-                    System.out.println("friend attempt");
-//                    message_tpl.setMessageText("User \""+inputFromServer+"\" wants to be your friend. [Y] accept [N] refuse");
+                }
+                // Someone wants to be your friend
+                else if(messageType.equals(ServerToClientMessageType.USER_WANTS_TO_BE_YOUR_FRIEND)) {
+
                     MessengerBot.sendRegularMessage("User \""+inputFromServer+"\" wants to be your friend. [Y] accept [N] refuse");
                     MessengerBot.friendRequest(inputFromServer);
 
-                }else if(messageType.equals(ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST)){
-//                    message_tpl.setMessageText("\""+inputFromServer + "\" accepted your friend request");
+                }
+                // Accepted friend request
+                else if(messageType.equals(ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST)){
+
                     MessengerBot.sendRegularMessage("\""+inputFromServer + "\" accepted your friend request");
                 }
                 else {
-//                    message_tpl.setMessageText(inputFromServer);
+
                     MessengerBot.sendRegularMessage("\""+inputFromServer + "\" accepted your friend request");
                 }
 

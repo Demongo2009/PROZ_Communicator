@@ -14,27 +14,20 @@ import java.util.concurrent.Semaphore;
 public class ClientPrinterThread extends Thread {
     private BufferedReader in;
     private ObjectInputStream inObject;
+    TextChannel textChannel;
+
 
     ClientPrinterThread(BufferedReader in, ObjectInputStream inObject){
         this.in=in;
         this.inObject = inObject;
 
-        mutex = new Semaphore(0);
-
     }
-
-    public void initializeMessage( String text, String userId){
-        this.text = text;
-        this.userId = userId;
-    }
-    String text;
-    String userId;
-    TextChannel textChannel;
 
     public void sendEventChannel(TextChannel textChannel){
         this.textChannel = textChannel;
     }
 
+    // Receiving message form server
     private ServerToClientMessage receiveMessage(){
         ServerToClientMessage message = null;
 
@@ -50,31 +43,35 @@ public class ClientPrinterThread extends Thread {
         return message;
     }
 
-    static Semaphore mutex;
-
-    public void releaseMutex(){
-        mutex.release();
-    }
 
     public void run(){
         try{
             String inputFromServer;
             ServerToClientMessage message = null;
 
-//            mutex.acquire();
+
+            // Wait for asynchronous messages
             while((message = receiveMessage()) != null){
                 inputFromServer = message.getText();
-                System.out.println("INPFRMSERV: "+inputFromServer);
+
                 if(inputFromServer.equals("") || inputFromServer.equals("\n")){
                     continue;
                 }
 
                 ServerToClientMessageType messageType= message.getType();
+
+
+                // Depending on message type different messages will be sent
+                // Image
                 if(messageType.equals(ServerToClientMessageType.IMAGE)){
                     new MessageBuilder().addAttachment(new URL(inputFromServer)).send(textChannel);
 
-                }else if(messageType.equals(ServerToClientMessageType.CONFIRM_LOGIN)) {
+                }
+                // Confirm login
+                else if(messageType.equals(ServerToClientMessageType.CONFIRM_LOGIN)) {
 
+
+                    // Printing friends and groups
                     String[] friendsAndGroups = inputFromServer.split("@");
                     String[] friends = friendsAndGroups[0].split("#");
                     String[] groups = friendsAndGroups[1].split("#");
@@ -102,17 +99,23 @@ public class ClientPrinterThread extends Thread {
 
                     DiscordBot.setLoginResultAvailable(true);
 
-                }else if(messageType.equals(ServerToClientMessageType.REJECT_LOGIN)) {
-                    System.out.println("nie");
+                }
+                // Reject login
+                else if(messageType.equals(ServerToClientMessageType.REJECT_LOGIN)) {
+
                     DiscordBot.setLoginResultAvailable(false);
 
 
-                }else if(messageType.equals(ServerToClientMessageType.USER_WANTS_TO_BE_YOUR_FRIEND)) {
-                    System.out.println("friend attempt");
+                }
+                // Someone wants to be a friend
+                else if(messageType.equals(ServerToClientMessageType.USER_WANTS_TO_BE_YOUR_FRIEND)) {
+
                     textChannel.sendMessage("User \""+inputFromServer+"\" wants to be your friend. [Y] accept [N] refuse");
                     DiscordBot.friendRequest(inputFromServer);
 
-                }else if(messageType.equals(ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST)){
+                }
+                // Friend accepted your request
+                else if(messageType.equals(ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST)){
                     textChannel.sendMessage("\""+inputFromServer + "\" accepted your friend request");
                 }
                 else {
@@ -120,8 +123,7 @@ public class ClientPrinterThread extends Thread {
                 }
             }
 
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

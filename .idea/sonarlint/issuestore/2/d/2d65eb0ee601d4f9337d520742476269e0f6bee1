@@ -1,0 +1,7 @@
+
+>
+java:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(•İÈ‚ıÿÿÿÿ
+X	java:S125"<This block of commented-out lines of code should be removed.(¼µù×8´õ³Š¤.
+t
+java:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(îÅéîùÿÿÿÿ

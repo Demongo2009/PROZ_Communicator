@@ -19,6 +19,7 @@ public class AddFriendPanel extends JPanel
     private JLabel MainTabLabel;
     private JLabel AddFriendText = new JLabel("Enter user name:");
 
+    /**Get user name form text field and send it (try to add this friend)*/
     private void submit()
     {
         if(FriendNameInput.getText().length()<3)

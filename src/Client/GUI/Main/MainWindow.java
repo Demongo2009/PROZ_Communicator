@@ -40,7 +40,7 @@ public class MainWindow extends JFrame
         chats.closeGroupChat(closedTabName);
     }
 
-
+    /**go and tell the GroupchatWindow that a message has been received*/
     public void getMessageFromGroup(String serverMessage)
     {
         String []userAndText = serverMessage.split("#");
@@ -53,7 +53,7 @@ public class MainWindow extends JFrame
         chats.groupWriteMessage(groupName,sendingUser,msgContent);
 
     }
-
+    /**go and tell the chatWindow that a message has been received*/
     public void getMessageFromUser(String serverMessage)
     {
         String []userAndText = serverMessage.split("#");
@@ -65,7 +65,7 @@ public class MainWindow extends JFrame
         chats.chatWriteMessage(sender,messageText);
 
     }
-
+    /**Informs user that receiver is unavaliable*/
     public void serverAlert(String chatName,String servertAlert)
     {
         if(chats.checkChat(chatName))
@@ -100,6 +100,9 @@ public class MainWindow extends JFrame
         notifications.receiveGroupInvitation(serverMessage);
     }
 
+
+    /**In case friends or groups have been added
+     * refresh lists, shown on mainTab */
     public void refresh()
     {
         panel.refreshFriends();

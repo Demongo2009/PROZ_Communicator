@@ -20,6 +20,7 @@ public class CreateGroupPanel extends JPanel
     private JLabel createGroupText = new JLabel("Enter group name:");
     private MainWindow referenceToMain;
 
+    /**get name of group from text field and try to create it*/
     void submit()
     {
         try

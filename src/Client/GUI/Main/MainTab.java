@@ -33,7 +33,7 @@ public class MainTab extends JPanel
     private JButton StartChatButton = new JButton("Start Chat");
 
 
-
+    /**Once FriendList has changed, update those changes (new friends) to the panel*/
     public void refreshFriends()
     {
         for(String s: friends)
@@ -44,6 +44,7 @@ public class MainTab extends JPanel
             }
         }
     }
+    /**Once GroupList has changed, update those changes (new groups) to the panel*/
     public void refreshGroups()
     {
         for(String s: groups)
@@ -55,6 +56,7 @@ public class MainTab extends JPanel
         }
 
     }
+    /**Set custom state text on panel */
     public void setState(Color fg,String text)
     {
         state.setForeground(fg);
@@ -147,6 +149,7 @@ public class MainTab extends JPanel
             }
         });
 
+        /*Add all previously prepared components to panel*/
         add(FriendsText);
         add(GroupsText);
         add(GroupScroll);

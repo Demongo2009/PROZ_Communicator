@@ -107,6 +107,10 @@ public class ChatWindow extends JPanel
         else
             addLeftChat(messageText,false);
     }
+    /**
+     * Set URLToImage based on whether received
+     * or sent message contains such URL
+     * @return {@code true} if messageText contains picture URl */
     boolean containsImage(String messageText)
     {
         String msgLink=messageText;

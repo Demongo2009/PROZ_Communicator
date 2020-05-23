@@ -222,7 +222,7 @@ public class ServerThread extends Thread{
         }
         String userAndText[] = textMessage.split("#");
 
-        System.out.println(userAndText[0]);
+        //.out.println(userAndText[0]);
         if( !databaseHandler.checkFriendship(userToHandle.getLogin(), userAndText[0]) ){
             System.out.println("USERS ARE NOT FRIENDS - something went wrong, client should check it");
             return;

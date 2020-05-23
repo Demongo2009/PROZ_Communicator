@@ -102,6 +102,10 @@ public class GroupChatWindow extends JPanel
             addLeftChat("<b>"+sender+ "</b>:" + messageText,sender,false);
     }
 
+    /**
+     * Set URLToImage based on whether received
+     * or sent message contains such URL
+     * @return {@code true} if messageText contains picture URl */
     boolean containsImage(String messageText)
     {
         String msgLink=messageText;
@@ -202,9 +206,9 @@ public class GroupChatWindow extends JPanel
         add(mainPanel);
     }
 
-    /*
-    * Writes on chat window Clients messages
-    * */
+    /**
+     * Writes on chat window Clients messages
+     * */
     private void addChat(int flowLayoutAlign, Color borderColor,String messageContent,boolean isPicture)
             throws IOException
     {
@@ -252,7 +256,7 @@ public class GroupChatWindow extends JPanel
         SwingUtilities.invokeLater(() -> verticalScrollBar.setValue(verticalScrollBar.getMaximum()));
     }
 
-    /*
+    /**
      * Writes on chat window received messages
      * */
     private void addChat(int flowLayoutAlign, Color borderColor,String messageContent,String sender,boolean isPicture)

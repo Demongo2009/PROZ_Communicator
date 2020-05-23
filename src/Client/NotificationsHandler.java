@@ -1,23 +1,36 @@
 package Client;
 
 import Messages.serverToClient.ServerToClientMessage;
-import Messages.serverToClient.ServerToClientMessageType;
-import com.sun.nio.sctp.NotificationHandler;
 
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
-public class NotificationsHandler {
-    ArrayList<ServerToClientMessage> notifications = new ArrayList<ServerToClientMessage>();
-    public NotificationsHandler(){};
+public class NotificationsHandler
+{
+    private Semaphore mutex = new Semaphore(0);
+    private ArrayList<ServerToClientMessage> notifications = new ArrayList<ServerToClientMessage>();
+    //public NotificationsHandler(){};
 
-    void addNotification(ServerToClientMessage message){
+    void addNotification(ServerToClientMessage message)
+    {
         notifications.add( message );
+        mutex.release();
     }
 
     /* removes first notification and returns it*/
-    ServerToClientMessage getNotification()
+    public ServerToClientMessage getNotification()
     {
-        ServerToClientMessage notification = notifications.get(0);
+        ServerToClientMessage notification;
+        try
+        {
+            mutex.acquire();
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        notification = notifications.get(0);
         notifications.remove(0);
         return notification;
     }

@@ -1,81 +1,52 @@
 package Client;
 
-import Client.GUI.ChatWindow;
-import Client.GUI.MainTab;
-import Client.GUI.MainWindow;
-import Client.GUI.StartingScreen;
+import Client.GUI.StartingScreen.StartingScreen;
 import Messages.clientToServer.ClientToServerMessage;
 import Messages.clientToServer.ClientToServerMessageType;
 import Messages.serverToClient.ServerToClientMessage;
 import Messages.serverToClient.ServerToClientMessageType;
-import Server.CommunicatorType;
 
-import javax.swing.*;
+
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
 
 import static Client.GUI.tools.SwingConsole.run;
 
-
 public class Client {
 
-    static String hostName = "localhost";
-    static int serverPort = 4444;
+    private static String hostName = "localhost";
+    private static int serverPort = 9999;
 
-    static Socket echoSocket;
-    static PrintWriter out;
-    static BufferedReader in;
-    static BufferedReader stdIn;
+    private static Socket echoSocket;
 
     /* to send and receive objects */
-    static ObjectOutputStream outObject;
-    static ObjectInputStream inObject;
+    private static ObjectOutputStream outObject;
+    private static ObjectInputStream inObject;
 
-    public static String username = null;
-    static NotificationsHandler notificationsHandler;
-    static ClientPrinterThread listener;
+    private static String username = null;
+    private static ClientPrinterThread listener;
 
     public static ArrayList<String> friends;
     public static ArrayList<String> groups;
 
-    // static GUI_notificiation_listener (notificaionHandler)
-    //TODO: checking if we dont want to add ourselfs to friends, if we already arent friends etc
-    /*TODO: if I get USER_ACCEPTED_YOUR_FRIEND_REQUEST message, then add friend to my local friends
-        if can be done in the listener thread since its automatic, don't know if should, probably no because listener thread doesn't get our friends array*/
+
+    public static NotificationsHandler notificationsHandler;
 
 
     public static void main(String[] args) {
-       initClient();
+        initClient();
+        run(new StartingScreen(),300,140);
 
-
-
-
-        run(new StartingScreen(),"KOMUNIKATOR",300,100);
-        logout();
     }
 
-    private static void initClient(){
+    public static void initClient(){
         try {
             echoSocket = new Socket(hostName, serverPort);
             // shutdown hook added for closing the connection if client exits
             Runtime.getRuntime().addShutdownHook(new ClientShutdownHook(echoSocket));
-
-
-            out =
-                    new PrintWriter(echoSocket.getOutputStream(), true);
-            in =
-                    new BufferedReader(
-                            new InputStreamReader(echoSocket.getInputStream()));
-            stdIn =
-                    new BufferedReader(
-                            new InputStreamReader(System.in));
-
-
-
 
             outObject = new ObjectOutputStream( echoSocket.getOutputStream()) ;
             inObject = new ObjectInputStream( echoSocket.getInputStream() );
@@ -93,7 +64,7 @@ public class Client {
             e.printStackTrace();
         }
     }
-    /*
+    /**
      * Sends to server LOGIN_REQUEST or REGISTER_REQUEST(decided by argument) with login and password.
      * Throws Exception if type is none of above OR login or password contain '#' OR they are shorter than 4 characters
      * */
@@ -111,16 +82,17 @@ public class Client {
             throw new Exception("Login and password must be one word");
         }
 
+        username=login;
         String textToSend = login + "#" + password;
-        ClientToServerMessage message = new ClientToServerMessage(type, textToSend, CommunicatorType.MULTI_COM );
+        ClientToServerMessage message = new ClientToServerMessage(type, textToSend );
         sendMessage( message );
     }
 
-    /*
+    /**
      * Throws exception if received message is not CONFIRM nor REJECT
      * starts listener thread
      * */
-    public static boolean receiveLoginAnswer(MainWindow ref) throws Exception{
+    public static boolean receiveLoginAnswer() throws Exception{
         ServerToClientMessage message = null;
         try {
             message = (ServerToClientMessage)inObject.readObject();
@@ -129,79 +101,71 @@ public class Client {
         }
 
         ServerToClientMessageType response = message.getType();
-        if( response == ServerToClientMessageType.REJECT_LOGIN ){
+        if( response == ServerToClientMessageType.REJECT_LOGIN )
+        {
             return false;
-        }else if( response == ServerToClientMessageType.CONFIRM_LOGIN ){
-
+        }
+        else if( response == ServerToClientMessageType.CONFIRM_LOGIN )
+        {
             //get friends and groups from server
             String[] friendsAndGroups = message.getText().split("@");
             String[] friendsArray = friendsAndGroups[0].split("#");
             String[] groupsArray = friendsAndGroups[1].split("#");
+
             friends.addAll(Arrays.asList(friendsArray));//inserts all strings into array list
             groups.addAll(Arrays.asList(groupsArray));
 
-
-
-
             /*Start of listener thread*/
-            listener = new ClientPrinterThread(inObject,ref);
+            listener = new ClientPrinterThread(inObject/*, friends*/);
             listener.start();
             return true;
-        }else{
+        }
+        else
+        {
             throw new Exception(" NOT CONFIRM NOR REJECTION");
         }
 
     }
 
-    /*
-     * Sends LOGOUT_MESSAGE
-     * stops listener thread
+
+
+
+    private static void sendMessage(ClientToServerMessage message){
+        try {
+            outObject.writeObject( message );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * checks if we are not adding ourself to friends and if we are not adding user that is out friend already
+     * if both are no, then we send the request and return true
      * */
-    public static void logout()
-    {
-        ClientToServerMessage message = new ClientToServerMessage( ClientToServerMessageType.LOGOUT);
-        System.out.println("Wylogowywanie...");
-        username = null;
-        listener.stopRunning();
-        try {
-            outObject.writeObject( message );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static ServerToClientMessage getNotification()
-    {
-        return notificationsHandler.getNotification();
-    }
-
-    static private  void sendMessage(ClientToServerMessage message){
-        try {
-            outObject.writeObject( message );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static int addUserToFriends(String userToAdd)
-    {
-        if( checkFriendship(userToAdd) )
-        {
+    public static boolean addUserToFriends(String userToAdd){
+        if( checkFriendship(userToAdd) ){
             //System.out.println("User is already your friend!!!");
-            return -1;
+            return false;
+        }
+        if( userToAdd.equals(username))
+        {
+            //System.out.println("You cannot add yourself to friends");
+            return false;
         }
 
         ClientToServerMessageType type = ClientToServerMessageType.ADD_USER_TO_FRIENDS;
         ClientToServerMessage message = new ClientToServerMessage(type, userToAdd);
         sendMessage(message);
-        return  1;
+        return true;
     }
-    /*
-    * Sends message to server that we are now friends with friendToAdd
-    * Add friend's nickname to friends ArrayList
-    * */
-    static void confirmFriendship(String friendToAdd){
-        if(checkFriendship( friendToAdd)){
+    /**
+     * Sends message to server that we are now friends with friendToAdd
+     * Add friend's nickname to friends ArrayList
+     * */
+    public static void confirmFriendship(String friendToAdd)
+    {
+        if(checkFriendship( friendToAdd))
+        {
             return;
         }
         friends.add(friendToAdd);
@@ -210,27 +174,24 @@ public class Client {
         sendMessage(message);
     }
 
-    /*
+    /**
      * Checks if username is on our friends Arraylist
-     *
-     * NIEPOTRZEBNE - NIE WYSWIETLI SIE W OGOLE NA LISCIE KTOS, KTO NIE JEST PRZYJACIELEM
      * */
-    public static boolean checkFriendship(String friendUsername){
+    private static boolean checkFriendship(String friendUsername){
         return friends.contains(friendUsername);
     }
 
-    /*
+    /**
      * Sends to out friend a text message
      * */
-
     public static void sendTextMessageToUser(String userToSend, String text){
         if( !checkFriendship(userToSend) ){
-            System.out.println("User is not your friend -> you cannot write to him");
+            //System.out.println("User is not your friend -> you cannot write to him");
             return;
         }
 
         if( text.contains("#") || userToSend.contains("#") ){
-            System.out.println("Using '#' is forbidden! ");
+            //System.out.println("Using '#' is forbidden! ");
             return;
         }
 
@@ -241,68 +202,75 @@ public class Client {
 
     }
 
-    /*
-    * Checks if groupName in on our groups ArrayList
-    * */
+    /**
+     * Checks if groupName in on our groups ArrayList
+     * */
     private static boolean checkMembership(String groupName){
         return groups.contains(groupName);
     }
 
-    /*
+    /**
      * Sends message to server a request to create a group
      * */
-    static void createGroup(String groupName){
-        if( checkMembership(groupName)){
-            System.out.println("You are in such group already");
-            return;
+    public static void createGroup(String groupName) throws Exception
+    {
+        if( checkMembership(groupName))
+        {
+            throw new Exception("You are in such group already");
         }
-        if( groupName.contains("#") ){
-            System.out.println("Cannot use '#'");
-            return;
+        if( groupName.contains("#") )
+        {
+            throw new Exception("Cannot use '#'");
         }
-        if( groupName.contains(" ") ){
-            System.out.println("Group name must be one word");
-            return;
+        if( groupName.contains(" ") )
+        {
+            throw new Exception("Group name must be one word");
         }
-        if( groupName.length() < 3 ){
-            System.out.println("Group name must have at least 3 characters");
-            return;
+        if( groupName.length() < 3 )
+        {
+            throw new Exception("Group name must have at least 3 characters");
         }
 
         ClientToServerMessageType type = ClientToServerMessageType.CREATE_GROUP;
         ClientToServerMessage message = new ClientToServerMessage(type, groupName);
         sendMessage( message );
 
-
     }
 
-    /*
-     *
+    /**
+     * checks if we are the member of the given group
+     * if yes, we send it
+     * if no, we do nothing
      * */
-        public static void sendTextMessageToGroup(String groupName,String text){
-        if(checkMembership(groupName)){
-            System.out.println("You are not a part of this group");
+    public static void sendTextMessageToGroup(String groupName, String text)
+    {
+        if( !checkMembership(groupName) ){
+            //System.out.println("You are not a part of this group");
             return;
         }
         ClientToServerMessageType type = ClientToServerMessageType.TEXT_TO_GROUP;
         String messageText = groupName + "#"+ username + "#" + text;
         ClientToServerMessage message = new ClientToServerMessage(type, messageText);
         sendMessage( message );
-
     }
 
-    /*
+    /**
      * Adds our friend to group we are into
      * */
-    static void addUserToGroup(String group, String user){
-        if( !checkMembership(group)){
-            System.out.println("You are not a member of this group");
+    public static void addUserToGroup(String group, String user) throws Exception
+    {
+
+        if( !checkMembership(group))
+        {
+            throw new Exception("You are not a member of this group");
         }
-        if( !checkFriendship(user)){
-            System.out.println("you cannot add this user to group because he is not your friend");
+        if( !checkFriendship(user))
+        {
+            throw new Exception("you cannot add this user to group because he is not your friend");
         }
-        if( user.equals(username)){
-            System.out.println("You cannot add yourself to group");
+        if( user.equals(username))
+        {
+            throw new Exception("You cannot add yourself to group");
         }
         ClientToServerMessageType type = ClientToServerMessageType.ADD_USER_TO_GROUP;
         String text = group + "#" + user;
@@ -311,12 +279,21 @@ public class Client {
     }
 
 
-    //TODO: add exit function similar to logout
-    static void exit(){
+    /**
+     * Sends LOGOUT_MESSAGE
+     * stops listener thread
+     * */
+    public static void logout(){
+        ClientToServerMessage message = new ClientToServerMessage( ClientToServerMessageType.LOGOUT);
+        System.out.println("Wylogowywanie...");
+        username = null;
 
+        try {
+            outObject.writeObject( message );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
-
 }
-

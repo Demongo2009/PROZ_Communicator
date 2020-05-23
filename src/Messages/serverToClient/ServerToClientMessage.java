@@ -1,11 +1,10 @@
 package Messages.serverToClient;
 
-import Messages.Message;
-import Server.CommunicatorType;
+import java.io.Serializable;
 
-public class ServerToClientMessage extends Message {
-    ServerToClientMessageType type;
-
+public class ServerToClientMessage implements Serializable {
+    private ServerToClientMessageType type;
+    private String text;
     public ServerToClientMessage(ServerToClientMessageType type, String text){
         this.type = type;
         this.text = text;

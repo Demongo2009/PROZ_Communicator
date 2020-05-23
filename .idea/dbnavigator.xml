@@ -40,7 +40,9 @@ insert into friends values ("Konrad5", "Konrad");
 
 insert into groups(group_name, user1) values("Essssa", "Konrad");
 
+DELETE FROM users;
 DELETE FROM friends;
+DELETE FROM groups;
 commit;]]></console>
     </connection>
   </component>

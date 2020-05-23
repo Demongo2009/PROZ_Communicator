@@ -20,9 +20,9 @@ public class TelegramBot {
     public static void main(String[] args) {
         userIdArray= new ArrayList<>();
 
-
+        // Setup connection with server
         String hostName = "localhost";
-        int portNumber = 4444;
+        int portNumber = 9999;
         try {
             echoSocket = new Socket(hostName, portNumber);
             Runtime.getRuntime().addShutdownHook(new ClientShutdownHook(echoSocket));
@@ -42,6 +42,7 @@ public class TelegramBot {
             e.printStackTrace();
         }
 
+        // Api initialization
         ApiContextInitializer.init();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try {

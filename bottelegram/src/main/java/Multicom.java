@@ -2,7 +2,7 @@ import Messages.clientToServer.ClientToServerMessage;
 import Messages.clientToServer.ClientToServerMessageType;
 import Messages.serverToClient.ServerToClientMessage;
 import Messages.serverToClient.ServerToClientMessageType;
-import Server.CommunicatorType;
+
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -26,6 +26,52 @@ public class Multicom extends TelegramLongPollingBot {
     private BufferedReader in;
     private ObjectOutputStream outObject;
     private ObjectInputStream inObject;
+    String username;
+    String password;
+    Semaphore loginResultAvailable = new Semaphore(0);
+    boolean loginResult = false;
+    boolean isGroupSending = false;
+    static String friend;
+
+    // States of bot
+    enum AvailableStates{
+        INIT,
+        CONNECTED_TO_CHAT,
+        SELECT_LOGIN_OR_REGISTER,
+        LOGIN_USERNAME,
+        LOGIN_PASSWORD,
+        REGISTER_USERNAME,
+        REGISTER_PASSWORD,
+        FRIEND_REQUEST_PENDING,
+        IMAGE_SENDING,
+        ADD_TO_FRIENDS,
+        CREATE_GROUP,
+        ADD_TO_GROUP,
+    }
+
+    static AvailableStates currentState = AvailableStates.INIT;
+
+    // Asynchronous result
+    void setLoginResultAvailable(boolean result){
+        loginResult = result;
+        loginResultAvailable.release();
+    }
+
+    // Send message to server
+    void sendMessageToServer(ClientToServerMessage message){
+        try {
+            outObject.writeObject(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    // Asynchronous friend request
+    static public void friendRequest(String friendName){
+        currentState = AvailableStates.FRIEND_REQUEST_PENDING;
+        friend = friendName;
+    }
 
     public Multicom(PrintWriter out, BufferedReader in, ObjectOutputStream outObject, ObjectInputStream inObject){
         this.out = out;
@@ -34,16 +80,7 @@ public class Multicom extends TelegramLongPollingBot {
         this.inObject = inObject;
     }
 
-//    public BotApiMethod onWebhookUpdateReceived(Update update) {
-//        if (update.hasMessage() && update.getMessage().hasText()) {
-//            SendMessage sendMessage = new SendMessage();
-//            sendMessage.setChatId(update.getMessage().getChatId().toString());
-//            sendMessage.setText("Well, all information looks like noise until you break the code.");
-//            return sendMessage;
-//        }
-//        return null;
-
-//    }
+    // Recieve message from server
     private ServerToClientMessage receiveMessage(){
         ServerToClientMessage message = null;
 
@@ -59,14 +96,8 @@ public class Multicom extends TelegramLongPollingBot {
         return message;
     }
 
-    private void sendMessage(ClientToServerMessage message){
-        try {
-            outObject.writeObject( message );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
+    // Telegram Api event for
     @Override
     public void onUpdateReceived(Update update) {
         try {
@@ -80,13 +111,9 @@ public class Multicom extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
-    enum AvailableStates{
-        INIT,
-        CONNECTED,
-        }
 
-    private AvailableStates state = AvailableStates.INIT;
 
+    // Handling incoming message
     private void handleIncomingMessage(Message message) throws TelegramApiException {
         SendMessage echoMessage = new SendMessage();
         echoMessage.setChatId(message.getChatId());
@@ -97,16 +124,18 @@ public class Multicom extends TelegramLongPollingBot {
 
              text = message.getText();
         }
-        System.out.println(text);
 
-        if(state.equals(AvailableStates.INIT) && text.equals("!chat")){
-            echoMessage.setText("Connected to chat!\n");
+
+
+
+        // Bot state machine
+        if (currentState.equals(AvailableStates.INIT) && text.equalsIgnoreCase("!chat")) {
+
+
+            echoMessage.setText("Initiated chat!\nPlease login[l] or sign in[s]...");
             execute(echoMessage);
-            state = AvailableStates.CONNECTED;
 
-
-            sendMessage(new ClientToServerMessage(ClientToServerMessageType.REQUEST_LOGIN,"login#password", CommunicatorType.TELEGRAM));
-
+            // Thread for asynchronous messages
             Thread thread = new Thread(){
                 @Override
                 public void run() {
@@ -114,17 +143,77 @@ public class Multicom extends TelegramLongPollingBot {
                     try {
                         String inputFromServer;
                         ServerToClientMessage messageFromServer = null;
+
+                        // Waiting for message form server
                         while ((messageFromServer = receiveMessage()) != null) {
                             inputFromServer = messageFromServer.getText();
                             if (inputFromServer.equals("") || inputFromServer.equals("\n")) {
                                 continue;
                             }
 
-                            if(messageFromServer.getType().equals(ServerToClientMessageType.IMAGE)){
+                            ServerToClientMessageType messageType= messageFromServer.getType();
+
+
+                            // Choosing which message should be send and special actions taken
+                            // Image
+                            if(messageType.equals(ServerToClientMessageType.IMAGE)){
                                 SendPhoto photoMessage = new SendPhoto().setPhoto(inputFromServer);
                                 execute(photoMessage);
-                            }else{
 
+                            }
+                            // Confirm login
+                            else if(messageType.equals(ServerToClientMessageType.CONFIRM_LOGIN)) {
+
+                                // Sending user friends and groups
+                                String[] friendsAndGroups = inputFromServer.split("@");
+                                String[] friends = friendsAndGroups[0].split("#");
+                                String[] groups = friendsAndGroups[1].split("#");
+                                String friendsText= "";
+                                if(friends.length>0){
+
+                                    for (String f: friends){
+                                        if(f!=null)
+                                            friendsText += ", "+f;
+                                    }
+                                }
+                                String groupsText = "";
+                                if(groups.length>0){
+
+                                    for (String g: groups){
+                                        if(g!=null)
+                                            groupsText += ", "+g;
+                                    }
+                                }
+
+                                echoMessage.setText("Your friends are: "+friendsText+".\nYour groups are: "+groupsText+".");
+                                execute(echoMessage);
+
+                                setLoginResultAvailable(true);
+
+                            }
+                            // Reject login
+                            else if(messageType.equals(ServerToClientMessageType.REJECT_LOGIN)) {
+
+                                setLoginResultAvailable(false);
+
+
+                            }
+                            // Someone send friend request
+                            else if(messageType.equals(ServerToClientMessageType.USER_WANTS_TO_BE_YOUR_FRIEND)) {
+
+                                echoMessage.setText("User \""+inputFromServer+"\" wants to be your friend. [Y] accept [N] refuse");
+                                execute(echoMessage);
+                                friendRequest(inputFromServer);
+
+                            }
+                            // Friend request accepted
+                            else if(messageType.equals(ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST)){
+
+                                echoMessage.setText("\""+inputFromServer + "\" accepted your friend request");
+                                execute(echoMessage);
+                            }
+                            // Normal message
+                            else {
                                 echoMessage.setText(inputFromServer);
                                 execute(echoMessage);
                             }
@@ -138,7 +227,178 @@ public class Multicom extends TelegramLongPollingBot {
                 }
             };
             thread.start();
-        }else if(state.equals(AvailableStates.CONNECTED)){
+
+
+            currentState = AvailableStates.SELECT_LOGIN_OR_REGISTER;
+        }
+        // Select login or register
+        else if(currentState.equals(AvailableStates.SELECT_LOGIN_OR_REGISTER)){
+
+            if(text.equalsIgnoreCase("l")){
+
+                echoMessage.setText("You selected login. Input your Username:...");
+                execute(echoMessage);
+
+                currentState = AvailableStates.LOGIN_USERNAME;
+
+            }else if(text.equalsIgnoreCase("s")){
+
+                echoMessage.setText("You selected sign in. Input your Username:...");
+                execute(echoMessage);
+
+                currentState = AvailableStates.REGISTER_USERNAME;
+            }
+
+
+        }
+        // Login username
+        else if(currentState.equals(AvailableStates.LOGIN_USERNAME)){
+            username = text;
+
+            echoMessage.setText("Input your Password:...");
+            execute(echoMessage);
+            currentState = AvailableStates.LOGIN_PASSWORD;
+        }
+        // Login password
+        else if(currentState.equals(AvailableStates.LOGIN_PASSWORD)){
+            password = text;
+
+            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.REQUEST_LOGIN,username+"#"+password));
+
+            // Asynchronous result
+            try {
+                Thread.yield();
+                loginResultAvailable.acquire();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+            if(loginResult){
+                echoMessage.setText("Login successful. Send messages: username#message_text.\n" +
+                        "Send images: !image\n" +
+                        "Add to friends: !friend\n" +
+                        "Create group: !creategroup\n" +
+                        "Add user to group: !addtogroup\n" +
+                        "Change text sending to group sending: !group. Then groupname#message_text\n" +
+                        "Switch to user sending: !user\n" +
+                        "Quit: !q");
+                execute(echoMessage);
+
+                currentState = AvailableStates.CONNECTED_TO_CHAT;
+            }else {
+                echoMessage.setText("Incorrect data. Try again.\nPlease login[l] or sign in[s]...");
+                execute(echoMessage);
+
+                currentState = AvailableStates.SELECT_LOGIN_OR_REGISTER;
+            }
+
+        }
+        // Register username
+        else if(currentState.equals(AvailableStates.REGISTER_USERNAME)){
+            username = text;
+            echoMessage.setText("Input your Password:...");
+            execute(echoMessage);
+            currentState = AvailableStates.REGISTER_PASSWORD;
+        }
+        // Register password
+        else if(currentState.equals(AvailableStates.REGISTER_PASSWORD)){
+            password = text;
+
+            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.REQUEST_REGISTER,username+"#"+password));
+
+            // Asynchronous result
+            try {
+                Thread.yield();
+                loginResultAvailable.acquire();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if(loginResult){
+                echoMessage.setText("Login successful. Send messages: username#message_text. \n" +
+                        "Send images: !image.\n" +
+                        "Add to friends: !friend\n" +
+                        "Create group: !creategroup\n" +
+                        "Add user to group: !addtogroup\n" +
+                        "Change text sending to group sending: !group. Then groupname#message_text\n" +
+                        "Switch to user sending: !user\n" +
+                        "Quit: !q");
+                execute(echoMessage);
+                currentState = AvailableStates.CONNECTED_TO_CHAT;
+            }else {
+                echoMessage.setText("Incorrect data. Try again.\nPlease login[l] or sign in[s]...");
+                execute(echoMessage);
+                currentState = AvailableStates.SELECT_LOGIN_OR_REGISTER;
+            }
+        }
+
+
+        // Connected to chat, now choose options
+        else if(currentState.equals(AvailableStates.CONNECTED_TO_CHAT)){
+            // Quit
+            if(text.equals("!q")){
+                try {
+                    TelegramBot.echoSocket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return;
+
+            }
+            // Image
+            else if(text.equalsIgnoreCase("!image")){
+                currentState = AvailableStates.IMAGE_SENDING;
+                echoMessage.setText("Input image");
+                execute(echoMessage);
+            }
+            // Friend add
+            else if(text.equalsIgnoreCase("!friend")){
+                currentState  = AvailableStates.ADD_TO_FRIENDS;
+                echoMessage.setText("Input friend to add name...");
+                execute(echoMessage);
+            }
+            // Create group
+            else if(text.equalsIgnoreCase("!creategroup")){
+                currentState = AvailableStates.CREATE_GROUP;
+                echoMessage.setText("Input group name to create...");
+                execute(echoMessage);
+            }
+            // Add to group
+            else if(text.equalsIgnoreCase("!addtogroup")){
+                currentState  = AvailableStates.ADD_TO_GROUP;
+                echoMessage.setText("Input groupname#usertoadd...");
+                execute(echoMessage);
+            }
+            // Group sending
+            else if(text.equalsIgnoreCase("!group")){
+                isGroupSending = true;
+                echoMessage.setText("Group sending!");
+                execute(echoMessage);
+            }
+            // User sending
+            else if(text.equalsIgnoreCase("!user")){
+                isGroupSending = false;
+                echoMessage.setText("User sending!");
+                execute(echoMessage);
+            }
+            // Message sending
+            else if(isGroupSending) {
+                String []tmpArray = text.split("#");
+
+                sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_GROUP,tmpArray[0]+"#"+username+"#"+tmpArray[1]));
+
+            }else{
+                sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_USER,text));
+
+            }
+
+
+
+        }
+
+        // Image sending
+        else if(currentState.equals(AvailableStates.IMAGE_SENDING)){
             if(message.hasPhoto()){
                 GetFile getFileRequest = new GetFile();
 
@@ -146,19 +406,44 @@ public class Multicom extends TelegramLongPollingBot {
                 File file = execute(getFileRequest);
                 String fileURL = file.getFileUrl("827656409:AAEgFLohXzB9sdkWUIaKz4IaYnAF16dZOrU");
                 System.out.println(fileURL);
-                sendMessage(new ClientToServerMessage(ClientToServerMessageType.IMAGE,fileURL,CommunicatorType.TELEGRAM));
-
-            }else{
-                sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_USER,"telegram#"+text,CommunicatorType.TELEGRAM));
+                sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.IMAGE,fileURL));
 
             }
+            currentState = AvailableStates.CONNECTED_TO_CHAT;
         }
+        // Add to friends
+        else if(currentState.equals(AvailableStates.ADD_TO_FRIENDS)){
+            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.ADD_USER_TO_FRIENDS,text));
+            currentState = AvailableStates.CONNECTED_TO_CHAT;
+        }
+        // Create group
+        else if(currentState.equals(AvailableStates.CREATE_GROUP)){
+            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.CREATE_GROUP,text));
+
+            currentState = AvailableStates.CONNECTED_TO_CHAT;
+        }
+        // Add to group
+        else if(currentState.equals(AvailableStates.ADD_TO_GROUP)){
+            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.ADD_USER_TO_GROUP,text));
+
+            currentState = AvailableStates.CONNECTED_TO_CHAT;
+        }
+        // Friend request pending
+        else if(currentState.equals(AvailableStates.FRIEND_REQUEST_PENDING)){
+            if(text.equalsIgnoreCase("Y")){
+                sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.CONFIRMATION_OF_FRIENDSHIP,friend));
+            }else if(text.equalsIgnoreCase("N")){
+
+            }else {
+                echoMessage.setText("Not recognised sign");
+                execute(echoMessage);
+            }
+            currentState = AvailableStates.CONNECTED_TO_CHAT;
+        }
+
     }
 
-//    @Override
-//    public void onUpdatesReceived(List<Update> updates) {
-//
-//    }
+
 
     public String getBotUsername() {
         return "MultiComEitiBot";
@@ -168,7 +453,5 @@ public class Multicom extends TelegramLongPollingBot {
         return "827656409:AAEgFLohXzB9sdkWUIaKz4IaYnAF16dZOrU";
     }
 
-//    public String getBotPath() {
-//        return "updates";
-//    }
+
 }

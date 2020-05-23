@@ -10,6 +10,7 @@ public enum ClientToServerMessageType {
     CREATE_GROUP,
     ADD_USER_TO_GROUP,
     TEXT_TO_GROUP,
-    IMAGE
+    IMAGE,
+
 
 }

@@ -1,0 +1,12 @@
+
+\
+java:S1192S"FDefine a constant instead of duplicating this literal "Chats" 3 times.(ÓœäŠ
+@
+java:S1948"*Make "listener" transient or serializable.(† ÁŒ
+n	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(íÚè|
+V	java:S110"<This class has 6 parents which is greater than 5 authorized.(™­•´ûÿÿÿÿ
+h	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ú¯ëâùÿÿÿÿ
+c	java:S100""NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ƒ‹ğ
+h	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÓÑ†ûÿÿÿÿ
+k	java:S117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ú¯ëâùÿÿÿÿ
+h	java:S100&"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ø‹¡™ûÿÿÿÿ

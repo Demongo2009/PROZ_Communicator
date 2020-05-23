@@ -1,39 +1,34 @@
 package Server;
 
-import Messages.Message;
 import Messages.clientToServer.ClientToServerMessage;
 import Messages.clientToServer.ClientToServerMessageType;
-//import Server.Protocol;
 import Messages.serverToClient.ServerToClientMessage;
 import Messages.serverToClient.ServerToClientMessageType;
-import Server.ServerPrinterThread;
 
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 public class ServerThread extends Thread{
-    static Semaphore mutex;
-    ServerSocket serverSocket;
-    Socket clientSocket;
+    private static Semaphore mutex;
+    private Socket clientSocket;
 
-    ArrayList<User> connectedUsers;
-    User userToHandle;
-    boolean shouldRun = true;
+    private ArrayList<User> connectedUsers;
+    private User userToHandle;
+    private boolean shouldRun = true;
+    private boolean isLogged = false;
 
     /* to send objects and receive */
-    ObjectOutputStream outObject;
-    ObjectInputStream inObject;
+    private ObjectOutputStream outObject;
+    private ObjectInputStream inObject;
 
-    static DatabaseHandler databaseHandler;
+    private static DatabaseHandler databaseHandler;
 
-    ArrayList<Group> groups;
+    private ArrayList<Group> groups;
 
 
-    ServerThread(ServerSocket serverSocket, Socket clientSocket, ArrayList<User> connectedUsers, ArrayList<Group> groups){
-        this.serverSocket = serverSocket;
+    ServerThread( Socket clientSocket, ArrayList<User> connectedUsers, ArrayList<Group> groups){
         this.clientSocket = clientSocket;
         this.connectedUsers = connectedUsers;
         this.groups = groups;
@@ -50,17 +45,23 @@ public class ServerThread extends Thread{
 
     public void run() {
         databaseHandler = new DatabaseHandler();
-/* LOG IN PHASE*/
-        try {
-            if (sendLoginAnswer(processLoginOrRegisterRequest())) {
-                System.out.println("Serwer: użytkownik zalogowany");
-            } else {
-                System.out.println("Serwer: nie udało sie");
+        /* LOG IN PHASE*/
+        while(!isLogged)
+        {
+            try {
+
+                if (sendLoginAnswer(processLoginOrRegisterRequest())) {
+                    //System.out.println("Serwer: użytkownik zalogowany");
+                    isLogged=true;
+
+                } else {
+                    //System.out.println("Serwer: nie udało sie");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        }catch( Exception e){
-            e.printStackTrace();
         }
-/* END OF LOG IN PHASE*/
+        /* END OF LOG IN PHASE*/
         while(shouldRun){
             try {
                 mutex.acquire();//========================
@@ -70,16 +71,24 @@ public class ServerThread extends Thread{
                 e.printStackTrace();
             }
         }
-        System.out.println("End of thread");
+        //System.out.println("End of thread");
+        try {
+            inObject.close();
+            outObject.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
-    /*  throws exception if message is not REQUEST_LOGIN nor REQUEST_REGISTER
-    *
-    *   if operation is successful then add user to connectedUsers map
-    *
-    *   return true if login or register is successful
-    * */
-    boolean processLoginOrRegisterRequest() throws Exception{
+    /**
+     * throws exception if message is not REQUEST_LOGIN nor REQUEST_REGISTER
+     *
+     *   if operation is successful then add user to connectedUsers map
+     *
+     *   return true if login or register is successful
+     * */
+    private boolean processLoginOrRegisterRequest() throws Exception{
         boolean answer=false;
 
         ClientToServerMessage message = (ClientToServerMessage)inObject.readObject();
@@ -87,10 +96,7 @@ public class ServerThread extends Thread{
             throw new Exception();
         }
 
-        String[] loginAndPass = message.getString().split("#");
-        //=========================================================================
-        CommunicatorType communicatorType = message.getCommunicatorType();
-        System.out.println(message.getText());
+        String[] loginAndPass = message.getText().split("#");
 
         if( message.getType() == ClientToServerMessageType.REQUEST_LOGIN){
             for(User us: connectedUsers){
@@ -102,15 +108,12 @@ public class ServerThread extends Thread{
         }else{ //cannot be other that REQUEST_REGISTER since it was already checked
             answer = databaseHandler.registerUser(loginAndPass[0], loginAndPass[1]);
         }
+
         if( answer ){
             //==========================================================
-            User user = new User(loginAndPass[0], clientSocket, communicatorType, outObject);
+            User user = new User(loginAndPass[0], clientSocket, outObject);
             connectedUsers.add(user);
             userToHandle = user;
-
-            /*for(User us: connectedUsers){
-                System.out.println( us.getLogin());
-            }*/
         }
 
         return answer;
@@ -118,18 +121,19 @@ public class ServerThread extends Thread{
 
 
 
-    /*
-    *   sends ServerToClientMessage with adequate MessageType and text
-    *
-    *    returns true if answer is positive
-    * */
-    boolean sendLoginAnswer(boolean answer){
+    /**
+     *   sends ServerToClientMessage with adequate MessageType and text
+     *
+     *    returns true if answer is positive
+     * */
+    private boolean sendLoginAnswer(boolean answer){
         ServerToClientMessageType type = null;
         String text = "";
         if( answer ){
             type = ServerToClientMessageType.CONFIRM_LOGIN;
+            text +="#";
             text += databaseHandler.getUserFriends( userToHandle.getLogin() ); //send to user his friends
-            text += "#@#"; //in order to not split empty array
+            text += "@#"; //in order to not split empty array
             text += getUserGroups(userToHandle.getLogin());
         }else{
             type = ServerToClientMessageType.REJECT_LOGIN;
@@ -146,10 +150,11 @@ public class ServerThread extends Thread{
         return answer;
     }
 
-    /*
-    * Returns User object based on given login
-    * */
-    User getUserFromConnectedUsers(String login){
+    /**
+     * Returns User object based on given login
+     * if user is not found then returns null
+     * */
+    private User getUserFromConnectedUsers(String login){
         for(User user: connectedUsers){
             if( user.getLogin().equals(login)){
                 return user;
@@ -159,16 +164,10 @@ public class ServerThread extends Thread{
     }
 
 
-    /* don't know what this function is for for now*/
-    ServerToClientMessage prepareMessage(ServerToClientMessageType type, String text){
-        ServerToClientMessage message = new ServerToClientMessage( type, text);
-        return message;
-    }
-
-    /*
-    * returns true if message is being sent
-    * */
-    boolean sendMessage(ServerToClientMessage message, User userToSend){
+    /**
+     * returns true if message is being sent
+     * */
+    private boolean sendMessage(ServerToClientMessage message, User userToSend){
 
         try {
             ObjectOutputStream tmpOut = userToSend.getObjectOutputStream();
@@ -180,27 +179,29 @@ public class ServerThread extends Thread{
         return false;
     }
 
-    /*
-    * returns message received by inObject received
-    * */
-    ClientToServerMessage receiveMessage(){
+    /**
+     * returns message received by inObject received
+     * if exception is thrown then end the thread
+     * */
+    private ClientToServerMessage receiveMessage(){
         ClientToServerMessage message= null;
 
         try {
             message = (ClientToServerMessage) inObject.readObject();
 
         } catch (Exception e) {
-            shouldRun = false; /* DON'T KNOW YET*/
+            shouldRun = false;
             e.printStackTrace();
         }
-
         return message;
     }
 
-    /*
-    * Removes user from connectedUsers and ends thread
-    * */
-    void logoutUser(){
+    /**
+     * Removes user from connectedUsers
+     * Sends to client listener communicate to end the listener thread
+     * ends thread
+     * */
+    private void logoutUser(){
         /* send to user listener thread that he can stop listening*/
         ServerToClientMessage message = new ServerToClientMessage( ServerToClientMessageType.LOGOUT, "");
         sendMessage(message, userToHandle);
@@ -208,18 +209,20 @@ public class ServerThread extends Thread{
         connectedUsers.remove(userToHandle);
         userToHandle=null;
         shouldRun = false;
+        isLogged=false;
     }
 
-    /*
-    * sends text message to user
-    * if user is not connected it sends the message to sender that communicates it
-    * */
-    void processTextMessage(String textMessage){
+    /**
+     * sends text message to user
+     * if user is not connected, it sends the message to sender that communicates it
+     * */
+    private void processTextMessage(String textMessage){
         if( textMessage == null ){
             return; // should never occur
         }
         String userAndText[] = textMessage.split("#");
 
+        //.out.println(userAndText[0]);
         if( !databaseHandler.checkFriendship(userToHandle.getLogin(), userAndText[0]) ){
             System.out.println("USERS ARE NOT FRIENDS - something went wrong, client should check it");
             return;
@@ -238,25 +241,21 @@ public class ServerThread extends Thread{
         ServerToClientMessage message = new ServerToClientMessage(type, text);
         sendMessage( message, user);
     }
-    /*
-    * sends to user that userToHandle wants to add to friends a USER_WANT_TO_BE_YOUR_FRIEND message
-    * if that user does not exit =============================
-    * if users are already friend then does nothing
-    * */
-    void processAddUserToFriends(String loginToAdd){
-        //System.out.println(userToAdd);
-        /*TODO: check if user is connected, if not || do nothing OR communicate it
-         *  if yes then send request to this user*/
-
+    /**
+     * sends to user that userToHandle wants to add to friends a USER_WANT_TO_BE_YOUR_FRIEND message
+     * if that user does not exit then does nothing
+     * if users are already friend then does nothing
+     * */
+    private void processAddUserToFriends(String loginToAdd){
         if( databaseHandler.checkFriendship( userToHandle.getLogin(), loginToAdd) ){
-            System.out.println("USERS ARE FRIENDS ALREADY");
+            //System.out.println("USERS ARE FRIENDS ALREADY");
             return;//users are friends already, no reason to send it further, should never occur since client checks it
         }
 
         User user = getUserFromConnectedUsers(loginToAdd);
         if( user == null ){
             /* Do nothing or communicate it to sender, don't know yet*/
-            System.out.println("No user found");
+            //System.out.println("No user found");
             return;
         }
         String text = userToHandle.getLogin();
@@ -265,11 +264,11 @@ public class ServerThread extends Thread{
 
     }
 
-    /*
-    * registers both users as friends in database
-    * and communicates it to first_user
-    * */
-    void processConfirmationOfFriendship(String newFriend){
+    /**
+     * registers both users as friends in database
+     * and communicates it to first_user
+     * */
+    private void processConfirmationOfFriendship(String newFriend){
         if( !databaseHandler.checkFriendship( userToHandle.getLogin(), newFriend)) { // it is possible to send few requests and to confirm these few requests, so we check if friendship is not already booked
             databaseHandler.insertFriendship(newFriend, userToHandle.getLogin());
             User user = getUserFromConnectedUsers( newFriend );
@@ -277,15 +276,15 @@ public class ServerThread extends Thread{
                 //do nothing since the friendship is already booked in database and user will get this friendship when he log in
                 return;
             }
-            ServerToClientMessage message = new ServerToClientMessage( ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST, newFriend);
+            ServerToClientMessage message = new ServerToClientMessage( ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST, userToHandle.getLogin());
             sendMessage( message, user );
         }
     }
 
-    /*
-    * returns group_names, in which given user is, separated by '#'
-    * */
-    String getUserGroups(String user){
+    /**
+     * returns group_names, in which given user is, separated by '#'
+     * */
+    private String getUserGroups(String user){
         String userGroups = "";
         for(Group group: groups){
             for(int i=0; i<group.getSize(); ++i){
@@ -298,11 +297,11 @@ public class ServerThread extends Thread{
         return userGroups;
     }
 
-    /*
-    * create group if group_name is not occupied
-    * if it is occpied then communicate it to user
-    * */
-    void processCreateGroup(String groupName){
+    /**
+     * create group if group_name is not occupied
+     * if it is occpied then communicate it to user
+     * */
+    private void processCreateGroup(String groupName){
         ServerToClientMessage message;
         if( databaseHandler.checkIfGroupExists(groupName)){
             ServerToClientMessageType type = ServerToClientMessageType.GROUP_NAME_OCCUPIED;
@@ -320,9 +319,10 @@ public class ServerThread extends Thread{
         sendMessage( message, userToHandle);
     }
 
-
-    //TODO:
-    void processTextGroupMessage(String text){
+    /**
+     *
+    * */
+    private void processTextGroupMessage(String text){
         String[] groupAndUserAndText = text.split("#");
         Group group=null;
         for( Group g: groups){
@@ -332,7 +332,7 @@ public class ServerThread extends Thread{
             }
         }
         if( group == null){//should never occur
-            System.out.println("GROUP DOES NOT EXIST");
+            //System.out.println("GROUP DOES NOT EXIST");
             return;
         }
 
@@ -351,8 +351,12 @@ public class ServerThread extends Thread{
             sendMessage(message, user);
         }
     }
-
-    void processAddUserToGroup(String text){
+    /**
+     * Adds user to groups
+     * Argument should look like
+     * "GROUP_NAME # USER"
+     * */
+    private void processAddUserToGroup(String text){
         String[] groupAndUser = text.split("#");
 
         Group group = null;
@@ -363,43 +367,44 @@ public class ServerThread extends Thread{
             }
         }
         if(group == null){
-            System.out.println("Group does not exist");
+            //System.out.println("Group does not exist");
             return;
         }
         if( group.getSize() >= 4){
-            System.out.println("Group is full");
+            //System.out.println("Group is full");
             return;
         }
         if( !databaseHandler.checkIfUserExists( groupAndUser[1])){
-            System.out.println("User does not exists");
+            //System.out.println("User does not exists");
+            return;
         }
         for(int i=0; i<group.getSize(); ++i){
             if( group.getUser(i).equals(groupAndUser[1])){
-                System.out.println("User is already in group");
+                //System.out.println("User is already in group");
                 return;
             }
         }
 
-        //TODO: send to user that he is added to group
         databaseHandler.addUserToGroup(groupAndUser[0], groupAndUser[1]);
         group.addUser(groupAndUser[1]);
+        User user = getUserFromConnectedUsers(groupAndUser[1]);
+        ServerToClientMessageType type = ServerToClientMessageType.USER_ADDED_YOU_TO_GROUP;
+        ServerToClientMessage message = new ServerToClientMessage(type, groupAndUser[0]);
+        sendMessage( message, user);
 
     }
 
 
-    /*
-    * Behaves like multiplexer for messages types
-    * */
-    void processMessage( ClientToServerMessage message ){
+    /**
+     * Behaves like multiplexer for messages types
+     * calls functions depending on message received
+     * */
+    private void processMessage( ClientToServerMessage message ){
         if( message == null){
             return;
         }
         ClientToServerMessageType type = message.getType();
         String text = message.getText();
-
-        //=============
-        //System.out.println(text);
-        ////===========
 
         try {
             switch (type) {
@@ -432,5 +437,6 @@ public class ServerThread extends Thread{
 
         }
     }
+
 
 }

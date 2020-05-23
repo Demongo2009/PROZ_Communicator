@@ -1,0 +1,25 @@
+
+g	java:S112]"FDefine and throw a dedicated exception instead of using a generic one.(Âó‘»ıÿÿÿÿ8¼çÅˆ¤.
+b	java:S112i"FDefine and throw a dedicated exception instead of using a generic one.(Â³Ô­8™–×ˆ¤.
+g	java:S112S"FDefine and throw a dedicated exception instead of using a generic one.(ú¤Å·ÿÿÿÿÿ8ß½Çˆ¤.
+g	java:S112o"FDefine and throw a dedicated exception instead of using a generic one.(ğ¬äøÿÿÿÿ8™–×ˆ¤.
+b	java:S112g"FDefine and throw a dedicated exception instead of using a generic one.(É³¤´8äüÕˆ¤.
+c	java:S112†"FDefine and throw a dedicated exception instead of using a generic one.(Ÿ™™Ü8Ëğ±‰¤.
+U	java:S106I"9Replace this use of System.out or System.err by a logger.(ôÓ¡¼8§ˆ´‰¤.
+E
+java:S1148L"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8¾¼ˆ¤.
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¾©ò¹
+b	java:S112U"FDefine and throw a dedicated exception instead of using a generic one.(ü²¬›8¼çÅˆ¤.
+g	java:S112s"FDefine and throw a dedicated exception instead of using a generic one.(˜æïµúÿÿÿÿ8²üßˆ¤.
+g	java:S112?"FDefine and throw a dedicated exception instead of using a generic one.(©ìŒ„ÿÿÿÿÿ8ºêèˆ¤.
+b	java:S112u"FDefine and throw a dedicated exception instead of using a generic one.(¶é€¶8…°àˆ¤.
+h	java:S112€"FDefine and throw a dedicated exception instead of using a generic one.(µÜå†üÿÿÿÿ8ÕÉ¬‰¤.
+Q
+java:S1128"/Remove this unused import 'java.sql.SQLOutput'.(ê¤òÃùÿÿÿÿ8§ˆ´‰¤.
+g	java:S112a"FDefine and throw a dedicated exception instead of using a generic one.(ÚÂ®úÿÿÿÿ8„Ùß‰¤.
+b	java:S112c"FDefine and throw a dedicated exception instead of using a generic one.(Œã÷š8„Ùß‰¤.
+c	java:S112‚"FDefine and throw a dedicated exception instead of using a generic one.(óµö™8£Ã«‰¤.
+b	java:S112Y"FDefine and throw a dedicated exception instead of using a generic one.(‡‚ß8¼çÅˆ¤.
+h	java:S112ˆ"FDefine and throw a dedicated exception instead of using a generic one.(Ÿ›Õ§øÿÿÿÿ8‹§±‰¤.
+g	java:S112:"FDefine and throw a dedicated exception instead of using a generic one.(‹‘ƒ¬ûÿÿÿÿ8°Êëˆ¤.
+g	java:S112{"FDefine and throw a dedicated exception instead of using a generic one.(ğ¬äøÿÿÿÿ8…°àˆ¤.

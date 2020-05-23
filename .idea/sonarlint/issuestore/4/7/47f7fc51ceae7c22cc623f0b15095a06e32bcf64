@@ -1,27 +1,11 @@
 
-M
-java:S1128"7Remove this unused import 'java.awt.event.ActionEvent'.(Úù“‘
+P
+java:S11611":Add the "@Override" annotation above this method signature(“–ış
 Z
-java:S2147$"DCombine this catch with the one at line 34, which has the same body.(ıàÑÎ
-l
-java:S1128"JRemove this unused import 'Messages.clientToServer.ClientToServerMessage'.(¼æé­şÿÿÿÿ8Ê³¤ñ .
-P
-java:S11618":Add the "@Override" annotation above this method signature(“–ış
-k
-java:S1128"NRemove this unused import 'Messages.clientToServer.ClientToServerMessageType'.(»Êû£8Ê³¤ñ .
+java:S2147"DCombine this catch with the one at line 29, which has the same body.(ıàÑÎ
 >
-java:S1148%"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
-Q	java:S125<"<This block of commented-out lines of code should be removed.(†£Íã
-I
-java:S1128
-"3Remove this unused import 'java.io.BufferedReader'.(€é²Å
-Z	java:S1064"9Replace this use of System.out or System.err by a logger.(ù‘™§ûÿÿÿÿ8ò·÷Ÿ.
->
-java:S1148#"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
-P
-java:S1128	":Remove this unused import 'java.awt.event.ActionListener'.(Ìä¹
-F
-java:S1128"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ
-L
-java:S1128"6Remove this unused import 'java.io.InputStreamReader'.(ãˆÎÉ
+java:S1148 "#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+Q	java:S1255"<This block of commented-out lines of code should be removed.(†£Íã
 t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(•İÈ‚ıÿÿÿÿ
+>
+java:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ

@@ -1,0 +1,31 @@
+
+h	java:S116-"SRename this field "URLRegex" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(á¨µì
+c	java:S1000"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ëÊµ­
+?
+java:S1148³"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+u	java:S116"[Rename this field "WIDTH_MULTIPLIER" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ÿ¯ã—ùÿÿÿÿ
+Q	java:S125©"<This block of commented-out lines of code should be removed.(õø©
+b	java:S101y"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(¡Ýäð
+?
+java:S1604"(Make this anonymous inner class a lambda(åŽ³²
+<
+java:S1170"!Make this final field static too.(Ÿ¯ã—ùÿÿÿÿ
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(—÷å²ÿÿÿÿÿ
+h
+java:S37760"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(ëÊµ­
+
+java:S1186–"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¼ Òþüÿÿÿÿ
+W	java:S125á"<This block of commented-out lines of code should be removed.(ì …Ôúÿÿÿÿ
+7
+java:S1170"!Make this final field static too.(˜Ïôò
+?
+java:S1148¼"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+>
+java:S1604”"(Make this anonymous inner class a lambda(²´•_
+h
+java:S3252 "LUse static access with "javax.swing.WindowConstants" for "DISPOSE_ON_CLOSE".(ÝÀâêúÿÿÿÿ
+n	java:S116"YRename this field "CHAT_BOX_WIDTH" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(˜Ïôò
+W	java:S125¢"<This block of commented-out lines of code should be removed.(ì …Ôúÿÿÿÿ
+?
+java:S1604™"(Make this anonymous inner class a lambda(Ý”ðà
+j	java:S116'"URename this field "URLToImage" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ãÿà

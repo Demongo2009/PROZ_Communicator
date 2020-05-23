@@ -1,6 +1,7 @@
 package Client.GUI.Chat;
 
 import Client.GUI.Main.MainWindow;
+import Client.GUI.tools.LabelTextBubbleBorder;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -19,7 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static Client.Client.sendTextMessageToUser;
-import static Client.GUI.Chat.ImageScaler.resizeImage;
+import static Client.GUI.tools.ImageScaler.resizeImage;
 
 
 public class ChatWindow extends JPanel
@@ -54,17 +55,23 @@ public class ChatWindow extends JPanel
 
             if (containsImage(message))
             {
-                String []notURL=message.split(URLRegex);
+                String[] notURL = message.split(URLRegex);
 
-                String rest="";
-                if(notURL.length!=0)
-                {
-                    if (notURL.length>0)
+                String rest = "";
+                if (notURL.length != 0) {
+                    if (notURL.length > 0)
                         rest += notURL[0];
                     if (notURL.length != 1)
                         rest += notURL[1];
                 }
-                addRightChatPicture(URLToImage,rest);
+                if (URLToImage.startsWith("http")) {
+                    addRightChatPicture(URLToImage, rest);
+                }
+                else
+                {
+                    addRightChat(message,false);
+
+                }
             }
             else
                 addRightChat(message,false);
@@ -88,14 +95,26 @@ public class ChatWindow extends JPanel
                 if (notURL.length != 1)
                     rest += notURL[1];
             }
-            addLeftChatPicture(URLToImage,rest);
+            if (URLToImage.startsWith("http"))
+            {
+                addLeftChatPicture(URLToImage,rest);
+            }
+            else
+            {
+                addLeftChat(messageText,false);
+            }
         }
         else
             addLeftChat(messageText,false);
     }
     boolean containsImage(String messageText)
     {
-        Matcher m = Pattern.compile(URLRegex).matcher(messageText);
+        String msgLink=messageText;
+        if(messageText.contains("http"))
+        {
+            msgLink = messageText.substring(messageText.indexOf("http"));
+        }
+        Matcher m = Pattern.compile(URLRegex).matcher(msgLink);
         if (m.find())
         {
             URLToImage=m.group(0);

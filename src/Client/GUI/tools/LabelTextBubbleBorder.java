@@ -1,4 +1,4 @@
-package Client.GUI.Chat;
+package Client.GUI.tools;
 
 import javax.swing.border.AbstractBorder;
 import java.awt.*;
@@ -22,7 +22,7 @@ public class LabelTextBubbleBorder extends AbstractBorder {
         new LabelTextBubbleBorder(color, 4, 8, 7);
     }
 
-    LabelTextBubbleBorder(
+    public LabelTextBubbleBorder(
             Color color, int thickness, int radii, int pointerSize) {
         this.thickness = thickness;
         this.radii = radii;

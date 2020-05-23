@@ -1,7 +1,6 @@
 package Messages.serverToClient;
 
-import Messages.Message;
-import Server.CommunicatorType;
+
 
 import java.io.Serializable;
 

@@ -33,24 +33,9 @@ public class ClientPrinterThread extends Thread {
     String userId;
 
     public void initializePlatform(){
-        platform = null;
-        try {
-            platform = new BotPlatform("config.properties");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        message_tpl = platform.getBaseSender().getMessageTemplate();
-        button_message_tpl = platform.getBaseSender().getButtonTemplate();
-        list_message_tpl = platform.getBaseSender().getListTemplate();
-        generic_message_tpl = platform.getBaseSender().getGenericTemplate();
-        receipt_message_tpl = platform.getBaseSender().getReceiptTemplate();
+
     }
-    BotPlatform platform;
-    MessageTemplate message_tpl;
-    ButtonTemplate button_message_tpl;
-    ListTemplate list_message_tpl;
-    GenericTemplate generic_message_tpl;
-    ReceiptTemplate receipt_message_tpl;
+
 
     static Semaphore mutex;
 
@@ -73,16 +58,7 @@ public class ClientPrinterThread extends Thread {
         return message;
     }
 
-    public void sendRegularMessage(String text){
-        message_tpl.setRecipientId(userId);
-        message_tpl.setNotificationType("REGULAR");
-        message_tpl.setMessageText(text);
-        try {
-            platform.getBaseSender().send(message_tpl);
-        } catch (UnirestException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     public void run(){
         try{
@@ -96,12 +72,12 @@ public class ClientPrinterThread extends Thread {
                 }
 //                System.out.println("Server.Server: "+ inputFromServer);
 
-                message_tpl.setRecipientId(userId);
-                message_tpl.setNotificationType("REGULAR");
+
 
                 ServerToClientMessageType messageType= message.getType();
                 if(messageType.equals(ServerToClientMessageType.IMAGE)){
-                    message_tpl.setAttachment("image",inputFromServer,true);
+//                    message_tpl.setAttachment("image",inputFromServer,true);
+                    MessengerBot.sendRegularMessage(inputFromServer);
 
                 }else if(messageType.equals(ServerToClientMessageType.CONFIRM_LOGIN)) {
                     System.out.println("tak");
@@ -114,21 +90,19 @@ public class ClientPrinterThread extends Thread {
 
                 }else if(messageType.equals(ServerToClientMessageType.USER_WANTS_TO_BE_YOUR_FRIEND)) {
                     System.out.println("friend attempt");
-                    message_tpl.setMessageText("User \""+inputFromServer+"\" wants to be your friend. [Y] accept [N] refuse");
+//                    message_tpl.setMessageText("User \""+inputFromServer+"\" wants to be your friend. [Y] accept [N] refuse");
+                    MessengerBot.sendRegularMessage("User \""+inputFromServer+"\" wants to be your friend. [Y] accept [N] refuse");
                     MessengerBot.friendRequest(inputFromServer);
 
                 }else if(messageType.equals(ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST)){
-                    message_tpl.setMessageText("\""+inputFromServer + "\" accepted your friend request");
+//                    message_tpl.setMessageText("\""+inputFromServer + "\" accepted your friend request");
+                    MessengerBot.sendRegularMessage("\""+inputFromServer + "\" accepted your friend request");
                 }
                 else {
-                    message_tpl.setMessageText(inputFromServer);
+//                    message_tpl.setMessageText(inputFromServer);
+                    MessengerBot.sendRegularMessage("\""+inputFromServer + "\" accepted your friend request");
                 }
 
-                try {
-                    platform.getBaseSender().send(message_tpl);
-                } catch (UnirestException e) {
-                    e.printStackTrace();
-                }
             }
 
         } catch (InterruptedException e) {

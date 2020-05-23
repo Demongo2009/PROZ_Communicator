@@ -5,7 +5,7 @@ import Messages.clientToServer.ClientToServerMessage;
 import Messages.clientToServer.ClientToServerMessageType;
 import Messages.serverToClient.ServerToClientMessage;
 import Messages.serverToClient.ServerToClientMessageType;
-import Server.CommunicatorType;
+
 
 import java.io.*;
 import java.net.Socket;
@@ -102,7 +102,7 @@ public class Client {
 
         username=login;
         String textToSend = login + "#" + password;
-        ClientToServerMessage message = new ClientToServerMessage(type, textToSend, CommunicatorType.MULTI_COM );
+        ClientToServerMessage message = new ClientToServerMessage(type, textToSend );
         sendMessage( message );
     }
 

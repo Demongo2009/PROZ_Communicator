@@ -1,4 +1,4 @@
-package Client.GUI.Chat;
+package Client.GUI.tools;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

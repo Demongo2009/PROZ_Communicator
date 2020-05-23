@@ -2,7 +2,7 @@ import Messages.clientToServer.ClientToServerMessage;
 import Messages.clientToServer.ClientToServerMessageType;
 import Messages.serverToClient.ServerToClientMessage;
 import Messages.serverToClient.ServerToClientMessageType;
-import Server.CommunicatorType;
+
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -166,19 +166,21 @@ public class Multicom extends TelegramLongPollingBot {
                                 String[] friendsAndGroups = inputFromServer.split("@");
                                 String[] friends = friendsAndGroups[0].split("#");
                                 String[] groups = friendsAndGroups[1].split("#");
+                                String friendsText= "";
+                                if(friends.length>0){
 
-                                String friendsText = friends[0];
-                                friends[0] = null;
-                                for (String f: friends){
-                                    if(f!=null)
-                                        friendsText += ", "+f;
+                                    for (String f: friends){
+                                        if(f!=null)
+                                            friendsText += ", "+f;
+                                    }
                                 }
+                                String groupsText = "";
+                                if(groups.length>0){
 
-                                String groupsText = groups[0];
-                                groups[0] = null;
-                                for (String g: groups){
-                                    if(g!=null)
-                                        groupsText += ", "+g;
+                                    for (String g: groups){
+                                        if(g!=null)
+                                            groupsText += ", "+g;
+                                    }
                                 }
 
                                 echoMessage.setText("Your friends are: "+friendsText+".\nYour groups are: "+groupsText+".");
@@ -255,7 +257,7 @@ public class Multicom extends TelegramLongPollingBot {
         else if(currentState.equals(AvailableStates.LOGIN_PASSWORD)){
             password = text;
 
-            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.REQUEST_LOGIN,username+"#"+password,CommunicatorType.MESSENGER));
+            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.REQUEST_LOGIN,username+"#"+password));
             System.out.println("Waiting for login result");
             try {
                 Thread.yield();
@@ -296,7 +298,7 @@ public class Multicom extends TelegramLongPollingBot {
         else if(currentState.equals(AvailableStates.REGISTER_PASSWORD)){
             password = text;
 
-            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.REQUEST_REGISTER,username+"#"+password,CommunicatorType.MESSENGER));
+            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.REQUEST_REGISTER,username+"#"+password));
 
             try {
                 Thread.yield();
@@ -331,25 +333,25 @@ public class Multicom extends TelegramLongPollingBot {
                 File file = execute(getFileRequest);
                 String fileURL = file.getFileUrl("827656409:AAEgFLohXzB9sdkWUIaKz4IaYnAF16dZOrU");
                 System.out.println(fileURL);
-                sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.IMAGE,fileURL,CommunicatorType.TELEGRAM));
+                sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.IMAGE,fileURL));
 
             }
             currentState = AvailableStates.CONNECTED_TO_CHAT;
         }
 
         else if(currentState.equals(AvailableStates.ADD_TO_FRIENDS)){
-            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.ADD_USER_TO_FRIENDS,text,CommunicatorType.MESSENGER));
+            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.ADD_USER_TO_FRIENDS,text));
             currentState = AvailableStates.CONNECTED_TO_CHAT;
         }
 
         else if(currentState.equals(AvailableStates.CREATE_GROUP)){
-            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.CREATE_GROUP,text,CommunicatorType.MESSENGER));
+            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.CREATE_GROUP,text));
 
             currentState = AvailableStates.CONNECTED_TO_CHAT;
         }
 
         else if(currentState.equals(AvailableStates.ADD_TO_GROUP)){
-            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.ADD_USER_TO_GROUP,text,CommunicatorType.MESSENGER));
+            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.ADD_USER_TO_GROUP,text));
 
             currentState = AvailableStates.CONNECTED_TO_CHAT;
         }
@@ -392,10 +394,10 @@ public class Multicom extends TelegramLongPollingBot {
             else if(isGroupSending) {
                 String []tmpArray = text.split("#");
 
-                sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_GROUP,tmpArray[0]+"#"+username+"#"+tmpArray[1],CommunicatorType.MESSENGER));
+                sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_GROUP,tmpArray[0]+"#"+username+"#"+tmpArray[1]));
 
             }else{
-                sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_USER,text,CommunicatorType.MESSENGER));
+                sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_USER,text));
 
             }
 
@@ -405,13 +407,14 @@ public class Multicom extends TelegramLongPollingBot {
 
         else if(currentState.equals(AvailableStates.FRIEND_REQUEST_PENDING)){
             if(text.equalsIgnoreCase("Y")){
-                sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.CONFIRMATION_OF_FRIENDSHIP,friend,CommunicatorType.MESSENGER));
+                sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.CONFIRMATION_OF_FRIENDSHIP,friend));
             }else if(text.equalsIgnoreCase("N")){
 
             }else {
                 echoMessage.setText("Not recognised sign");
                 execute(echoMessage);
             }
+            currentState = AvailableStates.CONNECTED_TO_CHAT;
         }
 
 

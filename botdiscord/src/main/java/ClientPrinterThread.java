@@ -79,18 +79,23 @@ public class ClientPrinterThread extends Thread {
                     String[] friends = friendsAndGroups[0].split("#");
                     String[] groups = friendsAndGroups[1].split("#");
 
-                    String friendsText = friends[0];
-                    friends[0] = null;
-                    for (String f: friends){
-                        if(f!=null)
-                            friendsText += ", "+f;
+                    String friendsText = "";
+                    if(friends.length>0){
+
+                        for (String f: friends){
+
+                                friendsText += ", "+f;
+                        }
                     }
 
-                    String groupsText = groups[0];
-                    groups[0] = null;
-                    for (String g: groups){
-                        if(g!=null)
-                            groupsText += ", "+g;
+                    String groupsText = "";
+                    if(groups.length>0){
+
+
+                        for (String g: groups){
+
+                                groupsText += ", "+g;
+                        }
                     }
 
                     textChannel.sendMessage("Your friends are: "+friendsText+".\nYour groups are: "+groupsText+".");

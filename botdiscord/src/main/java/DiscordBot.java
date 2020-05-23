@@ -1,7 +1,7 @@
 import Messages.clientToServer.ClientToServerMessage;
 import Messages.clientToServer.ClientToServerMessageType;
 import Messages.serverToClient.ServerToClientMessage;
-import Server.CommunicatorType;
+
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.channel.TextChannel;
@@ -71,7 +71,7 @@ public class DiscordBot {
 
     public static void main(String[] args) {
         // Insert your bot's token here
-        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.XsgYNQ.07iWnkAvX4uniKmQ336SLpQwN8k";
+        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.XsjhmA.0dXsAYYjM2GdfIWN8egNZOhpeDY";
 
         DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
 
@@ -155,7 +155,7 @@ public class DiscordBot {
             else if(currentState.equals(AvailableStates.LOGIN_PASSWORD)){
                 password = messageContent;
 
-                sendMessage(new ClientToServerMessage(ClientToServerMessageType.REQUEST_LOGIN,username+"#"+password,CommunicatorType.DISCORD));
+                sendMessage(new ClientToServerMessage(ClientToServerMessageType.REQUEST_LOGIN,username+"#"+password));
                 System.out.println("Waiting for login result");
                 try {
                     Thread.yield();
@@ -191,7 +191,7 @@ public class DiscordBot {
             else if(currentState.equals(AvailableStates.REGISTER_PASSWORD)){
                 password = messageContent;
 
-                sendMessage(new ClientToServerMessage(ClientToServerMessageType.REQUEST_REGISTER,username+"#"+password,CommunicatorType.DISCORD));
+                sendMessage(new ClientToServerMessage(ClientToServerMessageType.REQUEST_REGISTER,username+"#"+password));
 
                 try {
                     Thread.yield();
@@ -220,7 +220,7 @@ public class DiscordBot {
                 if(event.getMessageAttachments().size() > 0 ){
                     List<MessageAttachment> attachmentArray = event.getMessage().getAttachments();
                     if(attachmentArray.get(0)!=null) {
-                        sendMessage(new ClientToServerMessage(ClientToServerMessageType.IMAGE,attachmentArray.get(0).getUrl().toString(), CommunicatorType.DISCORD));
+                        sendMessage(new ClientToServerMessage(ClientToServerMessageType.IMAGE,attachmentArray.get(0).getUrl().toString()));
                     }
 
                 }
@@ -228,18 +228,18 @@ public class DiscordBot {
             }
 
             else if(currentState.equals(AvailableStates.ADD_TO_FRIENDS)){
-                sendMessage(new ClientToServerMessage(ClientToServerMessageType.ADD_USER_TO_FRIENDS,messageContent,CommunicatorType.DISCORD));
+                sendMessage(new ClientToServerMessage(ClientToServerMessageType.ADD_USER_TO_FRIENDS,messageContent));
                 currentState = AvailableStates.CONNECTED_TO_CHAT;
             }
 
             else if(currentState.equals(AvailableStates.CREATE_GROUP)){
-                sendMessage(new ClientToServerMessage(ClientToServerMessageType.CREATE_GROUP,messageContent,CommunicatorType.DISCORD));
+                sendMessage(new ClientToServerMessage(ClientToServerMessageType.CREATE_GROUP,messageContent));
 
                 currentState = AvailableStates.CONNECTED_TO_CHAT;
             }
 
             else if(currentState.equals(AvailableStates.ADD_TO_GROUP)){
-                sendMessage(new ClientToServerMessage(ClientToServerMessageType.ADD_USER_TO_GROUP,messageContent,CommunicatorType.DISCORD));
+                sendMessage(new ClientToServerMessage(ClientToServerMessageType.ADD_USER_TO_GROUP,messageContent));
 
                 currentState = AvailableStates.CONNECTED_TO_CHAT;
             }
@@ -277,10 +277,10 @@ public class DiscordBot {
                 else if(isGroupSending) {
                     String []tmp = messageContent.split("#");
 
-                    sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_GROUP,tmp[0]+"#"+username+"#"+tmp[1],CommunicatorType.DISCORD));
+                    sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_GROUP,tmp[0]+"#"+username+"#"+tmp[1]));
 
                 }else{
-                    sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_USER,messageContent.toString(),CommunicatorType.DISCORD));
+                    sendMessage(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_USER,messageContent.toString()));
 
                 }
 
@@ -289,7 +289,7 @@ public class DiscordBot {
 
             else if(currentState.equals(AvailableStates.FRIEND_REQUEST_PENDING)){
                 if(messageContent.equalsIgnoreCase("Y")){
-                    sendMessage(new ClientToServerMessage(ClientToServerMessageType.CONFIRMATION_OF_FRIENDSHIP,friend,CommunicatorType.DISCORD));
+                    sendMessage(new ClientToServerMessage(ClientToServerMessageType.CONFIRMATION_OF_FRIENDSHIP,friend));
                 }else if(messageContent.equalsIgnoreCase("N")){
 
                 }else {

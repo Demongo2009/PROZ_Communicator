@@ -18,6 +18,9 @@ public class Server {
         handleServer();
 
     }
+    /**
+     * inits server
+     * */
     private static void initServer(){
         databaseHandler = new DatabaseHandler();
         try {
@@ -29,6 +32,9 @@ public class Server {
         groups = databaseHandler.getGroups();
     }
 
+    /**
+     * accepts all clients and gives them a seperate thread
+     * */
     private static void handleServer(){
         // Main program. It should handle all connections.
         try{

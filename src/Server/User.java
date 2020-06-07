@@ -3,6 +3,9 @@ package Server;
 import java.io.*;
 import java.net.Socket;
 
+
+/**
+ * Class to handle users on server*/
 public class User{
     private String login;
     private Socket userSocket;

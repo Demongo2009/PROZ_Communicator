@@ -2,6 +2,9 @@ package Server;
 
 import java.util.ArrayList;
 
+/**
+ * Class to handle groups on server
+ * */
 public class Group {
     private String name;
 
@@ -16,8 +19,6 @@ public class Group {
         }
         return false;
     }
-    public ArrayList<String> getUsers(){ return users; }
-
     int getSize(){ return users.size(); }
 
     String getUser(int index){ return users.get(index); }

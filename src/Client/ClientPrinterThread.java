@@ -20,6 +20,9 @@ public class ClientPrinterThread extends Thread {
         shouldRun = true;
     }
 
+    /**
+     * @return received message
+     * */
     private ServerToClientMessage receiveMessage(){
         ServerToClientMessage message = null;
 
@@ -35,6 +38,9 @@ public class ClientPrinterThread extends Thread {
         return message;
     }
 
+    /**
+     * @param message message
+     * */
     private void processMessage(ServerToClientMessage message){
         if( message == null){
             return;
@@ -46,17 +52,14 @@ public class ClientPrinterThread extends Thread {
         }
     }
 
+    @Override
     public void run(){
         while(shouldRun) {
             processMessage(receiveMessage());
         }
-        //System.out.println("Koncze sluchac");
     }
 
-    void stopRunning(){
+    private void stopRunning(){
         shouldRun = false;
-    }
-
-    public void initializeMessage(String message_text, String userId) {
     }
 }

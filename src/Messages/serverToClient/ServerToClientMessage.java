@@ -2,6 +2,10 @@ package Messages.serverToClient;
 
 import java.io.Serializable;
 
+
+/**
+ * Class to handle communication from Server to Client
+ * */
 public class ServerToClientMessage implements Serializable {
     private ServerToClientMessageType type;
     private String text;

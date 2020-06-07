@@ -25,7 +25,9 @@ public class DatabaseHandler
      */
 
     /**
-     * Returns true if given login exists in given ResultSet
+     * @param rs ResultSet in which we will be looking for a login
+     * @param login login which we will look for
+     * @return true if given login exists in given ResultSet
      * */
     boolean checkIfLoginExists(ResultSet rs, String login){
         try {
@@ -40,7 +42,9 @@ public class DatabaseHandler
         return false;
     }
     /**
-     * Returns true if password matches login
+     * @param login login
+     * @param password password
+     * @return  true if password matches login
      * */
     boolean checkLogin(String login, String password){
         PreparedStatement statement = null;
@@ -67,7 +71,9 @@ public class DatabaseHandler
         return answer;
     }
     /**
-     * Return true if registration is successful
+     * @param login login
+     * @param password password
+     * @return true if registration is successful
      * */
     boolean registerUser(String login, String password){
         PreparedStatement statement = null;
@@ -106,7 +112,9 @@ public class DatabaseHandler
     }
 
     /**
-     * Returns true if given users are friends
+     * @param user1 nickname
+     * @param user2 nickname
+     * @return true if given users are friends
      * */
     boolean checkFriendship(String user1, String user2){
         PreparedStatement statement = null;
@@ -137,6 +145,8 @@ public class DatabaseHandler
     }
 
     /**
+     * @param user1 nickname
+     * @param user2 nickname
      * Inserts users' logins to 'friends' table
      * */
     void insertFriendship(String user1, String user2){
@@ -161,7 +171,8 @@ public class DatabaseHandler
     }
 
     /**
-     * Returns user's friends' nicknames separated by '#'
+     * @param login login
+     * @return user's friends' nicknames separated by '#'
      * */
     String getUserFriends(String login){
         PreparedStatement statement = null;
@@ -192,7 +203,9 @@ public class DatabaseHandler
     }
 
 
-
+    /**
+     * @return return ArrayList<Group> of all groups in database
+     * */
     ArrayList<Group> getGroups(){
         Statement statement = null;
         Connection conn = null;
@@ -232,7 +245,8 @@ public class DatabaseHandler
         return groups;
     }
 
-    /*dont know if necessary since server holds an array list for groups*/
+    /**@deprecated
+     * dont know if necessary since server holds an array list for groups*/
     String getUserGroups(String user){
         PreparedStatement statement = null;
         Connection conn = null;
@@ -262,6 +276,10 @@ public class DatabaseHandler
         return groups;
     }
 
+    /**
+     * @param groupName name of group we look for
+     * @return true if group already exists
+     * */
     boolean checkIfGroupExists(String groupName){
         PreparedStatement statement = null;
         Connection conn = null;
@@ -290,6 +308,10 @@ public class DatabaseHandler
         return exists;
     }
 
+    /**
+     * @param login nickname of user we look for
+     * @return true if user exists
+     * */
     boolean checkIfUserExists(String login){
         PreparedStatement statement = null;
         Connection conn = null;
@@ -314,6 +336,9 @@ public class DatabaseHandler
         return exists;
     }
 
+    /**
+     * @param group books group given on this object
+     * */
     void createGroup(Group group){
         PreparedStatement statement = null;
         Connection conn = null;
@@ -332,7 +357,9 @@ public class DatabaseHandler
             e.printStackTrace();
         }
     }
-
+    /**
+     * @return true if addition is successful
+    * */
     boolean addUserToGroup(String group, String user){
         PreparedStatement statement = null;
         Connection conn = null;
@@ -359,7 +386,6 @@ public class DatabaseHandler
                 } else if (rs.getString("user4") == null) {
                     query = "UPDATE groups SET user4 = ? WHERE group_name = ?";
                 } else {
-                    //System.out.println("GROUP IS FULL");//should never occur since it was already checked
                     successful = false;
                 }
             }
@@ -385,12 +411,16 @@ public class DatabaseHandler
 
 
 
-    //for unit tests
+    /**
+     * for unit tests
+     * */
     void setUrl(String newUrl){
         url = newUrl;
     }
 
-    //for unit tests
+    /**
+     * for unit tests
+     */
     void clearDataBase(){
         PreparedStatement statement = null;
         Connection conn = null;

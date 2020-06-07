@@ -10,6 +10,12 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
+
+/**
+ * Handles single user
+ * Receives messages from one user
+ * Sends messages to many users
+ * */
 public class ServerThread extends Thread{
     private static Semaphore mutex;
     private Socket clientSocket;
@@ -75,6 +81,7 @@ public class ServerThread extends Thread{
         try {
             inObject.close();
             outObject.close();
+            clientSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -86,7 +93,7 @@ public class ServerThread extends Thread{
      *
      *   if operation is successful then add user to connectedUsers map
      *
-     *   return true if login or register is successful
+     *   @return true if login or register is successful
      * */
     private boolean processLoginOrRegisterRequest() throws Exception{
         boolean answer=false;
@@ -122,9 +129,9 @@ public class ServerThread extends Thread{
 
 
     /**
-     *   sends ServerToClientMessage with adequate MessageType and text
-     *
-     *    returns true if answer is positive
+     * sends CONFIRM_LOGIN or REJECT_LOGIN
+     * @param answer should user be logged in or not
+     * @return  true if answer is positive
      * */
     private boolean sendLoginAnswer(boolean answer){
         ServerToClientMessageType type = null;
@@ -151,8 +158,8 @@ public class ServerThread extends Thread{
     }
 
     /**
-     * Returns User object based on given login
-     * if user is not found then returns null
+     * @param login nickname of user to look for
+     * @return  User object based on given login. If user is not connected then returns null
      * */
     private User getUserFromConnectedUsers(String login){
         for(User user: connectedUsers){
@@ -165,7 +172,9 @@ public class ServerThread extends Thread{
 
 
     /**
-     * returns true if message is being sent
+     * @param message message which will be send
+     * @param userToSend to whom the message should be send
+     * @return  true if message is being sent
      * */
     private boolean sendMessage(ServerToClientMessage message, User userToSend){
 
@@ -180,8 +189,7 @@ public class ServerThread extends Thread{
     }
 
     /**
-     * returns message received by inObject received
-     * if exception is thrown then end the thread
+     * @return  message received by inObject received
      * */
     private ClientToServerMessage receiveMessage(){
         ClientToServerMessage message= null;
@@ -213,6 +221,7 @@ public class ServerThread extends Thread{
     }
 
     /**
+     * @param textMessage String in form 'nickname#text'
      * sends text message to user
      * if user is not connected, it sends the message to sender that communicates it
      * */
@@ -222,9 +231,8 @@ public class ServerThread extends Thread{
         }
         String userAndText[] = textMessage.split("#");
 
-        //.out.println(userAndText[0]);
         if( !databaseHandler.checkFriendship(userToHandle.getLogin(), userAndText[0]) ){
-            System.out.println("USERS ARE NOT FRIENDS - something went wrong, client should check it");
+            //System.out.println("USERS ARE NOT FRIENDS - something went wrong, client should check it");
             return;
         }
 
@@ -242,6 +250,7 @@ public class ServerThread extends Thread{
         sendMessage( message, user);
     }
     /**
+     * @param loginToAdd nickname of user which will be friend with our userToHandle
      * sends to user that userToHandle wants to add to friends a USER_WANT_TO_BE_YOUR_FRIEND message
      * if that user does not exit then does nothing
      * if users are already friend then does nothing
@@ -265,6 +274,7 @@ public class ServerThread extends Thread{
     }
 
     /**
+     * @param newFriend nickname of user which will be friend with our userToHandle
      * registers both users as friends in database
      * and communicates it to first_user
      * */
@@ -282,7 +292,8 @@ public class ServerThread extends Thread{
     }
 
     /**
-     * returns group_names, in which given user is, separated by '#'
+     * @param user nickname of user which group we want to get
+     * @return group_names, in which given user is, separated by '#'
      * */
     private String getUserGroups(String user){
         String userGroups = "";
@@ -298,6 +309,7 @@ public class ServerThread extends Thread{
     }
 
     /**
+     * @param groupName new group name
      * create group if group_name is not occupied
      * if it is occpied then communicate it to user
      * */
@@ -320,7 +332,8 @@ public class ServerThread extends Thread{
     }
 
     /**
-     *
+     * @param text String in form 'group_name#user#text'
+     * sends message to every user that is in the group
     * */
     private void processTextGroupMessage(String text){
         String[] groupAndUserAndText = text.split("#");
@@ -352,9 +365,8 @@ public class ServerThread extends Thread{
         }
     }
     /**
-     * Adds user to groups
-     * Argument should look like
-     * "GROUP_NAME # USER"
+     * @param text String in form 'group#nickname'
+     * if group is not full and group exists then sends USER_ADDED_YOU_TO_GROUP to a user
      * */
     private void processAddUserToGroup(String text){
         String[] groupAndUser = text.split("#");
@@ -367,20 +379,16 @@ public class ServerThread extends Thread{
             }
         }
         if(group == null){
-            //System.out.println("Group does not exist");
             return;
         }
         if( group.getSize() >= 4){
-            //System.out.println("Group is full");
             return;
         }
         if( !databaseHandler.checkIfUserExists( groupAndUser[1])){
-            //System.out.println("User does not exists");
             return;
         }
         for(int i=0; i<group.getSize(); ++i){
             if( group.getUser(i).equals(groupAndUser[1])){
-                //System.out.println("User is already in group");
                 return;
             }
         }
@@ -396,6 +404,7 @@ public class ServerThread extends Thread{
 
 
     /**
+     * @param message message that was received from user
      * Behaves like multiplexer for messages types
      * calls functions depending on message received
      * */

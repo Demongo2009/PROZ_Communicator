@@ -15,6 +15,9 @@ import java.util.Arrays;
 
 import static Client.GUI.tools.SwingConsole.run;
 
+/**
+ * Class that implements logic of the client
+ * */
 public class Client {
 
     private static String hostName = "localhost";
@@ -41,12 +44,14 @@ public class Client {
         run(new StartingScreen(),300,140);
 
     }
-
+    /**
+     * initializes Sockets, ObjectStreams, fiends and groups
+     * */
     public static void initClient(){
         try {
             echoSocket = new Socket(hostName, serverPort);
             // shutdown hook added for closing the connection if client exits
-            Runtime.getRuntime().addShutdownHook(new ClientShutdownHook(echoSocket));
+            // Runtime.getRuntime().addShutdownHook(new ClientShutdownHook(echoSocket));
 
             outObject = new ObjectOutputStream( echoSocket.getOutputStream()) ;
             inObject = new ObjectInputStream( echoSocket.getInputStream() );
@@ -65,8 +70,11 @@ public class Client {
         }
     }
     /**
+     * @param login nickname
+     * @param password password
+     * @param type LOGIN_REQUEST or REGISTER_REQUEST
      * Sends to server LOGIN_REQUEST or REGISTER_REQUEST(decided by argument) with login and password.
-     * Throws Exception if type is none of above OR login or password contain '#' OR they are shorter than 4 characters
+     * @throws Exception if type is none of above OR login or password contain '#' OR they are shorter than 4 characters
      * */
     public static void sendLoginOrRegisterRequest(String login, String password, ClientToServerMessageType type) throws Exception{
         if( type != ClientToServerMessageType.REQUEST_LOGIN && type != ClientToServerMessageType.REQUEST_REGISTER){
@@ -89,8 +97,9 @@ public class Client {
     }
 
     /**
-     * Throws exception if received message is not CONFIRM nor REJECT
      * starts listener thread
+     * @throws Exception if received message is not CONFIRM nor REJECT
+     * @return true if answer is positive, false otherwise
      * */
     public static boolean receiveLoginAnswer() throws Exception{
         ServerToClientMessage message = null;
@@ -129,7 +138,10 @@ public class Client {
 
 
 
-
+    /**
+     * @param message message
+     * Sends message to server via ObjectOutputStream
+     * */
     private static void sendMessage(ClientToServerMessage message){
         try {
             outObject.writeObject( message );
@@ -139,17 +151,15 @@ public class Client {
     }
 
     /**
+     * @param userToAdd who we want to be friends with
+     * @return true if message is sent
      * checks if we are not adding ourself to friends and if we are not adding user that is out friend already
-     * if both are no, then we send the request and return true
      * */
     public static boolean addUserToFriends(String userToAdd){
         if( checkFriendship(userToAdd) ){
-            //System.out.println("User is already your friend!!!");
             return false;
         }
-        if( userToAdd.equals(username))
-        {
-            //System.out.println("You cannot add yourself to friends");
+        if( userToAdd.equals(username)) {
             return false;
         }
 
@@ -159,13 +169,12 @@ public class Client {
         return true;
     }
     /**
+     * @param friendToAdd whose invitation we accepted
      * Sends message to server that we are now friends with friendToAdd
      * Add friend's nickname to friends ArrayList
      * */
-    public static void confirmFriendship(String friendToAdd)
-    {
-        if(checkFriendship( friendToAdd))
-        {
+    public static void confirmFriendship(String friendToAdd) {
+        if(checkFriendship( friendToAdd)) {
             return;
         }
         friends.add(friendToAdd);
@@ -175,23 +184,24 @@ public class Client {
     }
 
     /**
-     * Checks if username is on our friends Arraylist
+     * @param friendUsername nickname that we want to check
+     * @return true if username in on our fiends ArrayList
      * */
     private static boolean checkFriendship(String friendUsername){
         return friends.contains(friendUsername);
     }
 
     /**
+     * @param userToSend to who we want to send the message
+     * @param text what text we want to send
      * Sends to out friend a text message
      * */
     public static void sendTextMessageToUser(String userToSend, String text){
         if( !checkFriendship(userToSend) ){
-            //System.out.println("User is not your friend -> you cannot write to him");
             return;
         }
 
         if( text.contains("#") || userToSend.contains("#") ){
-            //System.out.println("Using '#' is forbidden! ");
             return;
         }
 
@@ -203,6 +213,8 @@ public class Client {
     }
 
     /**
+     * @param groupName name of group we want to check
+     * @return true if we belong to that group
      * Checks if groupName in on our groups ArrayList
      * */
     private static boolean checkMembership(String groupName){
@@ -210,6 +222,8 @@ public class Client {
     }
 
     /**
+     * @param groupName name of group we want to create
+     * @throws Exception if: we are in such group, name contains '#', more than one word, shorter than 3 characters
      * Sends message to server a request to create a group
      * */
     public static void createGroup(String groupName) throws Exception
@@ -238,6 +252,8 @@ public class Client {
     }
 
     /**
+     * @param groupName to which group we want to send the message
+     * @param text what text we want to send
      * checks if we are the member of the given group
      * if yes, we send it
      * if no, we do nothing
@@ -255,7 +271,9 @@ public class Client {
     }
 
     /**
-     * Adds our friend to group we are into
+     * @param group to which group we want to add a user
+     * @param user nickanme of user we want to add
+     * @throws Exception if we are not a member of given group or user is not our friend or we want to add ourselfs
      * */
     public static void addUserToGroup(String group, String user) throws Exception
     {
@@ -280,8 +298,7 @@ public class Client {
 
 
     /**
-     * Sends LOGOUT_MESSAGE
-     * stops listener thread
+     * Sends LOGOUT_MESSAGE to server
      * */
     public static void logout(){
         ClientToServerMessage message = new ClientToServerMessage( ClientToServerMessageType.LOGOUT);
@@ -294,6 +311,19 @@ public class Client {
             e.printStackTrace();
         }
     }
+
+    public static void closeClient(){
+        try {
+            outObject.close();
+            inObject.close();
+            echoSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 
 
 }

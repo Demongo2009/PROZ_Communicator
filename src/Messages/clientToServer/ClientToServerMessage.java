@@ -4,6 +4,9 @@ package Messages.clientToServer;
 
 import java.io.Serializable;
 
+/**
+ * Class to handle communication from Client to Server
+ * */
 public class ClientToServerMessage implements Serializable
 {
     private String text;

@@ -35,6 +35,7 @@ public class GuiNotificationListener extends Thread
         {
             case LOGOUT:
                 shouldRun=false;
+                Client.closeClient();
                 break;
 
             case GROUP_NAME_OCCUPIED:

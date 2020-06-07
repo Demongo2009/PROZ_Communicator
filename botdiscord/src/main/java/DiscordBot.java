@@ -98,7 +98,7 @@ public class DiscordBot {
         // Handling Discord Api
 
 
-        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.XskS4A.4vmgCkgzZKbCAsEoABURb4NgkoE";
+        String token = "NzA3ODY4MzMxMzk0MjAzNjY5.XskqwA.ryHILU3jshbPWhnSGEeEUNkyzSE";
 
         DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
 

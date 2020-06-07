@@ -417,6 +417,7 @@ public class DiscordBot {
      * Function of state machine handling login process. Particularly username part.
      * @param messageContent contents of client message
      * @param channel client channel
+     * @param loginPassword login and password
      */
     private static void loginUsername(String messageContent, TextChannel channel, AvailableStates loginPassword) {
         username = messageContent;

@@ -89,8 +89,18 @@ public class LoginScreenDialog extends JDialog
         userName.requestFocus();
 
     }
+
+    /**
+     *
+     * @return login :-)
+     */
     String getLogin()
     {return  login;}
+
+    /**
+     *
+     * @return password :)
+     */
     String getPassword()
     {return  password;}
 

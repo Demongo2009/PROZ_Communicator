@@ -23,6 +23,10 @@ public class StartingScreen extends JFrame
     private String pass="";
     static String username = null;
 
+    /**
+     * Once user entered all his data, its send to the server and decides what to do next
+     * @return true when login successes
+     */
     private boolean CheckLoginPassword()
     {
             boolean loginSuccesful=false;
@@ -53,6 +57,10 @@ public class StartingScreen extends JFrame
             return loginSuccesful;
 
     }
+
+    /**
+     *
+     */
     private void CheckRegister()
     {
             try

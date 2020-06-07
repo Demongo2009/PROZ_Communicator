@@ -56,7 +56,10 @@ public class MainTab extends JPanel
         }
 
     }
-    /**Set custom state text on panel */
+    /**Set custom state text on panel
+     * @param text content of a state
+     * @param fg foreground color
+     * */
     public void setState(Color fg,String text)
     {
         state.setForeground(fg);

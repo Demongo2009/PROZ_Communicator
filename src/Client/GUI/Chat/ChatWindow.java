@@ -25,24 +25,28 @@ import static Client.GUI.tools.ImageScaler.resizeImage;
 
 public class ChatWindow extends JPanel
 {
-    private final int CHAT_BOX_WIDTH = 200;
-    private final int WIDTH_MULTIPLIER = 7;
-    private JPanel mainPanel = new JPanel();
-    private JPanel southPanel = new JPanel();
-    private JTextField messageBox = new JTextField(30);
-    JButton sendButton = new JButton("Send Message");
-    JButton closeButton = new JButton("Close chat");
-    String username;
-    String receiver;
-    String URLToImage="";
-    MainWindow upRef;
-    private JPanel chatBox;
-    JScrollPane scrollPane;
-    Date date = new Date();
-    SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-    String URLRegex = "(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*\\.(?:jpg|gif|png|jpeg|JPG))(?:\\?([^#]*))?(?:#(.*))?";
-    //String URLRegex = "^https?://(?:[a-z0-9\\-]+\\.)+[a-z]{2,6}(?:/[^/#?]+)+\\.(?:jpg|gif|png|JPG|jpeg)$";
+    private final int   CHAT_BOX_WIDTH =    200;
+    private final int   WIDTH_MULTIPLIER =  7; /** Since letters don't have fixed width, their count is multiplied */
+private JPanel      mainPanel =         new JPanel();
+    private JPanel      southPanel =        new JPanel();
+    private JTextField  messageBox =        new JTextField(30);
+    JButton             sendButton =        new JButton("Send Message");
+    JButton             closeButton =       new JButton("Close chat");
+    String              username;
+    String              receiver;
+    String              URLToImage=         "";
+    MainWindow          upRef;
+    private JPanel      chatBox;
+    JScrollPane         scrollPane;
+    Date                date =              new Date();
+    SimpleDateFormat    formatter =         new SimpleDateFormat("HH:mm:ss");
+    /** Regex that extracts URL to the image from the message - modified RFC 2396*/
+    String              URLRegex =
+            "(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*\\.(?:jpg|gif|png|jpeg|JPG))(?:\\?([^#]*))?(?:#(.*))?";
 
+    /**
+     * tries to send a message
+     * */
     private void TryToSend()
     {
         if(messageBox.getText().length()<1)
@@ -81,6 +85,10 @@ public class ChatWindow extends JPanel
         }
     }
 
+    /**
+     * write down received message on chat screen
+     * @param messageText content of message
+     */
     public void receiveMessage(String messageText)
     {
         if (containsImage(messageText))
@@ -110,7 +118,10 @@ public class ChatWindow extends JPanel
     /**
      * Set URLToImage based on whether received
      * or sent message contains such URL
-     * @return {@code true} if messageText contains picture URl */
+     * @param messageText message content
+     * @return {@code true} if messageText contains picture URl
+     *
+     * */
     boolean containsImage(String messageText)
     {
         String msgLink=messageText;
@@ -126,6 +137,8 @@ public class ChatWindow extends JPanel
         }
         return false;
     }
+
+
     private class sendMessageButtonListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event)
@@ -134,6 +147,7 @@ public class ChatWindow extends JPanel
 
         }
     }
+
     public ChatWindow(String login, String friendName, MainWindow upRef)
     {
         this.upRef = upRef;
@@ -191,7 +205,18 @@ public class ChatWindow extends JPanel
         mainPanel.add(BorderLayout.NORTH, closeButton);
         add(mainPanel);
     }
-    private void addChat(int flowLayoutAlign, Color borderColor,String messageContent,boolean isPicture) throws IOException
+
+    /**
+     *
+     * @param flowLayoutAlign TRAILING or LEADING - right or left side of chat
+     * @param borderColor color of background of a message
+     * @param messageContent printed text
+     * @param isPicture if message contains URL to picture
+     * @throws  IOException exception
+     *
+     */
+    private void addChat(int flowLayoutAlign, Color borderColor,String messageContent,boolean isPicture)
+            throws IOException
     {
         JPanel panel = new JPanel(new FlowLayout(flowLayoutAlign));
         JLabel label = new JLabel();
@@ -201,7 +226,10 @@ public class ChatWindow extends JPanel
         label.setBackground(borderColor);
         label.setOpaque(true);
 
-        int chatBoxWidth = messageContent.length()*WIDTH_MULTIPLIER<CHAT_BOX_WIDTH?messageContent.length()*WIDTH_MULTIPLIER:CHAT_BOX_WIDTH;
+        int chatBoxWidth =
+                messageContent.length()*WIDTH_MULTIPLIER<CHAT_BOX_WIDTH?
+                        messageContent.length()*WIDTH_MULTIPLIER:
+                        CHAT_BOX_WIDTH;
         if(isPicture)
         {
             BufferedImage image;
@@ -236,6 +264,11 @@ public class ChatWindow extends JPanel
         JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
         SwingUtilities.invokeLater(() -> verticalScrollBar.setValue(verticalScrollBar.getMaximum()));
     }
+    /**
+     * adding chat message from user
+     * @param isPicture if message containt picture
+     * @param messageContent content of message
+     * */
     private void addRightChat(String messageContent,boolean isPicture)
     {
         try {
@@ -244,7 +277,11 @@ public class ChatWindow extends JPanel
             e.printStackTrace();
         }
     }
-
+    /**
+     * adding chat message from the talker
+     * @param isPicture if message containt picture
+     * @param messageContent content of message
+     * */
     private void addLeftChat(String messageContent,boolean isPicture)
     {
         try {
@@ -253,7 +290,11 @@ public class ChatWindow extends JPanel
             e.printStackTrace();
         }
     }
-
+    /**
+     * adding picture on chat from user
+     * @param restOfMessage rest (without picture)
+     * @param pictureURL URL to pic
+     * */
     private void addRightChatPicture(String pictureURL,String restOfMessage)
     {
         addRightChat(restOfMessage,false);
@@ -261,14 +302,14 @@ public class ChatWindow extends JPanel
 
 
     }
+    /**
+     * adding picture on chat from the talker
+     * @param restOfMessage rest (without picture)
+     * @param pictureURL URL to pic
+     * */
     private void addLeftChatPicture(String pictureURL,String restOfMessage)
     {
         addLeftChat(restOfMessage,false);
         addLeftChat(pictureURL,true);
-
     }
-
-
 }
-
-

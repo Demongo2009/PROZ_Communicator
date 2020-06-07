@@ -91,12 +91,21 @@ public class NotificationPanel extends JPanel
     }
 
 
+    /**
+     * displays in a list new invitation
+     * @param serverMessage this is being written in list of notifications
+     */
     public void receiveFriendRequest(String serverMessage)
     {
         if(friendsRequestsList.indexOf(serverMessage)==-1)
             friendsRequestsList.addElement(serverMessage);
 
     }
+
+    /**
+     *  displays on a list new group addition
+     * @param serverMessage this is being written in list of notifications
+     */
     public void receiveGroupInvitation(String serverMessage)
     {
         if(addedToGroupList.indexOf(serverMessage)==-1)

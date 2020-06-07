@@ -24,6 +24,10 @@ public class RegisterScreenDialog extends JDialog
     private JLabel status = new JLabel("");
     String login = "";
     String password = "";
+
+    /**
+     * Checks entered data (login and pass)
+     */
     private void EnterData()
     {
         if(userName.getText().isEmpty() || userName.getText().length()<3)

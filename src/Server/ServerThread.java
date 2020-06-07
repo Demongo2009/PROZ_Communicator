@@ -94,6 +94,7 @@ public class ServerThread extends Thread{
      *   if operation is successful then add user to connectedUsers map
      *
      *   @return true if login or register is successful
+     * @throws Exception exception
      * */
     private boolean processLoginOrRegisterRequest() throws Exception{
         boolean answer=false;

@@ -43,6 +43,7 @@ public class ClientPrinterThread extends Thread {
 
     /**
      * Function responsible for receive message from server.
+     * @return message
       */
     private ServerToClientMessage receiveMessage(){
         ServerToClientMessage message = null;

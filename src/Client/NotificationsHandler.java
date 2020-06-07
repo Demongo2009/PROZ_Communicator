@@ -26,6 +26,7 @@ public class NotificationsHandler
 
     /** removes first notification and returns it
      * acquires Semaphore
+     * @return notification
      * */
     public ServerToClientMessage getNotification()
     {

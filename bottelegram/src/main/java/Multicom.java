@@ -104,6 +104,7 @@ public class Multicom extends TelegramLongPollingBot {
 
     /**
      * Function receiving message from server.
+     * @return message
       */
     private ServerToClientMessage receiveMessage(){
         ServerToClientMessage message = null;
@@ -144,6 +145,8 @@ public class Multicom extends TelegramLongPollingBot {
     /**
      * Most important function of bot designed to handling incoming message.
      * Implemented with state machine.
+     * @param message message
+     * @throws TelegramApiException exception
       */
 
     private void handleIncomingMessage(Message message) throws TelegramApiException {

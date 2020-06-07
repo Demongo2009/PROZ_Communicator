@@ -204,7 +204,7 @@ public class DatabaseHandler
 
 
     /**
-     * @return return ArrayList<Group> of all groups in database
+     * @return return ArrayList of all groups in database
      * */
     ArrayList<Group> getGroups(){
         Statement statement = null;
@@ -359,6 +359,9 @@ public class DatabaseHandler
     }
     /**
      * @return true if addition is successful
+     * @param group group name
+     * @param user user login
+     *
     * */
     boolean addUserToGroup(String group, String user){
         PreparedStatement statement = null;
@@ -413,6 +416,7 @@ public class DatabaseHandler
 
     /**
      * for unit tests
+     * @param newUrl new URL
      * */
     void setUrl(String newUrl){
         url = newUrl;

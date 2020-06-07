@@ -25,26 +25,30 @@ import static Client.GUI.tools.ImageScaler.resizeImage;
 
 public class GroupChatWindow extends JPanel
 {
-    private final int CHAT_BOX_WIDTH = 200;
-    private final int WIDTH_MULTIPLIER = 7;
-    private JPanel mainPanel = new JPanel();
-    private JPanel southPanel = new JPanel();
-    private JPanel buttonsPanel = new JPanel();
-    private JTextField messageBox = new JTextField(30);
-    JButton sendButton = new JButton("Send Message");
-    JButton closeButton = new JButton("Close chat");
-    JButton addToGroupButton = new JButton("Add friend to group");
-    String username;
-    String groupName;
-    String URLToImage="";
-    MainWindow upRef;
-    private JPanel chatBox;
-    JScrollPane scrollPane;
-    Date date;
-    SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+    private final int   CHAT_BOX_WIDTH = 200;
+    private final int   WIDTH_MULTIPLIER = 7; /** Since letters don't have fixed width, their count is multiplied */
+private JPanel      mainPanel = new JPanel();
+    private JPanel      southPanel = new JPanel();
+    private JPanel      buttonsPanel = new JPanel();
+    private JTextField  messageBox = new JTextField(30);
+    JButton             sendButton = new JButton("Send Message");
+    JButton             closeButton = new JButton("Close chat");
+    JButton             addToGroupButton = new JButton("Add friend to group");
+    String              username;
+    String              groupName;
+    String              URLToImage="";
+    MainWindow          upRef;
+    private JPanel      chatBox;
+    JScrollPane         scrollPane;
+    Date                date;
+    SimpleDateFormat    formatter = new SimpleDateFormat("HH:mm:ss");
+
+    /** Regex that extracts URL to the image from the message - modified RFC 2396*/
     String URLRegex = "(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*\\.(?:jpg|gif|png|jpeg|JPG))(?:\\?([^#]*))?(?:#(.*))?";
 
-
+    /**
+     * prepares message
+     * */
     private void TryToSend()
     {
         if(messageBox.getText().length()<1)
@@ -78,6 +82,11 @@ public class GroupChatWindow extends JPanel
         }
     }
 
+    /**
+     * write down received message (on chat screen)
+     * @param messageText content of message
+     * @param sender from whom message
+     */
     public void receiveMessage(String messageText,String sender)
     {
 
@@ -96,15 +105,16 @@ public class GroupChatWindow extends JPanel
                 }
             }
 
-            addLeftChatPicture(sender,URLToImage,"<b>"+sender+ "</b>:" + rest);
+            addLeftChatPicture(sender,URLToImage,"<b>"+sender+ "</b>: " + rest);
         }
         else
-            addLeftChat("<b>"+sender+ "</b>:" + messageText,sender,false);
+            addLeftChat("<b>"+sender+ "</b>: " + messageText,sender,false);
     }
 
     /**
      * Set URLToImage based on whether received
      * or sent message contains such URL
+     * @param  messageText content of message
      * @return {@code true} if messageText contains picture URl */
     boolean containsImage(String messageText)
     {
@@ -207,8 +217,13 @@ public class GroupChatWindow extends JPanel
     }
 
     /**
-     * Writes on chat window Clients messages
-     * */
+     *
+     * @param flowLayoutAlign TRAILING or LEADING - right or left side of chat
+     * @param borderColor color of background of a message
+     * @param messageContent printed text
+     * @param isPicture if message contains URL to picture
+     * @throws IOException when exception time comes exception is thrown
+     */
     private void addChat(int flowLayoutAlign, Color borderColor,String messageContent,boolean isPicture)
             throws IOException
     {
@@ -222,8 +237,8 @@ public class GroupChatWindow extends JPanel
 
         int chatBoxWidth =
                 messageContent.length()*WIDTH_MULTIPLIER<CHAT_BOX_WIDTH?
-                                messageContent.length()*WIDTH_MULTIPLIER:
-                                                        CHAT_BOX_WIDTH;
+                        messageContent.length()*WIDTH_MULTIPLIER:
+                        CHAT_BOX_WIDTH;
 
 
         //label.setText("<html><body style='width: " + chatBoxWidth + "px; word-break:break-all;'>" + messageContent);
@@ -257,8 +272,14 @@ public class GroupChatWindow extends JPanel
     }
 
     /**
-     * Writes on chat window received messages
-     * */
+     *
+     * @param flowLayoutAlign TRAILING or LEADING - right or left side of chat
+     * @param borderColor color of background of a message
+     * @param messageContent printed text
+     * @param sender user, who sent a message
+     * @param isPicture if message contains URL to picture
+     * @throws IOException when exception time comes exception is thrown
+     */
     private void addChat(int flowLayoutAlign, Color borderColor,String messageContent,String sender,boolean isPicture)
             throws IOException
     {
@@ -272,8 +293,8 @@ public class GroupChatWindow extends JPanel
 
         int chatBoxWidth =
                 messageContent.length()*WIDTH_MULTIPLIER<CHAT_BOX_WIDTH?
-                messageContent.length()*WIDTH_MULTIPLIER:
-                CHAT_BOX_WIDTH;
+                        messageContent.length()*WIDTH_MULTIPLIER:
+                        CHAT_BOX_WIDTH;
 
         if(isPicture)
         {
@@ -302,7 +323,12 @@ public class GroupChatWindow extends JPanel
 //        SwingUtilities.invokeLater(() -> verticalScrollBar.setValue(verticalScrollBar.getMaximum()));
     }
 
-
+    /**
+     * adding chat message from user
+     * @param messageContent content of received message (can be anything literally, even love confession)
+     * @param  isPicture true when message contains picture
+     *
+     * */
     private void addRightChat(String messageContent,boolean isPicture)
     {
         try {
@@ -312,6 +338,12 @@ public class GroupChatWindow extends JPanel
         }
     }
 
+    /**
+     * adding chat message from the talker
+     * @param messageContent content of received message (can be anything literally, even love confession)
+     * @param sender who sent message
+     * @param  isPicture true when message contains picture
+     * */
     private void addLeftChat(String messageContent,String sender,boolean isPicture)
     {
         try {
@@ -320,7 +352,11 @@ public class GroupChatWindow extends JPanel
             e.printStackTrace();
         }
     }
-
+    /**
+     * adding picture on chat from user
+     * @param pictureURL URL to image
+     * @param restOfMessage remaining text (if there is)
+     * */
     private void addRightChatPicture(String pictureURL,String restOfMessage)
     {
         addRightChat(restOfMessage,false);
@@ -328,6 +364,12 @@ public class GroupChatWindow extends JPanel
 
 
     }
+    /**
+     * adding picture on chat from the talker
+     * @param sender who sent message
+     * @param  pictureURL URL to picture
+     * @param  restOfMessage remaining text (if there is)
+     * */
     private void addLeftChatPicture(String sender,String pictureURL,String restOfMessage)
     {
         addLeftChat(restOfMessage,sender,false);

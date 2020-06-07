@@ -26,6 +26,11 @@ public class GuiNotificationListener extends Thread
         }
     }
 
+    /**
+     * Big guy out there, every notification has to come trough its service
+     * he decides what to do with each notification
+     *
+     */
     private void handleNotification()
     {
 
@@ -47,10 +52,12 @@ public class GuiNotificationListener extends Thread
                 break;
 
             case TEXT_MESSAGE_FROM_USER:
+                mainWindow.newMessageSound();
                 mainWindow.getMessageFromUser(notification.getText());
                 break;
 
             case TEXT_MESSAGE_FROM_GROUP:
+                mainWindow.newMessageSound();
                 mainWindow.getMessageFromGroup(notification.getText());
                 break;
 
@@ -58,10 +65,12 @@ public class GuiNotificationListener extends Thread
                 Client.groups.add(notification.getText());
                 mainWindow.receiveGroupInvitation(notification.getText());
                 mainWindow.refresh();
+                mainWindow.newRequestSound();
                 break;
 
             case USER_WANTS_TO_BE_YOUR_FRIEND:
                 mainWindow.receiveFriendRequest(notification.getText());
+                mainWindow.newRequestSound();
                 break;
 
             case USER_ACCEPTED_YOUR_FRIEND_REQUEST:

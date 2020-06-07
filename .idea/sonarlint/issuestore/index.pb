@@ -31,3 +31,9 @@ X
 (src/Client/GUI/Chat/GroupChatWindow.java,2/9/2972e0af74662a17e3e575e1f4ec24db406ed52d
 S
 #src/Client/GUI/Main/MainWindow.java,6/7/670f1975c6177d164921228171f90181deb2a1d8
+^
+.botmessengerV2/src/main/java/MessengerBot.java,b/1/b1ada0e8130da2ce4ab0d20780deafa905a4f42c
+Z
+*bottelegram/src/main/java/TelegramBot.java,5/d/5d0e53bb6fc2e3abb755137a0fe252e556a47413
+X
+(botdiscord/src/main/java/DiscordBot.java,5/b/5b1e2a6f13c415d4ddb9f2e53499deb436028ac3

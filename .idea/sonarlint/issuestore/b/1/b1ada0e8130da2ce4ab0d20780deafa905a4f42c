@@ -1,0 +1,64 @@
+
+e
+java:S1192ƒ"NDefine a constant instead of duplicating this literal "hub.challenge" 4 times.(®¯Œò
+g	java:S117›"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ø®½Á
+l	java:S117œ"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(çàÙÔıÿÿÿÿ
+g	java:S117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.( İ”â
+l	java:S117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÁÇãÊıÿÿÿÿ
+l	java:S117Ÿ"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ßšÙ¶ûÿÿÿÿ
+l	java:S117¯"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(˜íıÿÿÿÿÿ
+>
+java:S1148G"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+>
+java:S1148Z"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+>
+java:S1148y"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+>
+java:S1148{"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+?
+java:S1148å"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+?
+java:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+?
+java:S1148ª"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+F
+java:S5411…"*Use the primitive boolean expression here.(€ñøÀøÿÿÿÿ
+A
+java:S5411›"*Use the primitive boolean expression here.(Ø®½Á
+F
+java:S5411œ"*Use the primitive boolean expression here.(çàÙÔıÿÿÿÿ
+A
+java:S5411"*Use the primitive boolean expression here.( İ”â
+F
+java:S5411"*Use the primitive boolean expression here.(ÁÇãÊıÿÿÿÿ
+F
+java:S5411Ÿ"*Use the primitive boolean expression here.(ßšÙ¶ûÿÿÿÿ
+A
+java:S5411 "*Use the primitive boolean expression here.(µÖ•â
+A
+java:S5411¡"*Use the primitive boolean expression here.(õˆàƒ
+0
+java:S1220""Move this file to a named package.
+F
+java:S1128"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ
+q
+java:S3008'"VRename this field "message_tpl" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ø™‡óúÿÿÿÿ
+[
+java:S1124M"EReorder the modifiers to comply with the Java Language Specification.(³®¯
+`
+java:S1124S"EReorder the modifiers to comply with the Java Language Specification.(‡ÚÎûÿÿÿÿ
+n
+java:S3776`"SRefactor this method to reduce its Cognitive Complexity from 108 to the 15 allowed.(´úÿÿÿÿ
+[
+java:S2147z"ECombine this catch with the one at line 120, which has the same body.(ï­£Ä
+p
+java:S2293¡"YReplace the type specification in this constructor call with the diamond operator ("<>").(õˆàƒ
+]
+java:S2142ä"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€
+]
+java:S2142Œ"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€
+D	java:S108ı")Either remove or fill this block of code.(¹êçãùÿÿÿÿ
+R
+java:S1751¢"6Remove this "return" statement or make it conditional.(ó±şÿÿÿÿ
+E
+java:S1481 ".Remove this unused "timestamp" local variable.(µÖ•â

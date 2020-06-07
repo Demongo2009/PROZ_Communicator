@@ -1,0 +1,16 @@
+2020-06-07 18:41:08 [qtp1429554843-18] com.clivern.racter.receivers.VerifyWebhook.challenge()
+ERROR: Error validating verify token.
+2020-06-07 18:41:34 [qtp1429554843-29] com.clivern.racter.receivers.VerifyWebhook.challenge()
+ERROR: Error validating verify token.
+2020-06-07 18:46:18 [qtp989857946-29] MessengerBot.lambda$main$1()
+INFO: User ID#:3074751165902162
+2020-06-07 18:46:18 [qtp989857946-29] MessengerBot.lambda$main$1()
+INFO: Page ID#:106737977694697
+2020-06-07 18:46:18 [qtp989857946-29] MessengerBot.lambda$main$1()
+INFO: Message ID#:m_rA6cCBNMlqVWELEgIl_vT8AphKeflLrt3hqH3lZq4Gxx7ZMbikMDBrewsT--MfF_dN1zEQnymgVdUO3soj_O5g
+2020-06-07 18:46:18 [qtp989857946-29] MessengerBot.lambda$main$1()
+INFO: Message Text#:!chat
+2020-06-07 18:46:18 [qtp989857946-29] MessengerBot.lambda$main$1()
+INFO: Quick Reply Payload#:
+2020-06-07 18:46:18 [qtp989857946-29] com.clivern.racter.senders.BaseSender.send()
+INFO: curl -X POST -H "Content-Type: application/json" -d '{"recipient": {"id": "3074751165902162"},"message": {"text": "Initiated chat!Please login[l] or sign in[s]..."},"notification_type":"REGULAR"}' "https://graph.facebook.com/v2.6/me/messages?access_token="

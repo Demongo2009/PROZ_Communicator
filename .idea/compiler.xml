@@ -9,12 +9,11 @@
         <module name="botdiscord (1)" />
         <module name="bottelegram" />
         <module name="botdiscord" />
-        <module name="botmessengerV2" />
         <module name="bottelegram (1)" />
+        <module name="botmessengerV2" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="botdiscord (2)" target="1.8" />
       <module name="bothangouts" target="1.5" />
       <module name="botmessenger" target="11" />
       <module name="bottelegram (2)" target="1.8" />

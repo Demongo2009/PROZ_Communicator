@@ -1,12 +1,12 @@
 
-o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¾©ò¹
-o
-java:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(¿í†À
-z
-java:S1450"^Remove the "databaseHandler" field and declare it as a local variable in the relevant methods.(ß˜¡z8‚‘°‡¤.
-=
-java:S2189#""Add an end condition to this loop.(˜ïˆžÿÿÿÿÿ
 >
 java:S1148)"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¾©ò¹
 >
 java:S1148"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+o
+java:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(¿í†À
+=
+java:S2189#""Add an end condition to this loop.(˜ïˆžÿÿÿÿÿ
+z
+java:S1450"^Remove the "databaseHandler" field and declare it as a local variable in the relevant methods.(ß˜¡z8‚‘°‡¤.

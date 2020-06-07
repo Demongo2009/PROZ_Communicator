@@ -1,0 +1,40 @@
+
+T	java:S106ß"9Replace this use of System.out or System.err by a logger.(ÿ«ùØúÿÿÿÿ
+h
+java:S3776L"RRefactor this method to reduce its Cognitive Complexity from 67 to the 15 allowed.(Çµí‘
+0
+java:S1220""Move this file to a named package.
+[
+java:S1124E"EReorder the modifiers to comply with the Java Language Specification.(³®¯
+P
+java:S1128
+":Remove this unused import 'java.awt.event.ActionListener'.(Ìä¹
+[
+java:S2147n"ECombine this catch with the one at line 108, which has the same body.(ï­£Ä
+U
+java:S1155¨">Use isEmpty() to check whether the collection is empty or not.(Åå¥ß
+?
+java:S1148õ"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+]
+java:S2142«"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€
+?
+java:S1148¬"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+?
+java:S1148Ù"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+]
+java:S2142Ø"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€
+`
+java:S1124<"EReorder the modifiers to comply with the Java Language Specification.(±Âö©ùÿÿÿÿ
+e
+java:S1128"JRemove this unused import 'Messages.serverToClient.ServerToClientMessage'.(ÀÂ‘þýÿÿÿÿ
+>
+java:S1148m"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+m
+java:S1858Ÿ"Q"messageContent" is already a string, there's no need to call "toString()" on it.(¬Ÿ Ïûÿÿÿÿ
+[
+java:S11245"EReorder the modifiers to comply with the Java Language Specification.(ëƒÞ
+>
+java:S1148o"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+?	java:S108Ê")Either remove or fill this block of code.(šø
+>
+java:S1148@"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ

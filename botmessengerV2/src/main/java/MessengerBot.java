@@ -19,7 +19,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-
+/**
+ * Main Messenger Bot class.
+ * Handles Racter API specific message receiving and sending.
+ */
 public class MessengerBot {
 
 
@@ -39,7 +42,9 @@ public class MessengerBot {
     static MessageTemplate message_tpl;
     static BotPlatform platform;
 
-    // States of bot state machine
+    /**
+     * Available states of bot state machine.
+     */
     enum AvailableStates{
         INIT,
         CONNECTED_TO_CHAT,
@@ -57,13 +62,19 @@ public class MessengerBot {
 
     static AvailableStates currentState = AvailableStates.INIT;
 
-    // Asynchronous result got
+    /**
+     * Function realising mutex when asynchronous result are available.
+     * @param result type of result
+      */
     static void setLoginResultAvailable(boolean result){
         loginResult = result;
         loginResultAvailable.release();
     }
 
-    // Sending to server
+    /**
+     * Function sending message to server.
+     * @param message message to be sent
+      */
     static void sendMessageToServer(ClientToServerMessage message){
         try {
             outObject.writeObject(message);
@@ -73,13 +84,19 @@ public class MessengerBot {
 
     }
 
-    // Asynchronous friend request
+    /**
+     * Function handling asynchronous friend requests.
+     * @param friendName name of the friend requesting friendship
+      */
     static public void friendRequest(String friendName){
         currentState = AvailableStates.FRIEND_REQUEST_PENDING;
         friend = friendName;
     }
 
-    // Sending message to client
+    /**
+     * Function sending message to client.
+     * @param text message text
+      */
     static public void sendRegularMessage(String text){
         message_tpl.setRecipientId(message.getUserId());
         message_tpl.setMessageText(text);
@@ -176,7 +193,6 @@ public class MessengerBot {
                 message_tpl= message_tplN;
 
 
-                clientPrinterThread.initializeMessage(message_text,message.getUserId());
 
                 clientPrinterThread.releaseMutex();
 

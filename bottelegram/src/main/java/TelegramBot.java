@@ -7,6 +7,10 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+
+/**
+ * Class handling Telegram Bot and connection with server initialization.
+ */
 public class TelegramBot {
 
     static Socket echoSocket;

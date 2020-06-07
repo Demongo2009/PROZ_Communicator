@@ -14,6 +14,11 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+
+/**
+ * Main Discord Bot class.
+ * Handles Javacord API specific message receiving and sending.
+ */
 public class DiscordBot {
 
 
@@ -30,7 +35,9 @@ public class DiscordBot {
     static String friend;
     static boolean isGroupSending = false;
 
-    // States of bot state machine
+    /**
+     * Available states of bot state machine.
+      */
     enum AvailableStates{
         INIT,
         CONNECTED_TO_CHAT,
@@ -49,14 +56,22 @@ public class DiscordBot {
     // Setting first state
     static AvailableStates currentState = AvailableStates.INIT;
 
-    // Releasing mutex if there are new results available
+    /**
+     * Function releasing mutex if there are new results available.
+     *
+     * @param result type of result got
+      */
     static public void setLoginResultAvailable(boolean result){
         loginResult = result;
         loginResultAvailable.release();
     }
 
 
-    // Sending message to server
+    /**
+     *  Function sending message to server.
+     *
+     * @param message message that is send to server
+      */
     static private void sendMessage(ClientToServerMessage message){
         try {
             outObject.writeObject( message );
@@ -65,7 +80,11 @@ public class DiscordBot {
         }
     }
 
-    // Asynchronous friend request
+    /**
+     * Function handling asynchronous friend request.
+     *
+     * @param friendName name of the friend that is requesting friendship
+      */
     static public void friendRequest(String friendName){
         currentState = AvailableStates.FRIEND_REQUEST_PENDING;
         friend = friendName;
@@ -102,7 +121,7 @@ public class DiscordBot {
             inObject = new ObjectInputStream( echoSocket.getInputStream() );
 
             // Thread made for asynchronous messages from server
-            clientPrinterThread = new ClientPrinterThread(in,inObject);
+            clientPrinterThread = new ClientPrinterThread(inObject);
             clientPrinterThread.start();
 
         }catch (UnknownHostException e) {

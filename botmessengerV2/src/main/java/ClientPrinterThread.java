@@ -13,30 +13,38 @@ import java.util.concurrent.Semaphore;
 
 //import com.clivern.racter.BotPlatform;
 
+/**
+ * Class responsible for handling messages form server.
+ * Designed for Messenger Bot.
+ */
+
 public class ClientPrinterThread extends Thread {
 
     ObjectInputStream inObject;
     static Semaphore mutex;
-    String text;
-    String userId;
 
 
 
+    /**
+     * Constructor for ClientPrinterThread.
+     * @param inObject object input stream for receiving messages
+     */
     ClientPrinterThread(ObjectInputStream inObject){
         this.inObject = inObject;
         mutex = new Semaphore(0);
     }
-    public void initializeMessage( String text, String userId){
-        this.text = text;
-        this.userId = userId;
-    }
 
 
+    /**
+     * Function releasing mutex when object can get message.
+     */
     public void releaseMutex(){
         mutex.release();
     }
 
-    // Receive message from server
+    /**
+     * Function responsible for receive message from server.
+      */
     private ServerToClientMessage receiveMessage(){
         ServerToClientMessage message = null;
 

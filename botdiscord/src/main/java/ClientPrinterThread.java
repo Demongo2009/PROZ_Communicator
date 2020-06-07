@@ -11,23 +11,40 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.Semaphore;
 
+/**
+ * Class assigned to handling asynchronous messages coming from server.
+ * Designed specially for Discord.
+ *
+ */
+
 public class ClientPrinterThread extends Thread {
-    private BufferedReader in;
+
     private ObjectInputStream inObject;
     TextChannel textChannel;
 
+    /**
+     * Constructor for ClientPrinterThread
+     * @param inObject object input stream for receiving messages
+     */
+    ClientPrinterThread(ObjectInputStream inObject){
 
-    ClientPrinterThread(BufferedReader in, ObjectInputStream inObject){
-        this.in=in;
         this.inObject = inObject;
 
     }
 
+    /**
+     * Function assigning textChannel required for sending message to specific client
+     * @param textChannel textChannel of client
+     */
     public void sendEventChannel(TextChannel textChannel){
         this.textChannel = textChannel;
     }
 
-    // Receiving message form server
+    /**
+     * Function which purpose is receiving message form server.
+     *
+     * @return message got from server
+      */
     private ServerToClientMessage receiveMessage(){
         ServerToClientMessage message = null;
 

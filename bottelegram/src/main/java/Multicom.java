@@ -21,6 +21,10 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+/**
+ * Main Telegram Bot class.
+ * Handles TelegramBots API specific message receiving and sending.
+ */
 public class Multicom extends TelegramLongPollingBot {
     private PrintWriter out;
     private BufferedReader in;
@@ -33,7 +37,9 @@ public class Multicom extends TelegramLongPollingBot {
     boolean isGroupSending = false;
     static String friend;
 
-    // States of bot
+    /**
+     * Available states of bot state machine.
+     */
     enum AvailableStates{
         INIT,
         CONNECTED_TO_CHAT,
@@ -51,13 +57,19 @@ public class Multicom extends TelegramLongPollingBot {
 
     static AvailableStates currentState = AvailableStates.INIT;
 
-    // Asynchronous result
+    /**
+     * Function realising mutex when asynchronous result is available.
+     * @param result type of result
+      */
     void setLoginResultAvailable(boolean result){
         loginResult = result;
         loginResultAvailable.release();
     }
 
-    // Send message to server
+    /**
+     * Function sending message to server.
+     * @param message message to be sent
+      */
     void sendMessageToServer(ClientToServerMessage message){
         try {
             outObject.writeObject(message);
@@ -67,12 +79,22 @@ public class Multicom extends TelegramLongPollingBot {
 
     }
 
-    // Asynchronous friend request
+    /**
+     * Function handling asynchronous friend request.
+     * @param friendName name of the friend that sent the request
+      */
     static public void friendRequest(String friendName){
         currentState = AvailableStates.FRIEND_REQUEST_PENDING;
         friend = friendName;
     }
 
+    /**
+     * Class construction.
+     * @param out for sending strings to socket
+     * @param in for receiving strings form socket
+     * @param outObject for sending messages to server
+     * @param inObject for receiving messages from server
+     */
     public Multicom(PrintWriter out, BufferedReader in, ObjectOutputStream outObject, ObjectInputStream inObject){
         this.out = out;
         this.in = in;
@@ -80,7 +102,9 @@ public class Multicom extends TelegramLongPollingBot {
         this.inObject = inObject;
     }
 
-    // Recieve message from server
+    /**
+     * Function receiving message from server.
+      */
     private ServerToClientMessage receiveMessage(){
         ServerToClientMessage message = null;
 
@@ -97,7 +121,11 @@ public class Multicom extends TelegramLongPollingBot {
     }
 
 
-    // Telegram Api event for
+    /**
+     * Telegram Api specific event for receiving message.
+     * @param update new message
+      */
+
     @Override
     public void onUpdateReceived(Update update) {
         try {
@@ -113,7 +141,11 @@ public class Multicom extends TelegramLongPollingBot {
     }
 
 
-    // Handling incoming message
+    /**
+     * Most important function of bot designed to handling incoming message.
+     * Implemented with state machine.
+      */
+
     private void handleIncomingMessage(Message message) throws TelegramApiException {
         SendMessage echoMessage = new SendMessage();
         echoMessage.setChatId(message.getChatId());
@@ -444,11 +476,18 @@ public class Multicom extends TelegramLongPollingBot {
     }
 
 
-
+    /**
+     * Telegram API specific function for setting name of bot.
+     * @return bot name
+     */
     public String getBotUsername() {
         return "MultiComEitiBot";
     }
 
+    /**
+     * Telegram API specific function for setting token.
+     * @return token
+     */
     public String getBotToken() {
         return "827656409:AAEgFLohXzB9sdkWUIaKz4IaYnAF16dZOrU";
     }

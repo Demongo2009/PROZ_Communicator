@@ -17,7 +17,6 @@ import java.util.concurrent.Semaphore;
  * Class responsible for handling messages form server.
  * Designed for Messenger Bot.
  */
-
 public class ClientPrinterThread extends Thread {
 
     ObjectInputStream inObject;
@@ -70,56 +69,63 @@ public class ClientPrinterThread extends Thread {
 
             // Waiting for asynchronous message
             while((message = receiveMessage()) != null){
-                inputFromServer = message.getText();
-                if(inputFromServer == "" || inputFromServer == "\n"){
-                    continue;
-                }
-
-
-
-
-                ServerToClientMessageType messageType= message.getType();
-                // Switching for different message type
-                // Image
-                if(messageType.equals(ServerToClientMessageType.IMAGE)){
-
-                    MessengerBot.sendRegularMessage(inputFromServer);
-
-                }
-                // Confirm login
-                else if(messageType.equals(ServerToClientMessageType.CONFIRM_LOGIN)) {
-
-                    MessengerBot.setLoginResultAvailable(true);
-
-                }
-                // Reject login
-                else if(messageType.equals(ServerToClientMessageType.REJECT_LOGIN)) {
-
-                    MessengerBot.setLoginResultAvailable(false);
-
-
-                }
-                // Someone wants to be your friend
-                else if(messageType.equals(ServerToClientMessageType.USER_WANTS_TO_BE_YOUR_FRIEND)) {
-
-                    MessengerBot.sendRegularMessage("User \""+inputFromServer+"\" wants to be your friend. [Y] accept [N] refuse");
-                    MessengerBot.friendRequest(inputFromServer);
-
-                }
-                // Accepted friend request
-                else if(messageType.equals(ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST)){
-
-                    MessengerBot.sendRegularMessage("\""+inputFromServer + "\" accepted your friend request");
-                }
-                else {
-
-                    MessengerBot.sendRegularMessage("\""+inputFromServer + "\" accepted your friend request");
-                }
-
+                handleMessage(message);
             }
 
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Function responsible for handling message form server.
+     * @param message message form server
+     */
+    private void handleMessage(ServerToClientMessage message) {
+        String inputFromServer;
+        inputFromServer = message.getText();
+        if(inputFromServer == "" || inputFromServer == "\n"){
+            return;
+        }
+
+
+        ServerToClientMessageType messageType= message.getType();
+        // Switching for different message type
+        // Image
+        if(messageType.equals(ServerToClientMessageType.IMAGE)){
+
+            MessengerBot.sendRegularMessage(inputFromServer);
+
+        }
+        // Confirm login
+        else if(messageType.equals(ServerToClientMessageType.CONFIRM_LOGIN)) {
+
+            MessengerBot.setLoginResultAvailable(true);
+
+        }
+        // Reject login
+        else if(messageType.equals(ServerToClientMessageType.REJECT_LOGIN)) {
+
+            MessengerBot.setLoginResultAvailable(false);
+
+
+        }
+        // Someone wants to be your friend
+        else if(messageType.equals(ServerToClientMessageType.USER_WANTS_TO_BE_YOUR_FRIEND)) {
+
+            MessengerBot.sendRegularMessage("User \""+inputFromServer+"\" wants to be your friend. [Y] accept [N] refuse");
+            MessengerBot.friendRequest(inputFromServer);
+
+        }
+        // Accepted friend request
+        else if(messageType.equals(ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST)){
+
+            MessengerBot.sendRegularMessage("\""+inputFromServer + "\" accepted your friend request");
+        }
+        else {
+
+            MessengerBot.sendRegularMessage("\""+inputFromServer + "\" accepted your friend request");
         }
     }
 }

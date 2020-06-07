@@ -202,167 +202,38 @@ public class MessengerBot {
                 // Messenger bot state machine
                 if (currentState.equals(AvailableStates.INIT) && message_text.equalsIgnoreCase("!chat")) {
 
-                    sendRegularMessage("Initiated chat!Please login[l] or sign in[s]...");
-
-                    currentState = AvailableStates.SELECT_LOGIN_OR_REGISTER;
+                    initialMessage();
                 }
                 // Login
                 else if(currentState.equals(AvailableStates.SELECT_LOGIN_OR_REGISTER)){
 
 
-                    if(message_text.equalsIgnoreCase("l")){
-                        sendRegularMessage("You selected login. Input your Username:...");
-
-                        currentState = AvailableStates.LOGIN_USERNAME;
-
-                    }else if(message_text.equalsIgnoreCase("s")){
-
-                        sendRegularMessage("You selected sign in. Input your Username:...");
-
-                        currentState = AvailableStates.REGISTER_USERNAME;
-                    }
+                    selectLoginOrRegister(message_text);
 
 
                 }
                 // Login username
                 else if(currentState.equals(AvailableStates.LOGIN_USERNAME)){
-                    username = message_text;
-
-                    sendRegularMessage("Input your Password:...");
-                    currentState = AvailableStates.LOGIN_PASSWORD;
+                    loginUsername(message_text);
                 }
                 // Login password
                 else if(currentState.equals(AvailableStates.LOGIN_PASSWORD)){
-                    password = message_text;
-
-                    sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.REQUEST_LOGIN,username+"#"+password));
-
-                    // asynchronous result
-                    try {
-                        Thread.yield();
-                        loginResultAvailable.acquire();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-
-                    if(loginResult){
-
-                        sendRegularMessage("Login successful. Send messages: username#message_text." +
-                                "Send images: !image. " +
-                                "Add to friends: !friend. " +
-                                "Create group: !creategroup. " +
-                                "Add user to group: !addtogroup. " +
-                                "Change text sending to group sending: !group. Then groupname#message_text. " +
-                                "Switch to user sending: !user. " +
-                                "Quit: !q");
-                        currentState = AvailableStates.CONNECTED_TO_CHAT;
-                    }else {
-
-                        sendRegularMessage("Incorrect data. Try again. Please login[l] or sign in[s]...");
-                        currentState = AvailableStates.SELECT_LOGIN_OR_REGISTER;
-                    }
+                    loginPassword(message_text);
 
                 }
                 // Register login
                 else if(currentState.equals(AvailableStates.REGISTER_USERNAME)){
-                    username = message_text;
-
-                    sendRegularMessage("Input your Password:...");
-                    currentState = AvailableStates.REGISTER_PASSWORD;
+                    registerUsername(message_text);
                 }
                 // Register password
                 else if(currentState.equals(AvailableStates.REGISTER_PASSWORD)){
-                    password = message_text;
-
-                    sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.REQUEST_REGISTER,username+"#"+password));
-
-                    // asynchronous results
-                    try {
-                        Thread.yield();
-                        loginResultAvailable.acquire();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    if(loginResult){
-
-                        sendRegularMessage("Login successful. Send messages: username#message_text. " +
-                                "Send images: !image. " +
-                                "Add to friends: !friend. " +
-                                "Create group: !creategroup. " +
-                                "Add user to group: !addtogroup. " +
-                                "Change text sending to group sending: !group. Then groupname#message_text. " +
-                                "Switch to user sending: !user. " +
-                                "Quit: !q");
-                        currentState = AvailableStates.CONNECTED_TO_CHAT;
-                    }else {
-
-                        sendRegularMessage("Incorrect data. Try again. Please login[l] or sign in[s]...");
-                        currentState = AvailableStates.SELECT_LOGIN_OR_REGISTER;
-                    }
+                    registerPassword(message_text);
                 }
 
 
                 // Chat connection established, now choose options
                 else if(currentState.equals(AvailableStates.CONNECTED_TO_CHAT)){
-                    // Quit
-                    if(message_text.equals("!q")){
-                        try {
-                            echoSocket.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        return "ok";
-
-                    }
-                    // Image
-                    else if(message_text.equalsIgnoreCase("!image")){
-                        currentState = AvailableStates.IMAGE_SENDING;
-
-                        sendRegularMessage("Input image");
-                    }
-                    // Add friend
-                    else if(message_text.equalsIgnoreCase("!friend")){
-                        currentState  = AvailableStates.ADD_TO_FRIENDS;
-
-                        sendRegularMessage("Input friend to add name...");
-                    }
-                    // Create group
-                    else if(message_text.equalsIgnoreCase("!creategroup")){
-                        currentState = AvailableStates.CREATE_GROUP;
-
-                        sendRegularMessage("Input group name to create...");
-                    }
-                    // Add to group
-                    else if(message_text.equalsIgnoreCase("!addtogroup")){
-                        currentState  = AvailableStates.ADD_TO_GROUP;
-
-                        sendRegularMessage("Input groupname#usertoadd...");
-                    }
-                    // Group sending
-                    else if(message_text.equalsIgnoreCase("!group")){
-                        isGroupSending = true;
-
-                        sendRegularMessage("Group sending!");
-                    }
-                    // User sending
-                    else if(message_text.equalsIgnoreCase("!user")){
-                        isGroupSending = false;
-
-                        sendRegularMessage("User sending!");
-                    }
-                    // Send messsage
-                    else if(isGroupSending) {
-                        sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_GROUP,message_text));
-
-                    }else{
-                        sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_USER,message_text));
-
-                    }
-
-
-
+                    if (connectedToChat(message_text)) return "ok";
 
 
                 }
@@ -440,5 +311,188 @@ public class MessengerBot {
 
             return "No Messages";
         });
+    }
+
+    /**
+     * Function that is responsible for handling messages if client is already connected.
+     * @param message_text message text
+     * @return if message was correct
+     */
+    private static boolean connectedToChat(String message_text) {
+        // Quit
+        if(message_text.equals("!q")){
+            try {
+                echoSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return true;
+
+        }
+        // Image
+        else if(message_text.equalsIgnoreCase("!image")){
+            currentState = AvailableStates.IMAGE_SENDING;
+
+            sendRegularMessage("Input image");
+        }
+        // Add friend
+        else if(message_text.equalsIgnoreCase("!friend")){
+            currentState  = AvailableStates.ADD_TO_FRIENDS;
+
+            sendRegularMessage("Input friend to add name...");
+        }
+        // Create group
+        else if(message_text.equalsIgnoreCase("!creategroup")){
+            currentState = AvailableStates.CREATE_GROUP;
+
+            sendRegularMessage("Input group name to create...");
+        }
+        // Add to group
+        else if(message_text.equalsIgnoreCase("!addtogroup")){
+            currentState  = AvailableStates.ADD_TO_GROUP;
+
+            sendRegularMessage("Input groupname#usertoadd...");
+        }
+        // Group sending
+        else if(message_text.equalsIgnoreCase("!group")){
+            isGroupSending = true;
+
+            sendRegularMessage("Group sending!");
+        }
+        // User sending
+        else if(message_text.equalsIgnoreCase("!user")){
+            isGroupSending = false;
+
+            sendRegularMessage("User sending!");
+        }
+        // Send messsage
+        else if(isGroupSending) {
+            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_GROUP,message_text));
+
+        }else{
+            sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.TEXT_TO_USER,message_text));
+
+        }
+        return false;
+    }
+
+    /**
+     * Function of state machine handling registration process. Particularly password part.
+     * @param message_text text message
+     */
+    private static void registerPassword(String message_text) {
+        password = message_text;
+
+        sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.REQUEST_REGISTER,username+"#"+password));
+
+        // asynchronous results
+        try {
+            Thread.yield();
+            loginResultAvailable.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if(loginResult){
+
+            sendRegularMessage("Login successful. Send messages: username#message_text. " +
+                    "Send images: !image. " +
+                    "Add to friends: !friend. " +
+                    "Create group: !creategroup. " +
+                    "Add user to group: !addtogroup. " +
+                    "Change text sending to group sending: !group. Then groupname#message_text. " +
+                    "Switch to user sending: !user. " +
+                    "Quit: !q");
+            currentState = AvailableStates.CONNECTED_TO_CHAT;
+        }else {
+
+            sendRegularMessage("Incorrect data. Try again. Please login[l] or sign in[s]...");
+            currentState = AvailableStates.SELECT_LOGIN_OR_REGISTER;
+        }
+    }
+
+    /**
+     * Function of state machine handling registration process. Particularly username part.
+     * @param message_text text message
+     */
+    private static void registerUsername(String message_text) {
+        username = message_text;
+
+        sendRegularMessage("Input your Password:...");
+        currentState = AvailableStates.REGISTER_PASSWORD;
+    }
+
+    /**
+     * Function of state machine handling login process. Particularly password part.
+     * @param message_text text message
+     */
+    private static void loginPassword(String message_text) {
+        password = message_text;
+
+        sendMessageToServer(new ClientToServerMessage(ClientToServerMessageType.REQUEST_LOGIN,username+"#"+password));
+
+        // asynchronous result
+        try {
+            Thread.yield();
+            loginResultAvailable.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        if(loginResult){
+
+            sendRegularMessage("Login successful. Send messages: username#message_text." +
+                    "Send images: !image. " +
+                    "Add to friends: !friend. " +
+                    "Create group: !creategroup. " +
+                    "Add user to group: !addtogroup. " +
+                    "Change text sending to group sending: !group. Then groupname#message_text. " +
+                    "Switch to user sending: !user. " +
+                    "Quit: !q");
+            currentState = AvailableStates.CONNECTED_TO_CHAT;
+        }else {
+
+            sendRegularMessage("Incorrect data. Try again. Please login[l] or sign in[s]...");
+            currentState = AvailableStates.SELECT_LOGIN_OR_REGISTER;
+        }
+    }
+
+    /**
+     * Function of state machine handling login process. Particularly username part.
+     * @param message_text text message
+     */
+    private static void loginUsername(String message_text) {
+        username = message_text;
+
+        sendRegularMessage("Input your Password:...");
+        currentState = AvailableStates.LOGIN_PASSWORD;
+    }
+
+    /**
+     * Function of state machine handling selecting login and registration.
+     * @param message_text text message
+     */
+    private static void selectLoginOrRegister(String message_text) {
+        if(message_text.equalsIgnoreCase("l")){
+            sendRegularMessage("You selected login. Input your Username:...");
+
+            currentState = AvailableStates.LOGIN_USERNAME;
+
+        }else if(message_text.equalsIgnoreCase("s")){
+
+            sendRegularMessage("You selected sign in. Input your Username:...");
+
+            currentState = AvailableStates.REGISTER_USERNAME;
+        }
+    }
+
+    /**
+     * Function of state machine handling initial message.
+     */
+    private static void initialMessage() {
+        sendRegularMessage("Initiated chat!Please login[l] or sign in[s]...");
+
+        currentState = AvailableStates.SELECT_LOGIN_OR_REGISTER;
     }
 }

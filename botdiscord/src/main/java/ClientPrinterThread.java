@@ -69,80 +69,96 @@ public class ClientPrinterThread extends Thread {
 
             // Wait for asynchronous messages
             while((message = receiveMessage()) != null){
-                inputFromServer = message.getText();
-
-                if(inputFromServer.equals("") || inputFromServer.equals("\n")){
-                    continue;
-                }
-
-                ServerToClientMessageType messageType= message.getType();
-
-
-                // Depending on message type different messages will be sent
-                // Image
-                if(messageType.equals(ServerToClientMessageType.IMAGE)){
-                    new MessageBuilder().addAttachment(new URL(inputFromServer)).send(textChannel);
-
-                }
-                // Confirm login
-                else if(messageType.equals(ServerToClientMessageType.CONFIRM_LOGIN)) {
-
-
-                    // Printing friends and groups
-                    String[] friendsAndGroups = inputFromServer.split("@");
-                    String[] friends = friendsAndGroups[0].split("#");
-                    String[] groups = friendsAndGroups[1].split("#");
-
-                    String friendsText = "";
-                    if(friends.length>0){
-
-                        for (String f: friends){
-
-                                friendsText += ", "+f;
-                        }
-                    }
-
-                    String groupsText = "";
-                    if(groups.length>0){
-
-
-                        for (String g: groups){
-
-                                groupsText += ", "+g;
-                        }
-                    }
-
-                    textChannel.sendMessage("Your friends are: "+friendsText+".\nYour groups are: "+groupsText+".");
-
-                    DiscordBot.setLoginResultAvailable(true);
-
-                }
-                // Reject login
-                else if(messageType.equals(ServerToClientMessageType.REJECT_LOGIN)) {
-
-                    DiscordBot.setLoginResultAvailable(false);
-
-
-                }
-                // Someone wants to be a friend
-                else if(messageType.equals(ServerToClientMessageType.USER_WANTS_TO_BE_YOUR_FRIEND)) {
-
-                    textChannel.sendMessage("User \""+inputFromServer+"\" wants to be your friend. [Y] accept [N] refuse");
-                    DiscordBot.friendRequest(inputFromServer);
-
-                }
-                // Friend accepted your request
-                else if(messageType.equals(ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST)){
-                    textChannel.sendMessage("\""+inputFromServer + "\" accepted your friend request");
-                }
-                else {
-                    textChannel.sendMessage(inputFromServer);
-                }
+                handleMessage(message);
             }
 
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Function responsible for handling message from server.
+     * @param message message form server
+     * @throws MalformedURLException exception
+     */
+    private void handleMessage(ServerToClientMessage message) throws MalformedURLException {
+        String inputFromServer;
+        inputFromServer = message.getText();
+
+        if(inputFromServer.equals("") || inputFromServer.equals("\n")){
+            return;
+        }
+
+        ServerToClientMessageType messageType= message.getType();
+
+
+        // Depending on message type different messages will be sent
+        // Image
+        if(messageType.equals(ServerToClientMessageType.IMAGE)){
+            new MessageBuilder().addAttachment(new URL(inputFromServer)).send(textChannel);
+
+        }
+        // Confirm login
+        else if(messageType.equals(ServerToClientMessageType.CONFIRM_LOGIN)) {
+
+            confirmLogin(inputFromServer);
+
+        }
+        // Reject login
+        else if(messageType.equals(ServerToClientMessageType.REJECT_LOGIN)) {
+
+            DiscordBot.setLoginResultAvailable(false);
+
+        }
+        // Someone wants to be a friend
+        else if(messageType.equals(ServerToClientMessageType.USER_WANTS_TO_BE_YOUR_FRIEND)) {
+
+            textChannel.sendMessage("User \""+inputFromServer+"\" wants to be your friend. [Y] accept [N] refuse");
+            DiscordBot.friendRequest(inputFromServer);
+
+        }
+        // Friend accepted your request
+        else if(messageType.equals(ServerToClientMessageType.USER_ACCEPTED_YOUR_FRIEND_REQUEST)){
+            textChannel.sendMessage("\""+inputFromServer + "\" accepted your friend request");
+        }
+        else {
+            textChannel.sendMessage(inputFromServer);
+        }
+    }
+
+    /**
+     * Function responsible for handling login confirmation.
+     * @param inputFromServer text from server
+     */
+    private void confirmLogin(String inputFromServer) {
+        // Printing friends and groups
+        String[] friendsAndGroups = inputFromServer.split("@");
+        String[] friends = friendsAndGroups[0].split("#");
+        String[] groups = friendsAndGroups[1].split("#");
+
+        String friendsText = "";
+        if(friends.length>0){
+
+            for (String f: friends){
+
+                    friendsText += ", "+f;
+            }
+        }
+
+        String groupsText = "";
+        if(groups.length>0){
+
+
+            for (String g: groups){
+
+                    groupsText += ", "+g;
+            }
+        }
+
+        textChannel.sendMessage("Your friends are: "+friendsText+".\nYour groups are: "+groupsText+".");
+
+        DiscordBot.setLoginResultAvailable(true);
     }
 }

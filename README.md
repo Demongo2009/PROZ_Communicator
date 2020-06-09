@@ -2,7 +2,7 @@
 Communicator made as academic project. Allows to send messages from Discord, Telegram and our own Client. All traffic goes through local server.
 
 ## General schema:
-
+![Alt text](/doc/PROZ_graf.png)
 ## Communication between client and server:
 ```
 public enum ClientToServerMessageType {
@@ -62,11 +62,10 @@ void logout()
 ```
 Functions above are the interface between GUI and logic.
 ## Successful login schema:
-
+![Alt text](/doc/PROZ_login.png)
 ## Successful text message to friend schema:
-
+![Alt text](/doc/PROZ_mess.png)
 Other actions are analogous to these two
-
 ## Bots
 Bots are implemented with state machine, which has following states:
 ```
@@ -86,11 +85,11 @@ enum AvailableStates{
  }
 ```
 ### Client advances through the state machine with following schema:
-
+![Alt text](/doc/PROZ_bots.png)
 New bots can be implemented in analogus manner. However programer must remeber to send
 messages corresponding to the current state to the server.
 ## GUI
-
+![Alt text](/doc/PROZ_gui.png)
 GUI is made with 2 JFrames – Starting Screen and Main Window. After proper login
 procedure Starting Screen disposes and Main Window pops up. Properly registered account is
 immediately logged in.

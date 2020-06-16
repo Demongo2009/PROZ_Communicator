@@ -35,7 +35,7 @@ public enum ServerToClientMessageType {
 ```
 In order to add new bot the communication between this bot and the server must be based on those
 messages.
-## Serwer
+## Server
 Key classes and structures:
 * Server – accepts all clients and runs ServerThread for each
 * ServerThread – handles single client
